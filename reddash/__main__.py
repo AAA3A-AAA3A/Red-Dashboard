@@ -21,7 +21,6 @@ from rich.theme import Theme
 from .app import FlaskApp
 
 rich_console: Console = rich.get_console()
-rich.reconfigure(tab_size=4)
 logging.basicConfig(
     format="[{asctime}] {name}: {message}",
     datefmt="%Y-%m-%d %H:%M:%S",
@@ -45,7 +44,7 @@ rich_console.push_theme(
 parser: argparse.ArgumentParser = argparse.ArgumentParser()
 parser.add_argument("--host", dest="host", type=str, default="0.0.0.0")
 parser.add_argument("--port", dest="port", type=int, default=42356)
-parser.add_argument("--rpc-port", dest="rpcport", type=int, default=6133)
+parser.add_argument("--rpc-port", dest="rpc_port", type=int, default=6133)
 parser.add_argument("--interval", dest="interval", type=int, default=5, help=argparse.SUPPRESS)
 parser.add_argument("--development", dest="dev", action="store_true", help=argparse.SUPPRESS)
 # parser.add_argument("--debug", dest="debug", action="store_true")
@@ -60,7 +59,7 @@ async def _main():
     table.add_column("Value:", style="blue", no_wrap=True)
     table.add_row("Webserver Host", app.host)
     table.add_row("Webserver Port", str(app.port))
-    table.add_row("RPC Port", str(app.rpcport))
+    table.add_row("RPC Port", str(app.rpc_port))
     table.add_row("Update interval", str(app.interval))
     table.add_row("Environment", "Development" if app.dev else "Production")
     # table.add_row("Logging level", "Debug" if kwargs["debug"] else "Warning")

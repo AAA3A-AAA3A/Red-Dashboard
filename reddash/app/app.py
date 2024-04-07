@@ -12,7 +12,6 @@ import logging
 import sys
 import threading
 
-from fernet import Fernet
 from flask import Flask
 from flask_babel import Babel, _
 from flask_bootstrap import Bootstrap
@@ -66,7 +65,7 @@ class FlaskApp(Flask):
         cog: typing.Optional[typing.Any] = None,  # To don't use RPC.
         host: str = "0.0.0.0",
         port: int = 42356,
-        rpcport: int = 6133,
+        rpc_port: int = 6133,
         interval: int = 5,
         dev: bool = False,
     ) -> None:  # debug: bool = False,
@@ -75,7 +74,7 @@ class FlaskApp(Flask):
         self.cog: typing.Optional[typing.Any] = cog
         self.host: str = host
         self.port: int = port
-        self.rpcport: int = rpcport
+        self.rpc_port: int = rpc_port
         self.interval: int = interval
         self.dev: bool = dev
         self.testing = self.debug = self.dev
@@ -119,7 +118,7 @@ class FlaskApp(Flask):
         self.config["MAX_CONTENT_LENGTH"]: int = 16 * 1024 * 1024  # 16MB
 
         self.config["WEBSOCKET_HOST"]: str = "localhost"
-        self.config["WEBSOCKET_PORT"]: int = self.rpcport
+        self.config["WEBSOCKET_PORT"]: int = self.rpc_port
         self.config["WEBSOCKET_INTERVAL"]: int = self.interval
         self.config["RPC_CONNECTED"]: bool = False
         self.config["LAUNCH"]: datetime.datetime = datetime.datetime.now(tz=datetime.timezone.utc)
