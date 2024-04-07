@@ -13,9 +13,9 @@ This project is supported on Windows, Mac OS X and Linux distributions, however 
 If you wish to use this program and receive support for it, you must also give feedback and report any bugs you encounter.  You can join my support server [here](https://discord.gg/vQZTdB9).
 
 ## Legal
-Red - Discord Bot Dashboard is released under [Affero General Public License v3](https://github.com/AAA3A-AAA3A/Red-Dashboard/blob/main/LICENSE).
+Red-Dashboard for Red-DiscordBot is released under [Affero General Public License v3](https://github.com/AAA3A-AAA3A/Red-Dashboard/blob/main/LICENSE).
 
-For details about how the Red - Discord Bot - Dashboard manages your privacy, please review the following documents.  By using this program, you acknowledge that you have read these documents and consent to having your data used in the ways described in such documents.
+For details about how this project manages your privacy, please review the following documents. By using this program, you acknowledge that you have read these documents and consent to having your data used in the ways described in such documents.
 - [Cookie Policy](https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Cookie%20Policy.md)
 - [Privacy Policy](https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Privacy%20Policy.md)
 - [Third Party Disclaimer](https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Third%20Party%20Disclaimer.md)
