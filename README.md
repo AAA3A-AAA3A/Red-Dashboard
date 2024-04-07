@@ -1,4 +1,4 @@
-# Red-Dashboard
+# Red-Dashboard (Fork of Neuro's Dashboard)
 An easy-to-use interactive web dashboard to control your Red-DiscordBot instance! Thank you very much to Neuro for the initial work!
 
 ## Overview
