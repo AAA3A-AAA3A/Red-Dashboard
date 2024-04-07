@@ -1,0 +1,227 @@
+import typing  # isort:skip
+
+from reddash.app.app import app
+
+from flask import abort, flash, jsonify, redirect, render_template, render_template_string, request
+from flask_babel import _
+from flask_login import current_user, login_required
+from flask_login import login_url as make_login_url
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
+
+from ..base.routes import get_guild, get_third_parties
+from ..utils import get_result  # , get_user_id
+from . import blueprint
+
+# <---------- Third Parties ---------->
+
+
+@blueprint.route("/api/webhook", methods=("POST",))
+async def webhook_route():
+    if not request.is_json:
+        # Reject any requests that aren't json for now.
+        return jsonify(
+            {"status": 0, "message": "Invalid formatting. This endpoint receives JSON only."}
+        )
+    payload = request.get_json()
+    payload["origin"] = request.origin
+    payload["headers"] = str(
+        request.headers
+    )  # Pass header data here incase there was something else the user needs for filtering.
+    payload["user_agent"] = str(
+        request.user_agent
+    )  # User agent seems adequate enough for filtering.
+    try:
+        requeststr = {
+            "jsonrpc": "2.0",
+            "id": 0,
+            "method": "DASHBOARDRPC_WEBHOOKS__WEBHOOK_RECEIVE",
+            "params": [payload],
+        }
+        with app.lock:
+            return await get_result(app, requeststr)
+    except Exception as e:
+        app.logger.error("Error sending webhook data.", exc_info=e)
+
+
+@blueprint.route("/third_parties/<third_party>")
+@blueprint.route("/third_parties")
+@login_required
+async def third_parties(third_party: str = None):
+    return_third_parties = await get_third_parties()
+
+    return render_template(
+        "pages/third_parties/third_parties.html",
+        **return_third_parties,
+        tab_name=None
+        if third_party is None or third_party not in return_third_parties["third_parties"]
+        else third_party,
+    )
+
+
+@blueprint.route(
+    "/dashboard/<guild_id>/third_parties/<name>/<page>",
+    methods=(
+        "HEAD",
+        "GET",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+@blueprint.route(
+    "/dashboard/<guild_id>/third_parties/<name>",
+    methods=(
+        "HEAD",
+        "GET",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+@blueprint.route(
+    "/third_parties/<name>/<page>",
+    methods=(
+        "HEAD",
+        "GET",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+@blueprint.route(
+    "/third_parties/<name>",
+    methods=(
+        "HEAD",
+        "GET",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+async def third_party(name: str, page: str = None, guild_id: str = None):
+    third_parties = app.variables["third_parties"]
+    name = name.strip()
+    if name not in third_parties:
+        name = next((key for key in third_parties if key.lower() == name.lower()), None)
+        if name is None:
+            return abort(
+                404, description=_("Looks like that third party doesn't exist... Strange...")
+            )
+    if name in app.data["disabled_third_parties"]:
+        return abort(403, description=_("This third party is disabled."))
+    if page is not None:
+        page = _page = page.lower()
+    else:
+        _page = "null"
+    if _page not in third_parties[name]:
+        # if _page != "null" and page.isdecimal() and "null" in third_parties[name]:
+        #     guild_id, page, _page = page, None, "null"
+        return abort(404, description=_("Looks like that page doesn't exist... Strange..."))
+    if request.method not in third_parties[name][_page]["methods"]:
+        return abort(405, description=_("Method not allowed."))
+
+    context_ids = {}
+    if "user_id" in third_parties[name][_page]["context_ids"]:
+        if current_user.is_authenticated:
+            context_ids[
+                "user_id"
+            ] = current_user.id  # int(get_user_id(app=app, req=request, ses=session))
+        else:
+            return redirect(make_login_url("login_blueprint.login", next_url=request.url))
+    if "guild_id" in third_parties[name][_page]["context_ids"]:
+        try:
+            context_ids["guild_id"] = int(guild_id)
+        except (TypeError, ValueError):
+            return redirect(make_login_url("base_blueprint.dashboard", next_url=request.url))
+        return_guild = await get_guild(context_ids["guild_id"])
+        if return_guild["guild"]["status"] == 1:
+            return return_guild["guild"]
+    else:
+        return_guild = {}
+
+    kwargs = request.args.copy()
+    for key in third_parties[name][_page]["context_ids"]:
+        if key in ("user_id", "guild_id"):
+            continue
+        try:
+            context_ids[key] = int(kwargs.pop(key))
+        except KeyError:
+            return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
+        except ValueError:
+            return render_template("errors/custom.html", error_title=f"Invalid argument: `{key}`.")
+    for key in third_parties[name][_page]["required_kwargs"]:
+        if key not in kwargs:
+            return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
+
+    if request.method not in ["HEAD", "GET"] and request.json:
+        kwargs["data"] = request.json
+    try:
+        requeststr = {
+            "jsonrpc": "2.0",
+            "id": 0,
+            "method": "DASHBOARDRPC_THIRDPARTIES__DATA_RECEIVE",
+            "params": [
+                request.method,
+                name,
+                page,
+                context_ids,
+                kwargs,
+                app.extensions["babel"].locale_selector(),
+            ],
+        }
+        with app.lock:
+            result = await get_result(app, requeststr)
+
+        if "data" in result:
+            result = result["data"]
+        if "notifications" in result:
+            for notification in result["notifications"]:
+                flash(notification["message"], category=notification["category"])
+        if request.method not in ["HEAD", "GET"]:  # API request by JavaScript code or bot.
+            return result
+        if "web-content" in result:
+            if result["web-content"].get("standalone", False):
+                return render_template_string(
+                    name=name, page=page, **return_guild, **result["web-content"]
+                )
+            return render_template(
+                "pages/third_parties/third_party.html",
+                name=name,
+                page=page,
+                **return_guild,
+                source_content=render_template_string(
+                    result["web-content"].pop("source"), **result["web-content"]
+                ),
+            )
+        elif "error_code" in result:
+            return abort(result["error_code"], description=result.get("error_message"))
+        elif "error_title" in result:
+            return render_template(
+                "errors/custom.html",
+                error_title=result["error_title"],
+                error_message=result.get("error_message"),
+            )
+        elif "redirect" in result:
+            return redirect(result["redirect"])
+        return result
+    except Exception as e:
+        app.logger.error(
+            f"Error in the page `{page or 'Main Page'}` of the third party `{name}`.", exc_info=e
+        )
+        return abort(500, description=_("An error occurred while processing your request."))
+
+
+@app.template_filter("highlight")
+def highlight_filter(code, language="python"):
+    if language == "traceback":
+        lexer = Python3TracebackLexer()
+    else:
+        lexer = get_lexer_by_name(language, stripall=True)
+    formatter = HtmlFormatter()
+    return highlight(code, lexer, formatter)

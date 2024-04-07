@@ -1,0 +1,123 @@
+<div class="card card-chart">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12 text-left">
+          <div class="d-flex justify-content-between mb-2">
+              <h1 class="card-title">{{ number_to_text_with_suffix(third_parties|length) }} {% if third_parties|length != 1 %}{{  _("Third Parties") }}{% else %}{{  _("Third Party") }}{% endif %}</h1>
+          </div>
+      </div>
+    </div>
+    <br />
+    {% if third_parties %}
+      <div class="row">
+          <div id="third-parties-tabs" class="nav-wrapper position-relative col-md-2">
+            <ul class="nav nav-pills nav-fill flex-column p-1" role="tablist" aria-orientation="vertical">
+              {% for third_party in third_parties %}
+                <li class="nav-item">
+                  <a class="nav-link mb-0 px-0 py-1 {% if loop.index == 1 %}active{% endif %}" id="{{ third_party }}-tab" href="#{{ third_party }}" role="tab" data-toggle="pill" aria-controls="{% if loop.index == 1 %}preview{% else %}code{% endif %}" aria-selected="{% if loop.index == 1 %}false{% else %}false{% endif %}">{{ third_party }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-md-10">
+              <span id="topOfTabContent"></span>
+              <div class="tab-content" id="myTabContent">
+                  {% for third_party in third_parties %}
+                    <div class="tab-pane fade {% if (not tab_name and loop.index == 1) or (tab_name and third_party == tab_name) %}show active{% endif %}" id="{{ third_party }}" role="tabpanel" aria-labelledby="{{ third_party }}-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                            <h3 class="card-title">{{ third_party }}</h3>
+                                            <p>{{ third_parties_infos[third_party]["description"]|markdown }}</p>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                          <div class="col-ms-8">
+                                              <p class="mb-0">{{ (_("Author(s): {author}")).format(author=third_parties_infos[third_party]["author"])}}</p>
+                                              <p>{{ _("Repo:") }} <a {% if third_parties_infos[third_party]["repo"] != "Unknown" %}href="{{ third_parties_infos[third_party]["repo"] }}"{% endif %}>{{ third_parties_infos[third_party]["repo"] }}</a></p>
+                                          </div>
+                                      </div>
+                                      <table class="table tablesorter">
+                                          <thead class="text-primary">
+                                              <tr>
+                                                  <th>{{ _("Page") }}</th>
+                                                  <th>{{ _("Description") }}</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for third_party in third_parties recursive %}
+                                              {% for page in third_parties[third_party] recursive %}
+                                                <tr>
+                                                  <p>
+                                                    <td style="padding-left: {{ loop.depth0 * 40 + 24 }}px">
+                                                      <a class="text-{{ variables["meta"]["color"] }}" href="{{ third_parties[third_party][page].url }}">{{ page }}</a>
+                                                    </td>
+                                                  </p>
+                                                  {% if third_parties[third_party][page].description %}
+                                                    <td style="padding-left: 24px">{{ third_parties[third_party][page].description|markdown }}</td>
+                                                  {% endif %}
+                                                </tr>
+                                              {% endfor %}
+                                            {% endfor %}
+                                          </tbody>
+                                      </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                  <div class="card-body">
+                    <h4>{{ _("There is no third party available currently.") }}</h4>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+{% block javascripts %}
+  <script>
+    window.onload = function() {
+        resize_event = new Event("resize");
+        window.dispatchEvent(resize_event);
+    }
+  </script>
+  <script>
+    function changePage(tab_name) {
+        var tab_nav_link = document.querySelector("#" + tab_name + "-tab");
+        if (tab_nav_link) {
+            tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
+            tab_nav_link.click();
+        }
+    }
+    {% if tab_name %}
+        document.addEventListener("DOMContentLoaded", function() {
+            changePage("{{ tab_name }}");
+        });
+    {% endif %}
+  </script>
+  <script>
+    document.querySelector('#third-parties-tabs a[data-toggle="pill"]').addEventListener("shown.bs.tab", function(e) {
+        var target_id = e.target.id.slice(0, -4);
+        var new_url = "/third-parties/" + target_id;
+        if (!(window.location.pathname.startsWith(new_url))) {
+            // window.location.pathname = new_url;
+            window.history.pushState({}, "", new_url);
+        }
+    })
+  </script>
+{% endblock %}

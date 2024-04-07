@@ -1,0 +1,246 @@
+{% extends "layouts/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+  {{ _("Guild") }} {{ guild.name }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid">
+        <div class="row">
+            {% include "pages/guild_profile.html" %}
+
+            <div id="guild-content" class="col-md-8 mt-4" style="margin-left: 10px;">
+                <ul class="nav nav-pills position-relative end-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link {% if not page or page == "overview" %}show active{% endif %}" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+                            <i class="fa fa-map opacity-10" style="vertical-align: -1px;"></i> {{ _("Overview") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if page and page == "settings" %}show active{% endif %}" id="settings-tab" data-toggle="pill" href="#settings" role="tab" aria-controls="settings" aria-selected="true">
+                            <i class="ni ni-settings-gear-65 opacity-10" style="vertical-align: -1.5px;"></i> {{ _("Bot Settings") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if page and page == "third-parties" %}show active{% endif %}" id="third-parties-tab" data-toggle="pill" href="#third-parties" role="tab" aria-controls="third-parties" aria-selected="true">
+                            <i class="ni ni-diamond opacity-10" style="vertical-align: -1.5px;"></i> {{ number_to_text_with_suffix(third_parties|length) }} {% if third_parties|length != 1 %}{{ _("Third Parties") }}{% else %}{{ _("Third Party") }}{% endif %}
+                        </a>
+                    </li>
+                </ul>
+                <br />
+                <div class="tab-content" id="guild-tabContent">
+
+                    <div class="tab-pane fade {% if not page or page == "overview" %}show active{% endif %}" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                        <div class="card card-chart">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 text-left">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <h2 class="card-title">{{ _("Overview") }}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mt-4">
+                                        <h4>{{ _("This tab is still under development, sorry.") }}</h4>
+                                        {% if False %}
+                                            <div id="accordion">
+                                                <div class="card">
+                                                <div class="card-header" id="headingOne">
+                                                    <h5 class="mb-0">
+                                                    <a class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Collapsible Group Item #1</p>
+                                                            <i class="fa fa-arrow-circle-o-down"></i>
+                                                        </div>
+                                                    </a>
+                                                    </h5>
+                                                </div>
+                                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade {% if page and page == "settings" %}show active{% endif %}" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                        <div class="card card-chart">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12 text-left">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <h2 class="card-title">{{ _("Settings") }}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mt-4">
+                                        <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                            {{ guild_settings_form.hidden_tag() }}
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-group-label">{{ _("Bot Nickname:") }}</label>
+                                                    {{ guild_settings_form.bot_nickname(class="form-control form-control-default") }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-group-label">{{ _("Prefixes:") }}</label>
+                                                    {{ guild_settings_form.prefixes(class="form-control form-control-default select-choices") }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-group-label">{{ _("Admin Roles:") }}</label>
+                                                    {{ guild_settings_form.admin_roles(class="form-control form-control-default") }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-group-label">{{ _("Mod Roles:") }}</label>
+                                                    {{ guild_settings_form.mod_roles(class="form-control form-control-default") }}
+                                                </div>
+                                            </div>
+                                            <hr class="horizontal dark" />
+                                            <div class="mb-3">
+                                                <div class="form-check form-switch ps-0">
+                                                    {{ guild_settings_form.ignored(class="form-check-input ms-0", type="checkbox") }}
+                                                    <label class="form-check-label">{{ guild_settings_form.ignored.label.text }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-group-label">{{ _("Disabled Commands:") }}</label>
+                                                    {{ guild_settings_form.disabled_commands(class="form-control form-control-default") }}
+                                                </div>
+                                            </div>
+                                            <hr class="horizontal dark" />
+                                            <div class="row mb-1">
+                                                <div class="col-sm-6">
+                                                    <div class="form-check form-switch ps-0">
+                                                        {{ guild_settings_form.embeds(class="form-check-input ms-0", type="checkbox") }}
+                                                        <label class="form-check-label">{{ guild_settings_form.embeds.label.text }}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-check form-switch ps-0">
+                                                        {{ guild_settings_form.use_bot_color(class="form-check-input ms-0", type="checkbox") }}
+                                                        <label class="form-check-label">{{ guild_settings_form.use_bot_color.label.text }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-sm-6">
+                                                    <div class="form-check form-switch ps-0">
+                                                        {{ guild_settings_form.fuzzy(class="form-check-input ms-0", type="checkbox") }}
+                                                        <label class="form-check-label">{{ guild_settings_form.fuzzy.label.text }}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-group-label">{{ _("Delay before deleting invokation messages (-1 to disable):") }}</label>
+                                                        {{ guild_settings_form.delete_delay(class="form-control form-control-default") }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="horizontal dark" />
+                                            <div class="row mb-1">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-group-label">{{ _("Locale:") }}</label>
+                                                        {{ guild_settings_form.locale(class="form-control form-control-default") }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="form-group-label">{{ _("Regional Format:") }}</label>
+                                                        {{ guild_settings_form.regional_format(class="form-control form-control-default") }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-center">
+                                                {{ guild_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade {% if page and page == "third-parties" %}show active{% endif %}" id="third-parties" role="tabpanel" aria-labelledby="third-parties-tab">
+                        {% include "pages/third_parties/third_parties_list.html" %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function changePage(page) {
+            var tab_nav_link = document.querySelector("#" + page + "-tab");
+            if (tab_nav_link) {
+                tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
+                tab_nav_link.click();
+            }
+        }
+        {% if page == "overview" %}
+            {% set page = "settings" %}
+        {% endif %}
+        {% if page %}
+            document.addEventListener("DOMContentLoaded", function() {
+                changePage("{{ page }}");
+            });
+        {% endif %}
+    </script>
+    <script>
+        $('#guild-content a[data-toggle="pill"]').on("shown.bs.tab", function (e) {
+            var base_url = '{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}';
+            var target_id = e.target.id.slice(0, -4);
+            if (target_id == "third-parties") {
+                resize_event = new Event("resize");
+                window.dispatchEvent(resize_event);
+            }
+            if (target_id == "overview") {
+                var new_url = base_url;
+            } else {
+                var new_url = base_url + "/" + target_id;
+            }
+            if (!(window.location.pathname.startsWith(new_url)) || (target_id == "overview" && !(window.location.pathname == base_url))) {
+                // window.location.pathname = new_url;
+                window.history.pushState({}, "", new_url);
+            }
+        })
+    </script>
+    <script>
+        async function confirmLeaveGuild(event) {
+            if (confirmationDone) {
+                return true;
+            }
+            let target_button = event.target;
+            event.preventDefault();
+            SwalAlert.fire({
+                title: '{{ _("Are you sure you want me to leave this guild?") }}',
+                text: '{{ _("You will always be able to invite me back to this server later, but you risk losing some settings.") }}',
+                confirmButtonText: '{{ _("Yes, leave!") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    confirmationDone = true;
+                    target_button.click();
+                }
+            })
+            return false;
+        }
+    </script>
+{% endblock %}

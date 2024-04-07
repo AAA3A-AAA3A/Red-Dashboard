@@ -1,0 +1,54 @@
+<div class="fixed-plugin">
+  <!-- <a class="fixed-plugin-button text-dark position-fixed px-3 py-2"><i class="fa fa-cog py-2"></i></a> -->
+  <div class="card shadow-lg">
+    <div class="card-header pb-0 pt-3">
+      <div class="float-start">
+        <h5 class="mt-3 mb-0">{{ _("Dashboard Configurator") }}</h5>
+        <p>{{ _("Choose your custom options!") }}</p>
+      </div>
+      <div class="float-end mt-4">
+        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button"><i class="fa fa-close"></i></button>
+      </div>
+      <!-- End Toggle Button -->
+    </div>
+    <hr class="horizontal dark my-1" />
+    <div class="card-body pt-sm-3 pt-0 overflow-auto">
+      <!-- Theme Color -->
+      <div>
+        <h6 class="mb-0">{{ _("Theme Color") }}</h6>
+      </div>
+      <a href="javascript:void(0)" class="switch-trigger background-color" id="background-color-select">
+        <div class="badge-colors my-2 text-start">
+          {% for color in variables["meta"]["available_colors"] %}
+            <span class="badge filter bg-gradient-{{ color }} {% if color == variables["meta"]["color"] %}active{% endif %}" data-color="{{ color }}" onclick="sidebarColor(this);$.postData({'color': {% if color != variables["meta"]["default_color"] %}'{{ color }}'{% else %}null{% endif %}},'{{ url_for("base_blueprint.set_color") }}')"></span>
+          {% endfor %}
+        </div>
+      </a>
+      <hr class="horizontal dark my-sm-4" />
+      <!-- Theme Light/Dark -->
+      <div class="mt-2 mb-5 d-flex">
+        <h6 class="mb-0">{{ _("Light / Dark") }}</h6>
+        <div class="form-check form-switch ps-0 ms-auto my-auto" id="background-theme-select">
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this);$.postData({'background_theme': this.getAttribute('checked') ? 'dark' : 'white'},'{{ url_for("base_blueprint.set_background_theme") }}');" />
+        </div>
+      </div>
+      <hr class="horizontal dark my-sm-4" />
+      <!-- Sidenav Type -->
+      <div class="mt-3">
+        <h6 class="mb-0">{{ _("Sidenav Theme") }}</h6>
+      </div>
+      <div class="d-flex" id="sidebar-theme-select">
+        <a class="btn btn-outline-{{ variables["meta"]["color"] }} w-100 px-3 mb-2 me-2 active" data-class="bg-white" onclick="sidebarType(this);$.postData({'sidebar_theme': {% if 'white' != variables["meta"]["default_theme"] %}'white'{% else %}null{% endif %}},'{{ url_for("base_blueprint.set_sidebar_theme") }}')">{{ _("White") }}</a>
+        <a class="btn btn-outline-{{ variables["meta"]["color"] }} w-100 px-3 mb-2 me-2" data-class="bg-default" onclick="sidebarType(this);$.postData({'sidebar_theme': {% if 'dark' != variables["meta"]["default_theme"] %}'dark'{% else %}null{% endif %}},'{{ url_for("base_blueprint.set_sidebar_theme") }}')">{{ _("Dark") }}</a>
+      </div>
+      <p class="text-sm d-xl-none d-block mt-2">{{ _("You can change the sidenav theme just on desktop view.") }}</p>
+      <!-- Navbar Fixed -->
+      <div class="d-flex my-3">
+        <h6 class="mb-0">{{ _("Navbar Fixed") }}</h6>
+        <div class="form-check form-switch ps-0 ms-auto my-auto">
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

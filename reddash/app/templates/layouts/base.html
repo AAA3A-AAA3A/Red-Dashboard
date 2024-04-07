@@ -1,0 +1,139 @@
+<!-- 
+=========================================================
+* Argon Dashboard 2 - v2.0.4
+=========================================================
+
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/png" href="{{ variables["meta"]["icon"] }}" />
+
+    <title>
+      {{ variables["meta"]["title"] }} - {% block title %}{% endblock %}
+    </title>
+    <!-- Meta tags -->
+    <meta property="og:title" content="{{ variables["meta"]["title"] }} - {{ self.title() }}" />
+    <meta name="description" property="og:description" content="{{ variables["meta"]["description"] }}" />
+    <meta property="og:site_name" content="{{ _("Red-DiscordBot Dashboard") }}" />
+    <meta property="og:image" content="{{ variables["meta"]["icon"] }}" />
+    <meta name="theme-color" content="{{ variables["meta"]["color"] }}" />
+    <meta name="language" content="fr" />
+    <script type="application/ld+json">
+      {
+        "@context" : "https://schema.org",
+        "@type" : "WebSite",
+        "name" : "{{ variables['meta']['title'] }}",
+        "url" : "{{ url_for('base_blueprint.index') }}"
+      }
+    </script>
+    {% if False %}
+      <meta name="robots" content="noindex, nofollow" />
+    {% endif %}
+
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <style>
+      body #toast-container > div {
+        opacity: 1;
+        margin-top: 6px;
+        width: 500px !important;
+      }
+    </style>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" rel="stylesheet" />
+    <style>
+      .EasyMDEContainer {
+        .editor-toolbar i.separator {
+          position: relative; /* Fix separator icons display. */
+          height: auto;
+        }
+        .editor-toolbar {
+          &.fullscreen {
+            z-index: 9999;
+          }
+        }
+        .CodeMirror {
+          .CodeMirror-code .cm-comment:only-child {
+            display: block;
+          }
+          &.CodeMirror-fullscreen {
+            z-index: 9999;
+          }
+        }
+      }
+    </style>
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" />
+    <style>
+      .dropzone {
+        border: 1px solid #d2d6da;
+      }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" />
+    <link href="https://pagination.js.org/dist/2.6.0/pagination.css" rel="stylesheet" />
+
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock %}
+  </head>
+
+  <body class="g-sidenav-show bg-gray-100">
+    <div class="min-height-300 bg-gradient-{{ variables["meta"]["color"] }} position-absolute w-100"></div>
+
+    {% include "includes/navigation.html" %}
+
+    {% include "includes/sidenav.html" %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include "includes/fixed-plugin.html" %}
+
+    {% include "includes/footer.html" %}
+    <br />
+
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    {% include "includes/scripts.html" %}
+    <script src="{{ config.ASSETS_ROOT }}/js/argon-dashboard.js?v=2.0.4"></script>
+
+    <!-- Specific JS goes HERE -->
+    {% block javascripts %}{% endblock %}
+
+    <script>
+      let win = navigator.platform.indexOf('Win') > -1
+      if (win && document.querySelector("#sidenav-scrollbar")) {
+        let options = {
+          damping: "0.5"
+        }
+        Scrollbar.init(document.querySelector("#sidenav-scrollbar"), options)
+      }
+      document.querySelector("#background-color-select").querySelector('.bg-gradient-{{ variables["meta"]["color"] }}').click()
+      {% if variables["meta"]["background_theme"] == "dark" %}
+      document.querySelector("#background-theme-select").firstElementChild.click()
+      {% endif %}
+      {% if variables["meta"]["sidebar_theme"] == "white" %}
+        document.querySelector("#sidebar-theme-select").children[0].click()
+      {% else %}
+        document.querySelector("#sidebar-theme-select").children[1].click()
+      {% endif %}
+    </script>
+  </body>
+</html>

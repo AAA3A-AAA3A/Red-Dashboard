@@ -1,0 +1,131 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  {{ _("Guilds") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12 text-left">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h1 class="card-title">{{ number_to_text_with_suffix(guilds.total) }} {% if guilds.total != 1 %}{{ _("Guilds") }}{% else %}{{ _("Guild") }}{% endif %}</h1>
+                    </div>
+                    <br />
+                    <form action="#" onsubmit="submitSearch(event);" class="input-group">
+                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input id="guild-search" type="text" class="form-control" placeholder="{{ _("Search a guild...") }}" value="{% if query %}{{ query }}{% endif %}" />
+                    </form>
+                </div>
+            </div>
+            <div class="container mt-4 d-flex">
+              <div class="dropdown">
+                  <a class="btn btn-secondary" role="button" id="filter_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{ _("Filter by role") }} <i class="ni ni-bold-down"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="filter_dropdown">
+                      <a class="dropdown-item" href="{{ url_for_query(filter=None) }}">{% if not filter %}<i class="ni ni-check-bold me-2" style="vertical-align: -1.5px;"></i>{% endif %}{{ _("All guilds") }}</a>
+                      <a class="dropdown-item" href="{{ url_for_query(filter="owner") }}">{% if filter == "owner" %}<i class="ni ni-check-bold me-2" style="vertical-align: -1.5px;"></i>{% endif %}{{ _("Owner") }}</a>
+                      <a class="dropdown-item" href="{{ url_for_query(filter="admin") }}">{% if filter == "admin" %}<i class="ni ni-check-bold me-2" style="vertical-align: -1.5px;"></i>{% endif %}{{ _("Administrator") }}</a>
+                      <a class="dropdown-item" href="{{ url_for_query(filter="mod") }}">{% if filter == "mod" %}<i class="ni ni-check-bold me-2" style="vertical-align: -1.5px;"></i>{% endif %}{{ _("Moderator") }}</a>
+                  </div>
+              </div>
+              <div class="ms-md-auto">
+                  <a class="btn bg-gradient-success" href="{{ variables["bot"]["invite_url"] }}" target="_blank"><i class="ni ni-fat-add me-2" style="vertical-align: -2px;"></i>{{ _("Invite Me!") }}</a>
+              </div>
+            </div>
+            <div id="guilds-container">
+                <div class="row">
+                    {% for guild in guilds %}
+                        <div class="col-md-3 d-flex" style="margin-bottom: 20px;">
+                            <div class="card flex-fill">
+                                <a href="{{ redirecting_to }}/{{ guild.id }}">
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <div class="avatar avatar-xxl"><img src="{{ guild.icon_url }}" class="shadow-sm border-radius-lg" /></div>
+                                            <h6 class="mb-0">
+                                                {{ guild.name }}
+                                                ({{ guild.id }})
+                                            </h6>
+                                            <p class="mb-0 text-xl">{{ _("Owned by") }} {{ guild.owner }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <br />
+            <div id="guilds-pagination"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    function submitSearch(event) {
+      event.preventDefault();
+      let input = document.getElementById("guild-search");
+      let query = input.value.trim();
+      if (query) {
+        window.location.href = '{{ url_for_query(query="QUERY") }}'.replace("QUERY", encodeURIComponent(query));
+      } else {
+        window.location.href = "{{ url_for_query(query=None) }}";
+      }
+    }
+  </script>
+  <script>
+    {% if guilds.has_prev() or guilds.has_next() %}
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if guilds.page|string != request.args.get("page", "1") %}
+                window.history.pushState({}, "", '{{ url_for_query(page=guilds.page if guilds.page != 1 else None) }}');
+            {% endif %}
+            var pagination = $("#guilds-pagination").pagination({
+                dataSource: {{ guilds.elements_numbers|tojson }},
+                pageSize: {{ guilds.per_page }},
+                pageNumber: {{ guilds.page }},
+                callback: function(data, pagination) {
+                    if (pagination.pageNumber == {{ guilds.page }}) {
+                        return;
+                    }
+                    if (pagination.pageNumber == 1) {
+                        redirect_url = "{{ url_for_query(page=None) }}";
+                    } else {
+                        redirect_url = '{{ url_for_query(page="1234567890") }}'.replace("1234567890", pagination.pageNumber);
+                    }
+                    document.location.href = redirect_url.replace("amp;", "");
+                },
+                beforeSizeSelectorChange: function (event) {
+                    var newPageSize = event.target.value;
+                    if (newPageSize == {{ guilds.per_page }}) {
+                        return;
+                    }
+                    if (newPageSize == {{ guilds.DEFAULT_PER_PAGE }}) {
+                        redirect_url = "{{ url_for_query(page=None, per_page=None) }}";
+                    } else {
+                        redirect_url = '{{ url_for_query(page=None, per_page="1234567890") }}'.replace("1234567890", newPageSize);
+                    }
+                    document.location.href = redirect_url.replace("amp;", "");
+                },
+                className: 'paginationjs-big paginationjs-theme-green',
+                showSizeChanger: true,
+                showGoInput: true,
+                showGoButton: true,
+                autoHidePrevious: true,
+                autoHideNext: true,
+                goButtonText: '{{ _("Go") }}',
+            })
+        });
+    {% endif %}
+  </script>
+{% endblock %}

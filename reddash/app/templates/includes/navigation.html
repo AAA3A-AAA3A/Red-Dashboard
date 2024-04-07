@@ -1,0 +1,50 @@
+<!-- Navbar -->
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="false">
+  <div class="container-fluid py-1 px-3">
+      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+        <div class="input-group">
+          <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+          <input type="search" class="form-control" placeholder="{{ _("Type here...") }}" />
+        </div>
+      </div>
+      <ul class="navbar-nav justify-content-end">
+        <li class="nav-item d-flex align-items-center">
+            {% if current_user.is_authenticated %}
+              <div class="show">
+                <div class="dropdown">
+                  <a class="nav-link" href="javascript:void(0);" role="button" id="user_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="photo">
+                      <img src="{{ current_user.avatar_url }}" style="height: 35px; width: 35px; border-radius: 50%; margin: auto;" alt="User Avatar">
+                      <b class="text-white" style="margin-left: 2px">{{ current_user.display_name }}</b>
+                      <span class="text-white" style="margin-left: 0.5px"><i class="ni ni-bold-down"></i></span>
+                    </div>
+                    <b class="caret d-none d-lg-block d-xl-block"></b>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="user_dropdown">
+                    <li class="nav-link"><a href="{{ url_for("login_blueprint.logout") }}" class="nav-item dropdown-item text-danger"><i class="ni ni-user-run" style="width: 1.3em; vertical-align: -2px;"></i> {{ _("Logout") }}</a></li>
+                  </ul>
+              </div>
+            {% else %}
+              <a href="{{ full_login_url }}" class="btn btn-success btn-m mb-0 w-100">
+                <i class="ni ni-key-25 me-sm-1" style="vertical-align: -1.5px;"></i>
+                <span class="d-sm-inline d-none">{{ _("Login") }}</span>
+              </a>
+            {% endif %}
+        </li>
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+          <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line bg-white"></i>
+              <i class="sidenav-toggler-line bg-white"></i>
+              <i class="sidenav-toggler-line bg-white"></i>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item px-3 d-flex align-items-center">
+          <a href="javascript:;" class="nav-link text-white p-0"><i class="fa fa-cog text-lg opacity-10 fixed-plugin-button-nav cursor-pointer" style="vertical-align: 0px;"></i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar -->

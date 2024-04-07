@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  {{ _("Erreur 500") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-body">
+                    <h1><bold>{{ _("Error 500 !") }}</bold></h1>
+                    {% if not error_message %}
+                      <p>{{ _("Looks like the server ran into an issue... Strange...") }}</p>
+                    {% else %}
+                      <p>{{ error_message }}</p>
+                    {% endif %}
+                    <img src="{{ config.ASSETS_ROOT }}/error-500.gif" height="225" />
+                    <br /><br />
+                    <a class="btn bg-gradient-success mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

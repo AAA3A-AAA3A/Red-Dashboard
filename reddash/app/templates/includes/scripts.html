@@ -1,0 +1,288 @@
+<script src="{{ config.ASSETS_ROOT }}/js/core/jquery.min.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/core/popper.min.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/core/bootstrap.min.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/bootstrap-notify.js"></script>
+<script src="{{ config.ASSETS_ROOT }}/js/plugins/utils.js"></script>
+
+<script>
+    {% if csrf_token %}
+        const csrf_token = "{{ csrf_token() }}";
+    {% else %}
+        const csrf_token = null;
+    {% endif %}
+    let confirmationDone = false;  // Used to store actions confirmation state.
+</script>
+<script>
+    function copyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    toastr.options = {
+        "elements": document.querySelectorAll("select option"),
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    toastr.danger = toastr.error;
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            toastr.{{ category }}("{{ message }}");
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        document.querySelectorAll("pre code").forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+    });
+</script>
+{{ moment.include_moment() }}
+{{ moment.locale(auto_detect=true) }}
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script>
+    document.querySelectorAll(".markdown-text-area-field").forEach(function(element) {
+        var additionalKwargs = {};
+        if (element.classList.contains("markdown-text-area-field-toolbar-disabled")) {
+            additionalKwargs.toolbar = false;
+            additionalKwargs.status = false;
+        }
+        if (!element.classList.contains("markdown-text-area-field-max-height")) {
+            additionalKwargs.minHeight = "150px";
+        }
+        var easymde = new EasyMDE({
+            element: element,
+            showIcons: ["strikethrough", "heading-smaller", "heading-bigger", "code", "clean-block", "undo", "redo"],
+            renderingConfig: {"codeSyntaxHighlighting": true},
+            forceSync: true,
+            autoRefresh: {delay: 300},
+            spellChecker: false,
+            sideBySideFullscreen: false,
+            autosave: {
+                enabled: element.classList.contains("markdown-text-area-field-autosave") ? true : false,
+                uniqueId: element.id,
+                delay: 10000,
+                timeFormat: {
+                    locale: navigator.language || navigator.userLanguage,
+                },
+            },
+            ...additionalKwargs
+        });
+        easymde.codemirror.on("beforeChange", function (cm, change) {
+            let maxLength = easymde.element.maxLength
+            if (change.update && maxLength > 0) {
+                let str = change.text.join("\n");
+                let delta = str.length - (cm.indexFromPos(change.to) - cm.indexFromPos(change.from));
+                if (delta <= 0) {
+                    return true;
+                }
+                delta = cm.getValue().length + delta - maxLength;
+                if (delta > 0) {
+                    str = str.substr(0, str.length - delta);
+                    change.update(change.from, change.to, str.split("\n"));
+                }
+            }
+            return true;
+        });
+        // document.querySelectorAll(".modal").forEach(function(modal) {$(modal).on("shown.bs.modal", function () {easymde.codemirror.refresh();})});
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const SwalAlert = Swal.mixin({
+        icon: "warning",
+        customClass: {
+            confirmButton: "btn bg-danger",
+            cancelButton: "btn bg-success",
+        },
+        buttonsStyling: true,
+        showCancelButton: true,
+        cancelButtonText: "Annuler",
+        reverseButtons: true,
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script>
+    Dropzone.autoDiscover = false;
+    document.querySelectorAll(".dropzone").forEach(element => {
+        var input_element = element.querySelector("input[type=file]");
+        var dropzone = new Dropzone(
+            element,
+            {
+                url: "/",
+                addRemoveLinks: true,
+                maxFiles: input_element.multiple ? null : 1,
+                uploadMultiple: input_element.multiple,
+                acceptedFiles: input_element.accept,
+            },
+        );
+        console.log(element)
+        function uploadFiles(files) {
+            const dataTransfer = new DataTransfer();
+            dropzone.files.forEach(file => dataTransfer.items.add(file));
+            input_element.files = dataTransfer.files;
+            document.dispatchEvent(new Event("change", {bubbles: true}));
+            dropzone._finished(files, null, null);
+        }
+        dropzone.uploadFiles = uploadFiles
+        dropzone.on("removedfile", function(file) {
+            uploadFiles([]);
+        });
+        dropzone.on("maxfilesexceeded", function(file) {
+            if (dropzone.options.maxFiles == 1) {
+                dropzone.removeFile(file);
+                dropzone.removeFile(dropzone.files[0]);
+                dropzone.addFile(file);
+            }
+        });
+        input_element.style.display = "none";        
+    });
+</script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+<script>
+    flatpickr.localize(flatpickr.l10ns.fr);
+    document.querySelectorAll(".datepicker").forEach(element => {
+        flatpickr(
+            element,
+            {
+                enableTime: element.type == "datetime-local" ? true : false,
+                altInput: true,
+                altFormat: element.type == "datetime-local" ? "d/m/Y H:i" : "d/m/Y",
+                allowInput: true,
+            },
+        );
+        var parentElement = element.parentElement;
+        if (parentElement.classList.contains("input-group")) {
+            parentElement.querySelector(".input-group-text").addEventListener("click", function() {
+                element._flatpickr.toggle();
+            });
+            parentElement.removeChild(element);
+            parentElement.parentElement.parentNode.appendChild(element);
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll("select, input[type=text].select-choices").forEach(function(element) {
+        let choicesOptions = {
+            silent: false,
+            maxItemCount: -1,
+            addItems: true,
+            editItems: true,
+            removeItems: true,
+            removeItemButton: true,
+            allowHTML: true,
+            duplicateItemsAllowed: false,
+            paste: true,
+            searchEnabled: true,
+            searchChoices: true,
+            searchFields: ["label", "value"],
+            shouldSort: false,
+            shouldSortItems: false,
+            delimiter: ";;;;;",
+        };
+        if (element.ariaPlaceholder) {
+            choicesOptions.placeholder = true;
+            choicesOptions.placeholderValue = element.ariaPlaceholder;
+        }
+        if (element.classList.contains("just-display")) {
+            choicesOptions.addItems = false;
+            choicesOptions.editItems = false;
+            choicesOptions.removeItems = false;
+            choicesOptions.removeItemButton = false;
+            choicesOptions.searchEnabled = false;
+            choicesOptions.classNames = {disabledState: "is-active", itemSelectable: "choices__item"};
+        }
+        if (element.parentElement.style.maxWidth) {
+            choicesOptions.itemSelectText = "";
+        }
+        var choices = new Choices(element, choicesOptions);
+        if (element.classList.contains("just-display")) {
+            element.parentElement.style["background-color"] = "none";
+            element.parentElement.style["border"] = "none";
+            element.parentElement.querySelector("input[type=search]").remove();
+        }
+    });
+</script>
+<script src="https://pagination.js.org/dist/2.6.0/pagination.min.js"></script>
+<script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+<script>
+    const { startRegistration, startAuthentication } = SimpleWebAuthnBrowser;
+</script>
+
+<script>
+    function validateInputs() {
+        let inputs = document.querySelectorAll("input, textarea");
+        // let previousForm = null;
+        // let progressInputs = [];
+        let isValid = true;
+        inputs.forEach(input => {
+            // if (input.form !== previousForm) {
+            //     previousForm = input.form;
+            //     progressInputs = [];
+            // }
+            if (input.type === "hidden") {
+                return;
+            }
+            // let check_validity = input === document.activeElementinput || progressInputs.length > 0;
+            // if (input.value) {
+            //     progressInputs.push(input);
+            // }
+            if (input.type in ["submit", "button", "reset"] || !input.required) {
+                return;
+            }
+            // if (!check_validity) {
+            //     return;
+            // }
+            if (input.tagName == "TEXTAREA" && input.style.display == "none") {
+                _input = input.nextElementSibling.querySelector(".CodeMirror");
+                _input.classList.add("form-control");
+            } else {
+                _input = input;
+            }
+            if (!input.checkValidity() || (input.minLength != - 1&& input.value.length < input.minLength) || (input.maxLength != -1 && input.value.length > input.maxLength)) {  // Check manually for minlength and maxlength because of EasyMDE.
+                _input.classList.remove("is-valid");
+                _input.classList.add("is-invalid");
+                input.dataset.invalid = true;
+                isValid = false;
+            } else {
+                _input.classList.remove("is-invalid");
+                if (input.value) {
+                    _input.classList.add("is-valid");
+                } else {
+                    _input.classList.remove("is-valid");
+                }
+                delete input.dataset.invalid;
+            }
+        });
+        return isValid;
+    }
+    document.addEventListener("change", validateInputs);
+    document.addEventListener("input", validateInputs);
+</script>

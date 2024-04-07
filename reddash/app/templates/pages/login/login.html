@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+  {{ _("Login") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                    <div class="row justify-content-center">
+                      <div class="col-lg-6 col-md-6 mt-2">
+                        <div class="card border-0 mb-0">
+                          <div class="card-header bg-transparent">
+                            <div class="text-center info mb-4">
+                              <div class="icon icon-shape icon-xl rounded-circle bg-gradient-warning shadow text-center">
+                                <img src="{{ config["ASSETS_ROOT"] }}/biometric-icon.svg" style="height: 80%; margin-top: 7px;" />
+                              </div>
+                            </div>
+                            <h1 class="text-dark text-center mt-2 mb-3">{{ _("Authentication") }}</h1>
+                          </div>
+                          <div class="card-body px-lg-5 pt-0">
+                            <p class="text-center">{{ _("Accessing Red-Dashboard controls requires authorization for security. Authorization for Red-Dashboard uses Discord Open Authentication to identify and verify users. Please click the Login button below to access the dashboard.") }}</p>
+                            <br />
+                            <a class="btn bg-gradient-success mb-1 w-100" href="{{ url_for("login_blueprint.discord_oauth", next=next) }}">{{ _("Login with Discord") }}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

@@ -1,0 +1,457 @@
+{% extends "layouts/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+  {{ _("Admin") }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .avatar-wrapper{
+            position: relative;
+            height: 100px;
+            width: 100px;
+            margin: 10px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 1px 1px 15px -5px black;
+            transition: all .3s ease;
+            &:hover{
+                transform: scale(1.05);
+                cursor: pointer;
+            }
+            &:hover .profile-pic{
+                opacity: .5;
+            }
+            .profile-pic {
+                height: 100%;
+                width: 100%;
+                transition: all .3s ease;
+            }
+            .upload-button {
+                position: absolute;
+                top: 0; left: 0;
+                height: 100%;
+                width: 100%;
+                .fa-arrow-circle-up{
+                    position: absolute;
+                    font-size: 117px;
+                    top: -9px;
+                    left: 0;
+                    text-align: center;
+                    opacity: 0;
+                    transition: all .3s ease;
+                    color: #34495e;
+                }
+                &:hover .fa-arrow-circle-up{
+                    opacity: .9;
+                }
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid">
+        <div id="profile" class="card card-body mt-4">
+            <div class="row justify-content-left align-items-center">
+                <div class="col-sm-auto col-4">
+                    <div class="avatar avatar-xl"><img src="{{ variables["bot"]["avatar"] }}" class="shadow-sm border-radius-lg" /></div>
+                </div>
+                <div class="col-sm-auto col-8 my-auto">
+                    <div class="h-100">
+                        <h3 class="mb-1 font-weight-bolder">
+                            {{ variables["bot"]["name"] }}
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#setbotprofileModal"><i class="fa fa-pencil-square-o text-lg"></i></a>
+                        </h3>
+                        <h5 class="mb-0 font-weight-bold text-lg">{{ _("Owned by") }} {{ variables["bot"]["owner"] }}</h5>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 my-sm-auto ms-sm-auto me-sm-0 mx-auto" style="padding-left: 100px;">
+                    <ul class="nav nav-pills position-relative end-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link {% if not page or page == "overview" %}show active{% endif %}" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+                                <i class="fa fa-map opacity-10" style="vertical-align: -1px;"></i> {{ _("Overview") }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page and page == "dashboard-settings" %}show active{% endif %}" id="dashboard-settings-tab" data-toggle="pill" href="#dashboard-settings" role="tab" aria-controls="dashboard-settings" aria-selected="true">
+                                <i class="ni ni-settings-gear-65 opacity-10" style="vertical-align: -1.5px;"></i> {{ _("Dashboard Settings") }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page and page == "bot-settings" %}show active{% endif %}" id="bot-settings-tab" data-toggle="pill" href="#bot-settings" role="tab" aria-controls="bot-settings" aria-selected="true">
+                                <i class="ni ni-settings-gear-65 opacity-10" style="vertical-align: -1.5px;"></i> {{ _("Bot Settings") }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="tab-content" id="admin-tabContent">
+
+            <div class="tab-pane fade {% if not page or page == "overview" %}show active{% endif %}" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <div class="card card-chart">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 text-left">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h2 class="card-title">{{ _("Overview") }}</h2>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <p>
+                                    {{ _("Webserver has been up for:") }} <code>{{ uptime_str }}</code>.<br />
+                                    {% if config["RPC_CONNECTED"] %}{{ _("Connected to RPC websocket for:") }}{% else %}{{ _("Disconnected of RPC websocket for:") }}{% endif %} <code>{{ connection_str }}</code>.
+                                </p>
+                                <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                    {{ dashboard_actions_form.hidden_tag() }}
+                                    {{ dashboard_actions_form.lock(class="btn mb-0 bg-gradient-success btn-md my-4 mb-2", onclick="return confirmLock(event);") }}
+                                    <p><i>{{ _("This will lock the dashboard and prevent anyone from accessing control panels. Website administrators will still have access, and users will still be able to login through Discord Open Authentication.") }}</i></p>
+                                    {{ dashboard_actions_form.refresh_sessions(class="btn mb-0 bg-gradient-success btn-md my-4 mb-2", onclick="return confirmRefreshSessions(event);") }}
+                                    <p><i>{{ _("This will log out all active users and require them to re-authenticate, including website administrators.") }}</i></p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade {% if page and page == "dashboard-settings" %}show active{% endif %}" id="dashboard-settings" role="tabpanel" aria-labelledby="dashboard-settings-tab">
+                <div class="card card-chart">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 text-left">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h2 class="card-title">{{ _("Dashboard Settings") }}</h2>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-4">
+                                <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                    {{ dashboard_settings_form.hidden_tag() }}
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Title:") }}</label>
+                                            {{ dashboard_settings_form.title(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Description:") }}</label>
+                                            {{ dashboard_settings_form.description(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Support Server URL:") }}</label>
+                                            {{ dashboard_settings_form.support_server(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Default Color:") }}</label>
+                                            {{ dashboard_settings_form.default_color(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-group-label">{{ _("Default Background Theme:") }}</label>
+                                                {{ dashboard_settings_form.default_background_theme(class="form-control form-control-default") }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-group-label">{{ _("Default SideBar Theme:") }}</label>
+                                                {{ dashboard_settings_form.default_sidebar_theme(class="form-control form-control-default") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Disabled Third Parties:") }}</label>
+                                            {{ dashboard_settings_form.disabled_third_parties(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        {{ dashboard_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade {% if page and page == "bot-settings" %}show active{% endif %}" id="bot-settings" role="tabpanel" aria-labelledby="bot-settings-tab">
+                <div class="card card-chart">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 text-left">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h2 class="card-title">{{ _("Bot Settings") }}</h2>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-4">
+                                <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                    {{ bot_settings_form.hidden_tag() }}
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Prefixes:") }}</label>
+                                            {{ bot_settings_form.prefixes(class="form-control form-control-default select-choices") }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Invoke Error Message:") }}</label>
+                                            {{ bot_settings_form.invoke_error_msg(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Disabled Commands:") }}</label>
+                                            {{ bot_settings_form.disabled_commands(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Disabled Command Message:") }}</label>
+                                            {{ bot_settings_form.disabled_command_msg(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Description:") }}</label>
+                                            {{ bot_settings_form.description(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Custom Info:") }}</label>
+                                            {{ bot_settings_form.custom_info(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-sm-6">
+                                            <div class="form-check form-switch ps-0">
+                                                {{ bot_settings_form.embeds(class="form-check-input ms-0", type="checkbox") }}
+                                                <label class="form-check-label">{{ bot_settings_form.embeds.label.text }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-group-label">{{ _("Bot Color:") }}</label>
+                                                {{ bot_settings_form.color(class="form-control form-control-default") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-sm-6">
+                                            <div class="form-check form-switch ps-0">
+                                                {{ bot_settings_form.fuzzy(class="form-check-input ms-0", type="checkbox") }}
+                                                <label class="form-check-label">{{ bot_settings_form.fuzzy.label.text }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-check form-switch ps-0">
+                                                {{ bot_settings_form.use_buttons(class="form-check-input ms-0", type="checkbox") }}
+                                                <label class="form-check-label">{{ _("Use Buttons instead of Reactions") }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="row mb-1">
+                                        <div class="col-sm-6">
+                                            <div class="form-check form-switch ps-0">
+                                                {{ bot_settings_form.invite_public(class="form-check-input ms-0", type="checkbox") }}
+                                                <label class="form-check-label">{{ bot_settings_form.invite_public.label.text }}</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-check form-switch ps-0">
+                                                {{ bot_settings_form.invite_commands_scope(class="form-check-input ms-0", type="checkbox") }}
+                                                <label class="form-check-label">{{ bot_settings_form.invite_commands_scope.label.text }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-group">
+                                            <label class="form-group-label">{{ _("Invite Permissions:") }}</label>
+                                            {{ bot_settings_form.invite_perms(class="form-control form-control-default") }}
+                                        </div>
+                                    </div>
+                                    <hr class="horizontal dark" />
+                                    <div class="row mb-1">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-group-label">{{ _("Locale:") }}</label>
+                                                {{ bot_settings_form.locale(class="form-control form-control-default") }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-group-label">{{ _("Regional Format:") }}</label>
+                                                {{ bot_settings_form.regional_format(class="form-control form-control-default") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        {{ bot_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="setbotprofileModal" tabindex="-1" role="dialog" aria-labelledby="setbotprofileModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="setbotprofileModalTitle">{{ _("Edit Discord Bot Profile") }}</h5>
+                    <a class="btn close" style="background: none; border: none;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                </div>
+                <form action="" method="POST" role="form" enctype="multipart/form-data">
+                    {{ bot_profile_form.hidden_tag() }}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <div class="avatar-wrapper">
+                                <img class="profile-pic" src="{{ variables["bot"]["avatar"] }}" />
+                                <div class="upload-button" onclick='$(this).next(".file-upload").click();'>
+                                    <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                                </div>
+                                {{ bot_profile_form.avatar(class="file-upload", accept="image/png, image/jpg, image/jpeg, image/gif", onchange="readURL(this);", style="display: none;") }}
+                            </div>
+                            <div class="text-center">
+                                <a class="text-danger text-xs" href="javascript:void(0);" onclick='this.parentElement.parentElement.parentElement.parentElement.querySelector("input[type=hidden]").value = "default"; this.parentElement.parentElement.parentElement.parentElement.querySelector("input[type=file]").value = null; $(".profile-pic").attr("src", "{{ variables["bot"]["default_avatar"] }}"); this.style.display = "none"; this.parentElement.children[1].style.display = "";'>{{ _("Use default") }}</a>
+                                <a class="text-danger text-xs" href="javascript:void(0);" onclick='this.parentElement.parentElement.parentElement.parentElement.querySelector("input[type=hidden]").value = "keep"; this.parentElement.parentElement.parentElement.parentElement.querySelector("input[type=file]").value = null; $(".profile-pic").attr("src", "{{ variables["bot"]["avatar"] }}"); this.style.display = "none"; this.parentElement.children[0].style.display = "";' style="display: none; margin-left: 8px;">{{ _("Keep current") }}</a>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-group-label">{{ _("Username:") }}</label>
+                                {{ bot_profile_form.username(class="form-control form-control-default") }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-group-label">{{ _("Description:") }}</label>
+                                {{ bot_profile_form.description(class="form-control form-control-default") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" data-dismiss="modal">{{ _("Fermer") }}</a>
+                        {{ bot_profile_form.submit(class="btn mb-0 bg-gradient-success btn-md w-30 mt-2 mb-4") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+  </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        window.onload = function() {
+            resize_event = new Event("resize");
+            window.dispatchEvent(resize_event);
+        }
+    </script>
+    <script>
+        function changePage(page) {
+            var tab_nav_link = document.querySelector("#" + page + "-tab");
+            if (tab_nav_link) {
+                tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
+                tab_nav_link.click();
+            }
+        }
+        {% if page %}
+            document.addEventListener("DOMContentLoaded", function() {
+                changePage("{{ page }}");
+            });
+        {% endif %}
+    </script>
+    <script>
+        $('#profile a[data-toggle="pill"]').on("shown.bs.tab", function (e) {
+            var base_url = '{{ url_for("base_blueprint.admin") }}';
+            var target_id = e.target.id.slice(0, -4);
+            if (target_id == "overview") {
+                var new_url = base_url;
+            } else {
+                var new_url = base_url + "/" + target_id;
+            }
+            if (!(window.location.pathname.startsWith(new_url)) || (target_id == "overview" && !(window.location.pathname == base_url))) {
+                // window.location.pathname = new_url;
+                window.history.pushState({}, "", new_url);
+            }
+        })
+    </script>
+    <script>
+        var readURL = function(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(".profile-pic").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+                var avatar_options = input.parentElement.parentElement.parentElement.parentElement.querySelector("div .text-center");
+                avatar_options.children[0].style.display = "";
+                if (avatar_options.children.leghth > 1) {
+                    avatar_options.children[1].style.display = "";
+                }
+            }
+        }
+    </script>
+    <script>
+        async function confirmLock(event) {
+            if (confirmationDone) {
+                return true;
+            }
+            let target_button = event.target;
+            event.preventDefault();
+            SwalAlert.fire({
+                title: '{{ _("Are you sure you want to change the lock status of Dashboard?") }}',
+                text: '{{ _("You will be able to change it again later.") }}',
+                confirmButtonText: '{{ _("Yes, change it!") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    confirmationDone = true;
+                    target_button.click();
+                }
+            })
+            return false;
+        }
+        async function confirmRefreshSessions(event) {
+            if (confirmationDone) {
+                return true;
+            }
+            let target_button = event.target;
+            event.preventDefault();
+            SwalAlert.fire({
+                title: '{{ _("Are you sure you want to refresh users sessions and log out all users?") }}',
+                text: '{{ _("They will be able to log again.") }}',
+                confirmButtonText: '{{ _("Yes, refresh!") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    confirmationDone = true;
+                    target_button.click();
+                }
+            })
+            return false;
+        }
+    </script>
+{% endblock %}

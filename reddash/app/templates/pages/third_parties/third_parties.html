@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  {{ _("Third Parties") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        {% include "pages/third_parties/third_parties_list.html" %}
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

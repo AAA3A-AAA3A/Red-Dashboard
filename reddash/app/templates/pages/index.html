@@ -1,0 +1,111 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  {{ _("Page d'accueil") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-12 text-left">
+                <h5 class="card-category">{{ _("{botname} • Owned by {owner}").format(botname = variables["bot"]["name"], owner = variables["bot"]["owner"]) }}</h5>
+                <h1 class="card-title">{{ _("About") }}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-3">
+                <img src="{{ variables["bot"]["avatar"] }}" style="height: 200px; width: 200px; border-radius: 50%; margin: auto; display: block;" />
+              </div>
+              <div class="col-lg-8">
+                <h4>{{ variables["bot"]["info"]|safe }}</h4>
+                <br />
+                {% if variables["bot"]["invite_public"] or (current_user.is_authenticated and current_user.is_owner) %}
+                  <a class="btn btn-m bg-gradient-success" href="{{ variables["bot"]["invite_url"] }}" target="_blank" style="width: 65%;"><i class="fa fa-plus-circle me-2" style="vertical-align: -0.5px;"></i>{{ _("Invite Me!") }}</a>
+                {% endif %}
+                {% if False %}
+                  <br />
+                  <a class="btn bg-gradient-success" href="{{ variables["meta"]["support_server"] }}" target="_blank">{{ _("Join support server") }}</a>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-6 col-md-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">{{ _("Total Servers") }}</p>
+                    <h5 class="font-weight-bolder">
+                      {{ number_to_text_with_suffix(variables["stats"]["guilds"]) }}
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                    <i class="ni ni-map-big text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">{{ _("Total Users") }}</p>
+                    <h5 class="font-weight-bolder">
+                      {{ number_to_text_with_suffix(variables["stats"]["users"]) }}
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                    <i class="ni ni-single-02 text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">{{ _("Been up for") }}</p>
+                    <h5 class="font-weight-bolder">
+                      {{ variables["stats"]["uptime_timedelta"] }}
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                    <i class="ni ni-badge text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
