@@ -188,6 +188,13 @@ def register_extensions(_app: Flask) -> None:
     def _force_https():
         if request.remote_addr == "127.0.0.1" or request.remote_addr == "::1":
             return
+        private_ip_ranges = [
+            ("10.0.0.0", "10.255.255.255"),
+            ("172.16.0.0", "172.31.255.255"),
+            ("192.168.0.0", "192.168.255.255"),
+        ]
+        if any(start <= request.remote_addr <= end for start, end in private_ip_ranges):
+            return
         return old_force_https()
 
     app.talisman._force_https = _force_https
