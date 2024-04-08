@@ -10,7 +10,7 @@ To get started on setting up your Dashboard for your Red bot, please follow the 
 This project is supported on Windows, Mac OS X and Linux distributions, however is recommended on Linux distributions for security reasons.  Support is not given for setting up your domain for your dashboard other than any guides given for such, and contributors to the source code are not responsible for any security issues that arise as a result of not securely setting up the software.
 
 ## Support
-If you wish to use this program and receive support for it, you must also give feedback and report any bugs you encounter.  You can join my support server [here](https://discord.gg/vQZTdB9).
+If you wish to use this program and receive support for it, you must also give feedback and report any bugs you encounter. You can ask in the #support_aaa3a-cogs channel in the [cogs support server](https://discord.gg/GET4DVk).
 
 ## Legal
 Red-Dashboard for Red-DiscordBot is released under [Affero General Public License v3](https://github.com/AAA3A-AAA3A/Red-Dashboard/blob/main/LICENSE).

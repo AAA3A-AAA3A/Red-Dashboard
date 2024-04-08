@@ -376,7 +376,7 @@ class GuildSettingsForm(FlaskForm):
     use_bot_color: wtforms.BooleanField = wtforms.BooleanField(_("Use bot color in embeds."))
     fuzzy: wtforms.BooleanField = wtforms.BooleanField(_("Use fuzzy command search."))
     delete_delay: wtforms.IntegerField = wtforms.IntegerField(
-        _("Delay before deleting invokation messages (-1 to disable)"),
+        _("Delay before deleting invocation messages (-1 to disable)"),
         validators=[
             wtforms.validators.DataRequired(),
             wtforms.validators.NumberRange(min=-1, max=60),
