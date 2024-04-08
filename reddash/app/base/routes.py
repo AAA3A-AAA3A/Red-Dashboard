@@ -637,6 +637,7 @@ class BotSettingsForm(FlaskForm):
         self.use_buttons.default = settings["use_buttons"]
         self.invite_public.default = settings["invite_public"]
         self.invite_commands_scope.default = settings["invite_commands_scope"]
+        self.invite_perms.validators.append(wtforms.validators.NumberRange(min=0, max=app.variables["constants"]["MAX_DISCORD_PERMISSIONS_VALUE"]))
         self.invite_perms.default = settings["invite_perms"]
         self.locale.default = settings["locale"]
         self.regional_format.default = settings["regional_format"]
@@ -667,7 +668,6 @@ class BotSettingsForm(FlaskForm):
         _("Invite Permissions (0 for nothing)"),
         validators=[
             wtforms.validators.DataRequired(),
-            wtforms.validators.NumberRange(min=0, max=2147483647),
         ],
     )
     locale: wtforms.StringField = wtforms.StringField(
