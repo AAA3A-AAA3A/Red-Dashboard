@@ -7,14 +7,13 @@ import os
 import time
 from copy import deepcopy
 from importlib import import_module
-from inspect import iscoroutine
 from urllib.parse import parse_qs, quote_plus, urlencode, urlparse, urlunparse
 
 import jwt
 import websocket
 from django.conf import settings
 from fernet import Fernet
-from flask import Flask, flash, g, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from flask_babel import Locale, _
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, UserMixin, current_user
@@ -26,6 +25,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_wtf.file import FileAllowed, FileField, MultipleFileField
 from fuzzywuzzy import process
 from markdown import Markdown
+import bleach
 from markupsafe import Markup
 from wtforms import Field, SelectFieldBase
 
@@ -270,8 +270,9 @@ def register_extensions(_app: Flask) -> None:
     app.markdown: Markdown = Markdown()
 
     @app.template_filter("markdown")
-    def markdown_filter(text) -> Markup:
-        return Markup(app.markdown.convert(text))
+    def markdown_filter(text: str) -> Markup:
+        text = bleach.clean(text, tags=[], strip=False)
+        return Markup(app.markdown.convert(text.replace("\n", "<br />")))
 
     app.site_mapper: Sitemapper = Sitemapper(https=not app.testing)
 

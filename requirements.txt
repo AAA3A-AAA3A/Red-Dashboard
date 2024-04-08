@@ -16,6 +16,7 @@ aiohttp
 django-user-agents
 Flask-Bootstrap
 markdown
+bleach
 flask-moment
 flask-talisman
 flask-sitemapper
