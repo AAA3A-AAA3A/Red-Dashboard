@@ -22,9 +22,9 @@
        {{ variables["meta"]["title"] }} - {% block title %}{% endblock %}
      </title>
      <!-- Meta tags -->
+     <meta property="og:site_name" content="{{ variables["meta"]["title"] }}" />
      <meta property="og:title" content="{{ variables["meta"]["title"] }} - {{ self.title() }}" />
-     <meta name="description" property="og:description" content="{{ variables["meta"]["description"] }}" />
-     <meta property="og:site_name" content="{{ _("Red-DiscordBot Dashboard") }}" />
+     <meta name="description" property="og:description" content="{{ variables["meta"]["website_description"] }}" />
      <meta property="og:image" content="{{ variables["meta"]["icon"] }}" />
      <meta name="theme-color" content="{{ variables["meta"]["color"] }}" />
      <meta name="language" content="fr" />

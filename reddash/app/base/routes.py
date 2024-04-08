@@ -567,6 +567,7 @@ class DashboardSettingsForm(FlaskForm):
         super().__init__(prefix="dashboard_settings_form_")
         self.title.default = settings["title"]
         self.icon.default = settings["icon"]
+        self.website_description.default = settings["website_description"]
         self.description.default = settings["description"]
         self.support_server.default = settings["support_server"]
         self.default_color.default = settings["default_color"]
@@ -579,6 +580,7 @@ class DashboardSettingsForm(FlaskForm):
 
     title: wtforms.StringField = wtforms.StringField(_("Title"))
     icon: wtforms.StringField = wtforms.StringField(_("Icon"))
+    website_description: wtforms.StringField = wtforms.StringField(_("Website Short Description"))
     description: MarkdownTextAreaField = MarkdownTextAreaField(_("Description"))
     support_server: wtforms.StringField = wtforms.StringField(_("Support Server"))
     default_color: wtforms.SelectField = wtforms.SelectField(
@@ -758,6 +760,7 @@ async def admin(
         new_dashboard_settings = {
             "title": dashboard_settings_form.title.data.strip() or None,
             "icon": dashboard_settings_form.icon.data.strip() or None,
+            "website_description": dashboard_settings_form.website_description.data.strip() or None,
             "description": dashboard_settings_form.description.data.strip() or None,
             "support_server": dashboard_settings_form.support_server.data.strip() or None,
             "default_color": dashboard_settings_form.default_color.data,
