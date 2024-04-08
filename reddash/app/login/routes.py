@@ -56,6 +56,8 @@ async def discord_oauth():
     #         else f"http://{app.host}/callback"
     #     )  # app.data["core"]["redirect_uri"]
     redirect_uri = f"{request.scheme}://{request.host}/callback"
+    if request.headers.get("X-Forwarded-Host"):
+        redirect_uri = f"{request.headers.get('X-Forwarded-Proto', "http")}://{request.headers['X-Forwarded-Host']}/callback"
     state = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
     session["state"] = state
     session["next"] = request.args.get("next")
