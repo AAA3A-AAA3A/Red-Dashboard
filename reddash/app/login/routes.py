@@ -47,17 +47,12 @@ async def login():
 
 @blueprint.route("/login/discord")
 async def discord_oauth():
-    # if request.headers.get("X-Forwarded-Host"):
-    #     redirect_uri = f"{request.headers.get('X-Forwarded-Proto', "http")}://{request.headers['X-Forwarded-Host']}/callback"
-    # else:
-    #     redirect_uri = (
-    #         f"http://127.0.0.1:{app.port}/callback"
-    #         if app.host == "0.0.0.0"
-    #         else f"http://{app.host}/callback"
-    #     )  # app.data["core"]["redirect_uri"]
-    redirect_uri = f"{request.scheme}://{request.host}/callback"
-    if request.headers.get("X-Forwarded-Host"):
-        redirect_uri = f"{request.headers.get('X-Forwarded-Proto', "http")}://{request.headers['X-Forwarded-Host']}/callback"
+    if (redirect_uri := app.data["core"]["redirect_uri"]) is None:
+        redirect_uri = (
+            f"http://127.0.0.1:{app.port}/callback"
+            if app.host == "0.0.0.0"
+            else f"http://{app.host}/callback"
+        )  # app.data["core"]["redirect_uri"]
     state = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
     session["state"] = state
     session["next"] = request.args.get("next")
@@ -104,7 +99,12 @@ async def callback():
         )
         return redirect(url_for("login_blueprint.login", next=redirecting_to))
 
-    redirect_uri = url_for("login_blueprint.callback", _external=True)
+    if (redirect_uri := app.data["core"]["redirect_uri"]) is None:
+        redirect_uri = (
+            f"http://127.0.0.1:{app.port}/callback"
+            if app.host == "0.0.0.0"
+            else f"http://{app.host}/callback"
+        )  # app.data["core"]["redirect_uri"]
     data = {
         "client_id": app.variables["bot"]["application_id"],
         "client_secret": app.data["core"]["secret"],
