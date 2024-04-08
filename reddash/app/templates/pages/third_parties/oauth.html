@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+  {{ _("Erreur 403") }}
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+  <main class="main-content position-relative border-radius-lg">
+    <div class="container-fluid py-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-body">
+                    <h1><bold>{{ provider|title }} {{ _("OAuth") }}</bold></h1>
+                    <p>{{ _("Successfully forwarded your account informations. You may now close this tab and go back to Discord.") }}</p>
+                    <img src="{{ config.ASSETS_ROOT }}/oauth.png" height="250" />
+                    <br /><br />
+                    <a class="btn bg-gradient-success mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  {{ _('This is a Third Party integration. By using this application, you acknowledge that you have read the Third Party disclaimer found <a href="{link}">here</a>').format(link="https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Third%20Party%20Disclaimer.md") }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

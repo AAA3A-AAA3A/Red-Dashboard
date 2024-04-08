@@ -23,6 +23,7 @@ For details about how this project manages your privacy, please review the follo
 ## Credits
 I would like to thank the following, for all the contributions they have made that helped this become what it is today.
 * Neuro Assassin, for its great initial work!
+* TrustyJAID for its OAuth basic integration for third parties.
 * Cog Creators, for making such an amazing bot.
 * All the people who tested the Dashboard, and gave feedback.
 * AppSeed & Creative Tim, for creating a template that I use as the base for the Dashboard.

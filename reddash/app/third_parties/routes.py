@@ -43,6 +43,24 @@ async def webhook_route():
         app.logger.error("Error sending webhook data.", exc_info=e)
 
 
+@blueprint.route("/third_party/callback/<provider>")
+@blueprint.route("/oauth/callback/<provider>")
+@login_required
+async def oauth_route(provider: str):
+    args = request.args.copy()
+    args["provider"] = provider
+    args["url"] = request.url
+    requeststr = {
+        "jsonrpc": "2.0",
+        "id": 0,
+        "method": "DASHBOARDRPC_THIRDPARTIES__OAUTH_RECEIVE",
+        "params": [current_user.id, args],
+    }
+    with app.lock:
+        await get_result(app, requeststr)
+    return render_template("pages/third_parties/oauth.html", provider=provider)
+
+
 @blueprint.route("/third-parties/<third_party>")
 @blueprint.route("/third-parties")
 @login_required
@@ -183,10 +201,10 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 flash(notification["message"], category=notification["category"])
         if request.method not in ["HEAD", "GET"]:  # API request by JavaScript code or bot.
             return result
-        if "web-content" in result:
-            if result["web-content"].get("standalone", False):
+        if "web_content" in result:
+            if result["web_content"].get("standalone", False):
                 return render_template_string(
-                    name=name, page=page, **return_guild, **result["web-content"]
+                    name=name, page=page, **return_guild, **result["web_content"]
                 )
             return render_template(
                 "pages/third_parties/third_party.html",
@@ -194,7 +212,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 page=page,
                 **return_guild,
                 source_content=render_template_string(
-                    result["web-content"].pop("source"), **result["web-content"]
+                    result["web_content"].pop("source"), **result["web_content"]
                 ),
             )
         elif "error_code" in result:
