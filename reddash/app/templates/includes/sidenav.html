@@ -28,13 +28,18 @@
         <div class="card-body text-center p-3 w-100 pt-0">
           <div class="docs-info">
             <span class="font-weight-bold text-dark">{{ _("Need help?") }}</span><br />
-            <span class="text-xs font-weight-bold text-dark">{{ _("Please check our docs!") }}</span>
+            {% if variables["meta"]["support_server"] %}
+              <span class="text-xs font-weight-bold text-dark">{{ _("Please join our support server!") }}</span>
+            {% else %}
+              <span class="text-xs font-weight-bold text-dark">{{ _("Please check our docs!") }}</span>
+            {% endif %}
           </div>
         </div>
       </div>
-      <a class="btn btn-dark btn-sm w-100 mb-3" href="{{ url_for("base_blueprint.commands") }}" type="button">{{ _("Documentation") }}</a>
-      {% if False and variables["meta"]["support_server"] %}
-        <a class="btn bg-gradient-success btn-sm mb-0 w-100" href="{{ variables["meta"]["support_server"] }}" type="button">{{ _("Get support!") }}</a>
+      {% if variables["meta"]["support_server"] %}
+        <a class="btn btn-dark btn-sm w-100 mb-3" href="{{ variables["meta"]["support_server"] }}" type="button">{{ _("Join Support Server") }}</a>
+      {% else %}
+        <a class="btn btn-dark btn-sm w-100 mb-3" href="{{ url_for("base_blueprint.commands") }}" type="button">{{ _("Documentation") }}</a>
       {% endif %}
     </div>
   </aside>

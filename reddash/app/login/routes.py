@@ -52,7 +52,7 @@ async def discord_oauth():
             f"http://127.0.0.1:{app.port}/callback"
             if app.host == "0.0.0.0"
             else f"http://{app.host}/callback"
-        )  # app.data["core"]["redirect_uri"]
+        )
     state = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
     session["state"] = state
     session["next"] = request.args.get("next")
@@ -104,7 +104,7 @@ async def callback():
             f"http://127.0.0.1:{app.port}/callback"
             if app.host == "0.0.0.0"
             else f"http://{app.host}/callback"
-        )  # app.data["core"]["redirect_uri"]
+        )
     data = {
         "client_id": app.variables["bot"]["application_id"],
         "client_secret": app.data["core"]["secret"],
