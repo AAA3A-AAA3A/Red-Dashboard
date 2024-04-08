@@ -202,7 +202,6 @@ async def dashboard():
     redirecting_to: str = (
         request.args.get("next") if not app.config["USE_SESSION_FOR_NEXT"] else session.get("next")
     ) or url_for("base_blueprint.dashboard_guild", guild_id="GUILD_ID")
-    redirecting_to = redirecting_to.replace("GUILD_ID", "").rstrip("/")
     # `url_has_allowed_host_and_scheme` should check if the url is safe for redirects, meaning it matches the request host.
     if not url_has_allowed_host_and_scheme(redirecting_to, request.host):
         return abort(400)

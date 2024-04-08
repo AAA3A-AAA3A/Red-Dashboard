@@ -1,8 +1,6 @@
-import typing  # isort:skip
-
 from reddash.app.app import app
 
-from flask import abort, flash, jsonify, redirect, render_template, render_template_string, request
+from flask import abort, flash, jsonify, redirect, render_template, render_template_string, request, url_for
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
@@ -45,8 +43,8 @@ async def webhook_route():
         app.logger.error("Error sending webhook data.", exc_info=e)
 
 
-@blueprint.route("/third_parties/<third_party>")
-@blueprint.route("/third_parties")
+@blueprint.route("/third-parties/<third_party>")
+@blueprint.route("/third-parties")
 @login_required
 async def third_parties(third_party: str = None):
     return_third_parties = await get_third_parties()
@@ -61,7 +59,7 @@ async def third_parties(third_party: str = None):
 
 
 @blueprint.route(
-    "/dashboard/<guild_id>/third_parties/<name>/<page>",
+    "/dashboard/<guild_id>/third-party/<name>/<page>",
     methods=(
         "HEAD",
         "GET",
@@ -72,7 +70,7 @@ async def third_parties(third_party: str = None):
     ),
 )
 @blueprint.route(
-    "/dashboard/<guild_id>/third_parties/<name>",
+    "/dashboard/<guild_id>/third-party/<name>",
     methods=(
         "HEAD",
         "GET",
@@ -83,7 +81,7 @@ async def third_parties(third_party: str = None):
     ),
 )
 @blueprint.route(
-    "/third_parties/<name>/<page>",
+    "/third-party/<name>/<page>",
     methods=(
         "HEAD",
         "GET",
@@ -94,7 +92,7 @@ async def third_parties(third_party: str = None):
     ),
 )
 @blueprint.route(
-    "/third_parties/<name>",
+    "/third-party/<name>",
     methods=(
         "HEAD",
         "GET",
@@ -138,7 +136,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         try:
             context_ids["guild_id"] = int(guild_id)
         except (TypeError, ValueError):
-            return redirect(make_login_url("base_blueprint.dashboard", next_url=request.url))
+            return redirect(make_login_url("base_blueprint.dashboard", next_url=url_for("third_parties_blueprint.third_party", name=name, page=page, guild_id="GUILD_ID", **request.args)))
         return_guild = await get_guild(context_ids["guild_id"])
         if return_guild["guild"]["status"] == 1:
             return return_guild["guild"]

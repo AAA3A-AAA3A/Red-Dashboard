@@ -45,7 +45,7 @@
                     {% for guild in guilds %}
                         <div class="col-md-3 d-flex" style="margin-bottom: 20px;">
                             <div class="card flex-fill">
-                                <a href="{{ redirecting_to }}/{{ guild.id }}">
+                                <a href="{{ redirecting_to|replace("GUILD_ID", guild.id) }}">
                                     <div class="card-body">
                                         <div class="text-center">
                                             <div class="avatar avatar-xxl"><img src="{{ guild.icon_url }}" class="shadow-sm border-radius-lg" /></div>
