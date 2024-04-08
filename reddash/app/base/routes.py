@@ -481,7 +481,7 @@ async def get_third_parties(guild_id: typing.Optional[str] = None):
             continue
         if not pages:
             continue
-        if all(page["hidden"] for page in pages.values()):
+        if all(page["hidden"] or "guild_id" not in page["context_ids"] for page in pages.values()):
             continue
         real_cog_name = third_party  # _third_parties[third_party][list(pages)[0]]["real_cog_name"]
         if real_cog_name in cogs_data:
@@ -505,7 +505,7 @@ async def get_third_parties(guild_id: typing.Optional[str] = None):
                 guild_id=guild_id,
             )
         for page in sorted(pages):
-            if not pages[page]["hidden"]:
+            if not pages[page]["hidden"] and "guild_id" in pages[page]["context_ids"]:
                 third_parties[third_party][page] = pages[page]
                 third_parties[third_party][page]["url"] = url_for(
                     "third_parties_blueprint.third_party",
