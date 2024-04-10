@@ -1,6 +1,6 @@
 from reddash.app.app import app
 
-from flask import abort, flash, jsonify, redirect, render_template, render_template_string, request, url_for
+from flask import abort, flash, jsonify, redirect, render_template, render_template_string, url_for, request, session
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
@@ -79,8 +79,8 @@ async def third_parties(third_party: str = None):
 @blueprint.route(
     "/dashboard/<guild_id>/third-party/<name>/<page>",
     methods=(
-        "HEAD",
         "GET",
+        "HEAD",
         "OPTIONS",
         "POST",
         "PATCH",
@@ -90,8 +90,8 @@ async def third_parties(third_party: str = None):
 @blueprint.route(
     "/dashboard/<guild_id>/third-party/<name>",
     methods=(
-        "HEAD",
         "GET",
+        "HEAD",
         "OPTIONS",
         "POST",
         "PATCH",
@@ -101,8 +101,8 @@ async def third_parties(third_party: str = None):
 @blueprint.route(
     "/third-party/<name>/<page>",
     methods=(
-        "HEAD",
         "GET",
+        "HEAD",
         "OPTIONS",
         "POST",
         "PATCH",
@@ -112,8 +112,8 @@ async def third_parties(third_party: str = None):
 @blueprint.route(
     "/third-party/<name>",
     methods=(
-        "HEAD",
         "GET",
+        "HEAD",
         "OPTIONS",
         "POST",
         "PATCH",
@@ -150,6 +150,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
             ] = current_user.id  # int(get_user_id(app=app, req=request, ses=session))
         else:
             return redirect(make_login_url("login_blueprint.login", next_url=request.url))
+    if third_parties[name][_page]["is_owner"] and not current_user.is_owner:
+        return abort(403, description=_("You must be the owner of the bot to access this page."))
     if "guild_id" in third_parties[name][_page]["context_ids"]:
         try:
             context_ids["guild_id"] = int(guild_id)
@@ -175,8 +177,9 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if key not in kwargs:
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
 
-    if request.method not in ["HEAD", "GET"] and request.json:
-        kwargs["data"] = request.json
+    kwargs["data"] = request.json if request.method not in ("GET", "HEAD") else {}
+    kwargs["form"] = request.form.copy()
+    
     try:
         requeststr = {
             "jsonrpc": "2.0",
@@ -186,6 +189,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 request.method,
                 name,
                 page,
+                request.url,
+                session["csrf_token"],
                 context_ids,
                 kwargs,
                 app.extensions["babel"].locale_selector(),
