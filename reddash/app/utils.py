@@ -443,37 +443,37 @@ def add_constants(app: Flask) -> None:
             "Vi",
         ]  # ["k", "M", "B", "T", "P", "E", "Z", "Y"]
         index = None
-        while abs(number) >= 1000 and (index or -1) < len(suffixes) - 1:
+        while abs(number) >= 1000 and (index if index is not None else -1) < len(suffixes) - 1:
             number /= 1000.0
             if index is None:
                 index = -1
             index += 1
-        return f"{int(number) if number == int(number) else ((int(float(f'{number:.1f}')) if float(f'{number:.1f}') == int(float(f'{number:.1f}')) else f'{number:.1f}') if f'{number:.1f}' != '0.0' else ((int(float(f'{number:.2f}')) if float(f'{number:.2f}') == int(float(f'{number:.2f}')) else f'{number:.2f}') if f'{number:.2f}' != '0.0' else '0'))}{suffixes[index] if index is not None else ''}"
+        return f"{number:.1f}{suffixes[index] if index is not None else ''}"
 
     @app.context_processor
     def inject_variables() -> typing.Dict[str, typing.Any]:
         variables = deepcopy(app.variables)
-        variables["locales"]: typing.Dict[str, str] = app.config["LOCALE_DICT"]
-        variables["safelocales"]: str = json.dumps(app.config["LOCALE_DICT"])
-        variables["selectedlocale"]: str = session.get("lang_code")
-        variables["sidebar"]: typing.List[typing.Dict] = process_sidebar()
+        variables["locales"] = app.config["LOCALE_DICT"]
+        variables["safelocales"] = json.dumps(app.config["LOCALE_DICT"])
+        variables["selectedlocale"] = session.get("lang_code")
+        variables["sidebar"] = process_sidebar()
         uptime = datetime.datetime.fromtimestamp(
-            app.variables["stats"]["uptime"], tz=datetime.timezone.utc
+            app.variables["stats"]["uptime"]
         )
-        utc_now = datetime.datetime.now(tz=datetime.timezone.utc).replace(second=0, microsecond=0)
+        utc_now = datetime.datetime.utcnow().replace(second=0, microsecond=0)
+        real_timedelta = utc_now - uptime
         timedelta: datetime.timedelta = utc_now - uptime.replace(
+            hour=utc_now.hour
+            if real_timedelta > datetime.timedelta(days=30)
+            else uptime.hour,
             minute=utc_now.minute
-            if (utc_now - uptime) > datetime.timedelta(days=1)
+            if real_timedelta > datetime.timedelta(days=1)
             else uptime.minute,
             second=0,
             microsecond=0,
         )
-        if timedelta.total_seconds() > 60 * 60 * 24 * 30:
-            timedelta = datetime.timedelta(
-                seconds=timedelta.total_seconds() - (timedelta.total_seconds() - 60 * 60)
-            )
         if timedelta.total_seconds() > 60 * 60 * 24 * 365:
-            timedelta.days = 0
+            timedelta = datetime.timedelta(days=timedelta.days // 30 * 30)
         variables["stats"]["uptime_timedelta"] = humanize_timedelta(timedelta=timedelta)
         variables.update(**process_meta_tags())
         return dict(
