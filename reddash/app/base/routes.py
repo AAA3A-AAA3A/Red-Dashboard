@@ -808,7 +808,7 @@ async def admin(
             "params": [
                 current_user.id,
                 {
-                    "prefixes": bot_settings_form.prefixes.data,
+                    "prefixes": bot_settings_form.prefixes.data.split(";;;;;"),
                     "invoke_error_msg": bot_settings_form.invoke_error_msg.data.strip() or None,
                     "disabled_commands": bot_settings_form.disabled_commands.data,
                     "disabled_command_msg": bot_settings_form.disabled_command_msg.data.strip()
