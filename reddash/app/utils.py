@@ -441,14 +441,22 @@ def add_constants(app: Flask) -> None:
             "Oc",
             "No",
             "Vi",
-        ]  # ["k", "M", "B", "T", "P", "E", "Z", "Y"]
+        ]
         index = None
         while abs(number) >= 1000 and (index if index is not None else -1) < len(suffixes) - 1:
             number /= 1000.0
             if index is None:
                 index = -1
             index += 1
-        return f"{number:.1f}{suffixes[index] if index is not None else ''}"
+        # return f"{number:.1f}{suffixes[index] if index is not None else ''}"
+        if number == int(number):
+            formatted_number = int(number)
+        elif f'{number:.1f}' != "0.0":
+            formatted_number = int(float(f"{number:.1f}")) if float(f"{number:.1f}") == int(float(f"{number:.1f}")) else f"{number:.1f}"
+        else:
+            formatted_number = int(float(f"{number:.2f}")) if float(f"{number:.2f}") == int(float(f"{number:.2f}")) else f"{number:.2f}"
+        suffix = suffixes[index] if index is not None else ""
+        return f"{formatted_number}{suffix}"
 
     @app.context_processor
     def inject_variables() -> typing.Dict[str, typing.Any]:

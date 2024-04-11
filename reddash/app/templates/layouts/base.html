@@ -118,21 +118,21 @@
     {% block javascripts %}{% endblock %}
 
     <script>
-      let win = navigator.platform.indexOf('Win') > -1
+      let win = navigator.platform.indexOf("Win") > -1
       if (win && document.querySelector("#sidenav-scrollbar")) {
         let options = {
           damping: "0.5"
         }
-        Scrollbar.init(document.querySelector("#sidenav-scrollbar"), options)
+        Scrollbar.init(document.querySelector("#sidenav-scrollbar"), options);
       }
-      document.querySelector("#background-color-select").querySelector('.bg-gradient-{{ variables["meta"]["color"] }}').click()
+      document.querySelector("#background-color-select").querySelector('.bg-gradient-{{ variables["meta"]["color"] }}').click();
       {% if variables["meta"]["background_theme"] == "dark" %}
-      document.querySelector("#background-theme-select").firstElementChild.click()
+        document.querySelector("#background-theme-select").firstElementChild.click();
       {% endif %}
       {% if variables["meta"]["sidebar_theme"] == "white" %}
-        document.querySelector("#sidebar-theme-select").children[0].click()
+        document.querySelector("#sidebar-theme-select").children[0].click();
       {% else %}
-        document.querySelector("#sidebar-theme-select").children[1].click()
+        document.querySelector("#sidebar-theme-select").children[1].click();
       {% endif %}
     </script>
   </body>
