@@ -11,12 +11,12 @@
   <main class="main-content position-relative border-radius-lg">
     <div class="container-fluid">
         <div class="row">
-            {% if guild %}
+            {% if guild and not fullscreen %}
                 {% include "pages/guild_profile.html" %}
             {% endif %}
 
-            <div id="guild-content" class="col-md-8 mt-4" style="margin-left: 10px;">
-                {% if guild %}
+            <div id="guild-content"{% if guild and not fullscreen %} class="col-md-8 mt-4"{% endif %}>
+                {% if guild and not fullscreen %}
                     <ul class="nav nav-pills position-relative end-0" role="tablist">
                         <li class="nav-item">
                             <a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}" class="nav-link">
@@ -43,7 +43,15 @@
                                 <div class="row">
                                     <div class="col-sm-12 text-left">
                                         <div class="d-flex justify-content-between mb-4">
-                                            <h2 class="card-title">{{ name }}</h2>
+                                            {% if guild %}
+                                                {% if not fullscreen %}
+                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                                {% else %}
+                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}"><img src="{{ guild.icon_url }}" style="height: 50px; vertical-align: -13px; border-radius: 50%; margin: none; display: inline;" /> {{ guild.name }}</a> / <a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                                {% endif %}
+                                            {% else %}
+                                                <h2 class="card-title"><a href="{{ url_for("third_parties_blueprint.third_parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

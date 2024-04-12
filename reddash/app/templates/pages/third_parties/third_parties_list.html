@@ -111,13 +111,15 @@
     {% endif %}
   </script>
   <script>
-    document.querySelector('#third-parties-tabs a[data-toggle="pill"]').addEventListener("shown.bs.tab", function(e) {
-        var target_id = e.target.id.slice(0, -4);
-        var new_url = "/third-parties/" + target_id;
-        if (!(window.location.pathname.startsWith(new_url))) {
-            // window.location.pathname = new_url;
-            window.history.pushState({}, "", new_url);
-        }
-    })
+    document.querySelectorAll('#third-parties-tabs a[data-toggle="pill"]').forEach(function(element) {
+      element.addEventListener("shown.bs.tab", function(e) {
+          var target_id = e.target.id.slice(0, -4);
+          var new_url = "/third-parties/" + target_id;
+          if (!(window.location.pathname.startsWith(new_url))) {
+              // window.location.pathname = new_url;
+              window.history.pushState({}, "", new_url);
+          }
+      });
+    });
   </script>
 {% endblock %}

@@ -216,8 +216,10 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 name=name,
                 page=page,
                 **return_guild,
+                fullscreen=result["web_content"].get("fullscreen", False),
                 source_content=render_template_string(
-                    result["web_content"].pop("source"), **result["web_content"]
+                    result["web_content"].pop("source"),
+                    **result["web_content"],
                 ),
             )
         elif "error_code" in result:
