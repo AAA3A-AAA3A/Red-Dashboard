@@ -1,4 +1,4 @@
-.. success::
+.. important::
 
     Many thanks to Neuro for the initial project and for this detailed documentation!
 
