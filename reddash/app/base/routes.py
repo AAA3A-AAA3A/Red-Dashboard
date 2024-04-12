@@ -6,7 +6,6 @@ from copy import deepcopy
 
 from reddash.app.app import app
 
-import wtforms
 from babel import Locale as BabelLocale
 from babel import UnknownLocaleError
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -26,6 +25,7 @@ from flask_babel import _
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
+import wtforms
 from markupsafe import Markup
 
 from ..utils import AVAILABLE_COLORS, User, get_result, humanize_timedelta
