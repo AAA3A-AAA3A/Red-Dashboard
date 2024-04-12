@@ -1,6 +1,6 @@
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "venv"]
 html_css_files = ["literals.css"]
-extensions = ["sphinx_rtd_theme"]
+extensions = ["sphinx_rtd_theme", "sphinx-prompt"]
 templates_path = ["_templates"]
 
 html_context = {
