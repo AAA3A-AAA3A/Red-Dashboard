@@ -7,8 +7,8 @@ Red-Dashboard is a website that provides a friendly interface to control and mod
 - "Owner" or "bot owner" refers to any person(s) who has access to the website/service files or to the Red-DiscordBot program/service files.
 
 This Third Party document applies whenever you access this Red-Dashboard website/service or any other Red-Dashboard website/services. This document will detail to you:
-- How Third Parties integrations are structured
-- What to do when malicious use is detected
+- How Third Parties integrations are structured.
+- What to do when malicious use is detected.
 
 If you do not wish to interact with Third Parties integrations, then do not use any components of the Red-Dashboard that are included with a disclaimer stating that they are a Third Parties Integration or disable them manually.
 
