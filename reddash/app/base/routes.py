@@ -2,7 +2,6 @@ import typing  # isort:skip
 
 import base64
 import datetime
-import re
 from copy import deepcopy
 
 from reddash.app.app import app
@@ -268,7 +267,7 @@ class PrefixesCheck:
     def __call__(self, form: FlaskForm, field: wtforms.Field) -> None:
         if field.data == field.default:
             return
-        for prefix in field.data.split(";;;;;"):
+        for prefix in field.data.split(";;|;;"):
             if (
                 not app.variables["constants"]["MIN_PREFIX_LENGTH"]
                 <= len(prefix)
@@ -319,7 +318,7 @@ class GuildSettingsForm(FlaskForm):
             for field in self:
                 field.render_kw = {"disabled": True}
         self.bot_nickname.default = guild["settings"]["bot_nickname"]
-        self.prefixes.default = ";;;;;".join(guild["settings"]["prefixes"])
+        self.prefixes.default = ";;|;;".join(guild["settings"]["prefixes"])
         self.admin_roles.choices = [
             (str(role["id"]), f"{role['name']} ({role['id']})") for role in guild["roles"][1:]
         ]
@@ -328,7 +327,7 @@ class GuildSettingsForm(FlaskForm):
             (str(role["id"]), f"{role['name']} ({role['id']})") for role in guild["roles"][1:]
         ]
         self.mod_roles.default = [str(role["id"]) for role in guild["settings"]["mod_roles"]]
-        self.ignored.default = guild["settings"]["ignored"]
+        self.ignored.default = self.ignored.checked = guild["settings"]["ignored"]
         available_commands = []
         all_commands = deepcopy(app.variables["commands"])
         for cog_data in all_commands.values():
@@ -350,9 +349,9 @@ class GuildSettingsForm(FlaskForm):
                 check_subs(command["subs"])
         self.disabled_commands.choices = sorted(available_commands)
         self.disabled_commands.default = guild["settings"]["disabled_commands"].copy()
-        self.embeds.default = guild["settings"]["embeds"]
-        self.use_bot_color.default = guild["settings"]["use_bot_color"]
-        self.fuzzy.default = guild["settings"]["fuzzy"]
+        self.embeds.default = self.embeds.checked = guild["settings"]["embeds"]
+        self.use_bot_color.default = self.use_bot_color.checked = guild["settings"]["use_bot_color"]
+        self.fuzzy.default = self.fuzzy.checked = guild["settings"]["fuzzy"]
         self.delete_delay.default = guild["settings"]["delete_delay"]
         self.locale.default = guild["settings"]["locale"]
         self.regional_format.default = guild["settings"]["regional_format"]
@@ -563,7 +562,7 @@ async def dashboard_guild(
                 guild_id,
                 {
                     "bot_nickname": guild_settings_form.bot_nickname.data.strip() or None,
-                    "prefixes": guild_settings_form.prefixes.data.split(";;;;;"),
+                    "prefixes": (prefixes if (prefixes := guild_settings_form.prefixes.data.split(";;|;;")) != [""] else []),
                     "admin_roles": guild_settings_form.admin_roles.data,
                     "mod_roles": guild_settings_form.mod_roles.data,
                     "ignored": guild_settings_form.ignored.data,
@@ -729,7 +728,7 @@ class DashboardSettingsForm(FlaskForm):
 class BotSettingsForm(FlaskForm):
     def __init__(self, settings: typing.Dict[str, typing.Any]) -> None:
         super().__init__(prefix="bot_settings_form_")
-        self.prefixes.default = ";;;;;".join(settings["prefixes"])
+        self.prefixes.default = ";;|;;".join(settings["prefixes"])
         self.invoke_error_msg.default = settings["invoke_error_msg"]
         available_commands = []
         all_commands = deepcopy(app.variables["commands"])
@@ -755,12 +754,12 @@ class BotSettingsForm(FlaskForm):
         self.disabled_command_msg.default = settings["disabled_command_msg"]
         self.description.default = settings["description"]
         self.custom_info.default = settings["custom_info"]
-        self.embeds.default = settings["embeds"]
+        self.embeds.default = self.embeds.checked = settings["embeds"]
         self.color.default = settings["color"]
-        self.fuzzy.default = settings["fuzzy"]
-        self.use_buttons.default = settings["use_buttons"]
-        self.invite_public.default = settings["invite_public"]
-        self.invite_commands_scope.default = settings["invite_commands_scope"]
+        self.fuzzy.default = self.fuzzy.checked = settings["fuzzy"]
+        self.use_buttons.default = self.use_buttons.checked = settings["use_buttons"]
+        self.invite_public.default = self.invite_public.checked = settings["invite_public"]
+        self.invite_commands_scope.default = self.invite_commands_scope.checked = settings["invite_commands_scope"]
         self.invite_perms.validators.append(wtforms.validators.NumberRange(min=0, max=app.variables["constants"]["MAX_DISCORD_PERMISSIONS_VALUE"]))
         self.invite_perms.default = settings["invite_perms"]
         self.locale.default = settings["locale"]
@@ -930,7 +929,7 @@ async def admin(
             "params": [
                 current_user.id,
                 {
-                    "prefixes": bot_settings_form.prefixes.data.split(";;;;;"),
+                    "prefixes": (prefixes if (prefixes := bot_settings_form.prefixes.data.split(";;|;;")) != [""] else []),
                     "invoke_error_msg": bot_settings_form.invoke_error_msg.data.strip() or None,
                     "disabled_commands": bot_settings_form.disabled_commands.data,
                     "disabled_command_msg": bot_settings_form.disabled_command_msg.data.strip()
