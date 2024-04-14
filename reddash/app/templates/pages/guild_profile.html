@@ -1,8 +1,8 @@
-<div id="profile" class="card card-body col-md-3 mt-4 align-items-center" style="margin-right: 10px;">
+<div id="profile" class="card card-body col-md-3 mt-4 align-items-center" style="margin-left: 10px; margin-right: 10px;">
     <div {% if False %}class="row"{% endif %}>
         <br />
         <div class="col-sm-auto col-4 text-center">
-            <div class="avatar avatar-xl"><img src="{{ guild.icon_url }}" class="shadow-sm border-radius-lg" style="height: 170%; width: 170%;" /></div>
+            <div class="avatar avatar-xl"><img src="{{ guild.icon_url }}"{% if guild.icon_animated %} onmouseover="playGif(this);" onmouseout="stopGif(this);"{% endif %} class="shadow-sm border-radius-lg" style="height: 170%; width: 170%;" /></div>
         </div>
         <div class="col-sm-auto col-8 my-auto">
             <div class="h-100">
@@ -54,4 +54,38 @@
     {% endif %}
 </div>
             
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    {% if guild.icon_animated %}
+        <script>
+            function playGif(element) {
+                element.src = element.src.replace(".png", ".gif");
+            }
+            function stopGif(element) {
+                element.src = element.src.replace(".gif", ".png");
+            }
+            document.addEventListener("DOMContentLoaded", function() {
+                stopGif(document.querySelector("#profile img"));
+            });
+        </script>
+    {% endif %}
+    <script>
+        async function confirmLeaveGuild(event) {
+            if (confirmationDone) {
+                return true;
+            }
+            let target_button = event.target;
+            event.preventDefault();
+            SwalAlert.fire({
+                title: '{{ _("Are you sure you want me to leave this guild?") }}',
+                text: '{{ _("You will always be able to invite me back to this server later, but you risk losing some settings.") }}',
+                confirmButtonText: '{{ _("Yes, leave!") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    confirmationDone = true;
+                    target_button.click();
+                }
+            })
+            return false;
+        }
+    </script>
+{% endblock %}

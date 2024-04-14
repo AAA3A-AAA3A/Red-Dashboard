@@ -23,11 +23,11 @@ from flask_sitemapper import Sitemapper
 from flask_talisman import Talisman
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf.file import FileAllowed, FileField, MultipleFileField
+from wtforms import Field, SelectFieldBase, FormField
 from fuzzywuzzy import process
 from markdown import Markdown
 import bleach
 from markupsafe import Markup
-from wtforms import Field, SelectFieldBase
 
 settings.configure()
 from django_user_agents.utils import get_user_agent
@@ -217,6 +217,8 @@ def register_extensions(_app: Flask) -> None:
 
     def init_field(field, *args, **kwargs):
         initial_init(field, *args, **kwargs)
+        if isinstance(field, FormField):
+            return
         if hasattr(field, "_value"):
             field._real_value = field._value
         field._value = lambda: (field._real_value() if hasattr(field, "_real_value") else "") or (
@@ -256,8 +258,6 @@ def register_extensions(_app: Flask) -> None:
                 field.flags.accept = ", ".join(
                     [f".{extension}" for extension in file_allowed.upload_set]
                 )
-        if request.endpoint == "creators_blueprint.creator":
-            field.label.text = field.label.text.replace(_("l'utilisateur"), _("le créateur"))
 
     Field.__init__ = init_field
 
@@ -416,7 +416,8 @@ def add_constants(app: Flask) -> None:
         updated_url_components = url_components._replace(query=new_query_string)
         if _anchor is not None:
             updated_url_components = updated_url_components._replace(fragment=_anchor)
-        return urlunparse(updated_url_components)
+        relative_url = urlunparse(updated_url_components._replace(scheme="", netloc="", params="", fragment=""))
+        return relative_url
 
     def number_to_text_with_suffix(number: float) -> str:
         suffixes = [
@@ -646,7 +647,6 @@ def check_for_disconnect(app: Flask, method: str, result: typing.Dict[str, typin
 async def get_result(app: Flask, request: typing.Dict[str, typing.Any]):
     if app.cog is not None:
         from aiohttp_json_rpc.protocol import JsonRpcMsg, JsonRpcMsgTyp
-
         try:
             method = app.cog.bot.rpc._rpc.methods[request["method"]]
         except KeyError:
@@ -664,7 +664,7 @@ async def get_result(app: Flask, request: typing.Dict[str, typing.Any]):
             return {"status": 1, "message": _("Not connected to bot.")}
         app.logger.error(result["error"])
         return {"status": 1, "message": _("Something went wrong.")}
-    if isinstance(result["result"], dict) and result["result"].get("disconnected", False):
+    if not result["result"] or isinstance(result["result"], typing.Dict) and result["result"].get("disconnected", False):
         return {"status": 1, "message": _("Not connected to bot.")}
     return result["result"]
 

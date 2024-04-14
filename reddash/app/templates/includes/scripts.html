@@ -65,7 +65,7 @@
 {{ moment.locale(auto_detect=true) }}
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 <script>
-    document.querySelectorAll(".markdown-text-area-field").forEach(function(element) {
+    function MarkdownField(element) {
         var additionalKwargs = {};
         if (element.classList.contains("markdown-text-area-field-toolbar-disabled")) {
             additionalKwargs.toolbar = false;
@@ -108,8 +108,8 @@
             }
             return true;
         });
-        // document.querySelectorAll(".modal").forEach(function(modal) {$(modal).on("shown.bs.modal", function () {easymde.codemirror.refresh();})});
-    });
+    }
+    document.querySelectorAll(".markdown-text-area-field").forEach(MarkdownField);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
