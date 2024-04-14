@@ -249,7 +249,7 @@ function sidebarType(a) {
 // Set Navbar Fixed.
 function navbarFixed(el) {
   let classes = ['position-sticky', 'bg-white', 'left-auto', 'top-2', 'z-index-sticky'];
-  const navbar = document.getElementById('navbarBlur');
+  let navbar = document.getElementById('navbarBlur');
 
   if (!el.getAttribute("checked")) {
     toggleNavLinksColor('blur');
@@ -309,7 +309,7 @@ function toggleNavLinksColor(type) {
 
 // Navbar blur on scroll.
 function navbarBlurOnScroll(id) {
-  const navbar = document.getElementById(id);
+  let navbar = document.getElementById(id);
   let navbarScrollActive = navbar ? navbar.getAttribute("data-scroll") : false;
   let scrollDistance = 5;
   let classes = ["bg-white", "left-auto", "position-sticky"];
@@ -386,9 +386,9 @@ function debounce(func, wait, immediate) {
 };
 
 // Toggle Sidenav.
-const iconNavbarSidenav = document.getElementById("iconNavbarSidenav");
-const iconSidenav = document.getElementById("iconSidenav");
-const sidenav = document.getElementById("sidenav-main");
+let iconNavbarSidenav = document.getElementById("iconNavbarSidenav");
+let iconSidenav = document.getElementById("iconSidenav");
+let sidenav = document.getElementById("sidenav-main");
 let body = document.getElementsByTagName("body")[0];
 let className = "g-sidenav-pinned";
 
@@ -586,30 +586,30 @@ function getEventTarget(e) {
 
 // Light Mode / Dark Mode.
 function darkMode(el) {
-  const body = document.getElementsByTagName("body")[0];
-  const hr = document.querySelectorAll("div:not(.sidenav) > hr");
-  const sidebar = document.querySelector(".sidenav");
-  const sidebarWhite = document.querySelectorAll(".sidenav.bg-white");
-  const hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
-  const text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
-  const text_span = document.querySelectorAll("span.text-dark");
-  const text_span_white = document.querySelectorAll("span.text-white");
-  const text_strong = document.querySelectorAll("strong.text-dark");
-  const text_strong_white = document.querySelectorAll("strong.text-white");
-  const text_nav_link = document.querySelectorAll("a.nav-link.text-dark");
-  const secondary = document.querySelectorAll(".text-secondary");
-  const bg_gray_100 = document.querySelectorAll(".bg-gray-100");
-  const bg_gray_600 = document.querySelectorAll(".bg-gray-600");
-  const btn_text_dark = document.querySelectorAll(".btn.btn-link.text-dark, .btn .ni.text-dark");
-  const btn_text_white = document.querySelectorAll(".btn.btn-link.text-white, .btn .ni.text-white");
-  const card_border = document.querySelectorAll(".card.border");
-  const card_border_dark = document.querySelectorAll(".card.border.border-dark");
-  const svg = document.querySelectorAll("g");
-  const navbarBrand = document.querySelector(".navbar-brand-img");
-  const navbarBrandImg = navbarBrand.src;
-  const navLinks = document.querySelectorAll(".navbar-main .nav-link, .navbar-main .breadcrumb-item, .navbar-main .breadcrumb-item a, .navbar-main h6");
-  const cardNavLinksIcons = document.querySelectorAll(".card .nav .nav-link i");
-  const cardNavSpan = document.querySelectorAll(".card .nav .nav-link span");
+  let body = document.getElementsByTagName("body")[0];
+  let hr = document.querySelectorAll("div:not(.sidenav) > hr");
+  let sidebar = document.querySelector(".sidenav");
+  let sidebarWhite = document.querySelectorAll(".sidenav.bg-white");
+  let hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
+  let text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
+  let text_span = document.querySelectorAll("span.text-dark");
+  let text_span_white = document.querySelectorAll("span.text-white");
+  let text_strong = document.querySelectorAll("strong.text-dark");
+  let text_strong_white = document.querySelectorAll("strong.text-white");
+  let text_nav_link = document.querySelectorAll("a.nav-link.text-dark");
+  let secondary = document.querySelectorAll(".text-secondary");
+  let bg_gray_100 = document.querySelectorAll(".bg-gray-100");
+  let bg_gray_600 = document.querySelectorAll(".bg-gray-600");
+  let btn_text_dark = document.querySelectorAll(".btn.btn-link.text-dark, .btn .ni.text-dark");
+  let btn_text_white = document.querySelectorAll(".btn.btn-link.text-white, .btn .ni.text-white");
+  let card_border = document.querySelectorAll(".card.border");
+  let card_border_dark = document.querySelectorAll(".card.border.border-dark");
+  let svg = document.querySelectorAll("g");
+  let navbarBrand = document.querySelector(".navbar-brand-img");
+  let navbarBrandImg = navbarBrand.src;
+  let navLinks = document.querySelectorAll(".navbar-main .nav-link, .navbar-main .breadcrumb-item, .navbar-main .breadcrumb-item a, .navbar-main h6");
+  let cardNavLinksIcons = document.querySelectorAll(".card .nav .nav-link i");
+  let cardNavSpan = document.querySelectorAll(".card .nav .nav-link span");
 
 
   if (!el.getAttribute("checked")) {
@@ -695,7 +695,7 @@ function darkMode(el) {
     }
     el.setAttribute("checked", "true");
 
-    document.querySelector("#sidebar-theme-select").children[1].click(); // Even the sidebar change of theme when theme changing, but the change wasn"t saved in a cookie.
+    document.querySelector("#sidebar-theme-select").children[1].click(); // Toggle sidebar dark theme, even if the change isn't asked by the user.
   } else {
     body.classList.remove("dark-version");
     sidebar.classList.add("bg-white");
