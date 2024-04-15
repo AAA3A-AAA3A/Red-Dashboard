@@ -550,6 +550,7 @@ def initialize_babel(app: Flask) -> None:
         # - `lang_code` cookie
         # - `lang_code` session value
         # - default from browser
+        locale = None
         lang = request.args.get("lang_code") or request.cookies.get(
             "lang_code"
         )  # Url is visible by user, so it's the priority.
@@ -563,15 +564,14 @@ def initialize_babel(app: Flask) -> None:
             else:
                 # User had `lang_code` argument, and it closely matched a registered locale.
                 locale = processed[0]
-
         # Let's save that so it will be used on next request as well.
         session["lang_code"] = locale
 
     # @app.babel.localeselector
     def get_locale() -> str:
-        return session.get(
-            "lang_code", request.accept_languages.best_match(app.config["LANGUAGES"])
-        )
+        return (
+            session.get("lang_code") or request.accept_languages.best_match(app.config["LANGUAGES"], default="en-US")
+        ).replace("-", "_")
 
     app.extensions["babel"].locale_selector = get_locale
 
