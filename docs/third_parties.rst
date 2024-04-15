@@ -154,8 +154,8 @@ In `dashboard_integration.py`:
         async def on_dashboard_cog_add(self, dashboard_cog: commands.Cog) -> None:  # `on_dashboard_cog_add` is triggered by the Dashboard cog automatically.
             dashboard_cog.rpc.third_parties_extension.add_third_party(self)  # Add the third party to Dashboard.
 
-        @dashboard_page(name=None, methods=("GET", "POST"), is_owner=True)  # Create a default page for the third party (`name=None`). It will be available at the URL `/third-party/MyCog`.
-        async def rpc_callback(self, user: discord.User, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg `user` means that Red-Dashboard will request a connection from a bot user with OAuth from Discord.
+        @dashboard_page(name=None, description="Send Hello to a user!", methods=("GET", "POST"), is_owner=True)  # Create a default page for the third party (`name=None`). It will be available at the URL `/third-party/MyCog`.
+        async def send_hello(self, user: discord.User, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg `user` means that Red-Dashboard will request a connection from a bot user with OAuth from Discord.
             import wtforms
             class Form(kwargs["Form"]):  # Create a WTForms form.
                 def __init__(self):
@@ -187,12 +187,12 @@ In `dashboard_integration.py`:
                 "web_content": {"source": source, "form": form},
             }
 
-        @dashboard_page(name="guild")  # Create a page nammed "guild" for the third party. It will be available at the URL `/dashboard/<guild_id>/third-party/MyCog/guild`.
-        async def rpc_callback(self, user: discord.User, guild: discord.Guild, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg `guild` means that Red-Dashboard will ask for the choice of a guild among those to which the user has access.
+        @dashboard_page(name="guild", details="Get basic details about a guild!")  # Create a page nammed "guild" for the third party. It will be available at the URL `/dashboard/<guild_id>/third-party/MyCog/guild`.
+        async def guild_page(self, user: discord.User, guild: discord.Guild, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg `guild` means that Red-Dashboard will ask for the choice of a guild among those to which the user has access.
             return {
                 "status": 0,
-                "web-content": {  # Return a web content with the text variable `title_content`.
-                    "source": f"<h4>You're in guild {{ guild.name }} ({{ guild.id }})!</h4>",
+                "web_content": {  # Return a web content with the text variable `title_content`.
+                    "source": '<h4>You are in the guild "{{ guild.name }}" ({{ guild.id }})!</h4>',
                     "guild": {"name": guild.name, "id": guild.id},
                 },
             }
