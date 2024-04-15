@@ -1,12 +1,14 @@
 from reddash.app.app import app
 
-from flask import abort, flash, jsonify, redirect, render_template, render_template_string, url_for, request, session
+from flask import abort, flash, jsonify, redirect, render_template, render_template_string, url_for, request, session, g
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
+
+import base64
 
 from ..base.routes import get_guild, get_third_parties
 from ..utils import get_result  # , get_user_id
@@ -178,7 +180,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
 
     kwargs["form"] = request.form.copy()
-    kwargs["json"] = request.json if request.method not in ("GET", "HEAD") else {}
+    kwargs["json"] = request.json if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
     
     try:
         requeststr = {
@@ -190,7 +192,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 name,
                 page,
                 request.url,
-                session["csrf_token"],
+                (session["csrf_token"], g.csrf_token),
+                base64.urlsafe_b64encode(app.config["WTF_CSRF_SECRET_KEY"]).decode(),
                 context_ids,
                 kwargs,
                 app.extensions["babel"].locale_selector(),
@@ -204,8 +207,6 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if "notifications" in result:
             for notification in result["notifications"]:
                 flash(notification["message"], category=notification["category"])
-        if request.method not in ["HEAD", "GET"]:  # API request by JavaScript code or bot.
-            return result
         if "web_content" in result:
             if result["web_content"].get("standalone", False):
                 return render_template_string(
