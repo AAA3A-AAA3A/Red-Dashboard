@@ -5,6 +5,7 @@ from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
 from django.utils.http import url_has_allowed_host_and_scheme
+from flask_wtf.csrf import generate_csrf
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
@@ -188,6 +189,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
     data["json"] = request.json if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
     
     try:
+        generate_csrf()
         requeststr = {
             "jsonrpc": "2.0",
             "id": 0,
