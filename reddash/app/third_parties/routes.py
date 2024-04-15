@@ -4,6 +4,7 @@ from flask import abort, flash, jsonify, redirect, render_template, render_templ
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
+from django.utils.http import url_has_allowed_host_and_scheme
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
@@ -166,6 +167,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         return_guild = {}
 
     kwargs = request.args.copy()
+    required_kwargs = {}
     for key in third_parties[name][_page]["context_ids"]:
         if key in ("user_id", "guild_id"):
             continue
@@ -178,9 +180,12 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
     for key in third_parties[name][_page]["required_kwargs"]:
         if key not in kwargs:
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
+        required_kwargs[key] = kwargs.pop(key)
+    extra_kwargs = kwargs
 
-    kwargs["form"] = request.form.copy()
-    kwargs["json"] = request.json if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
+    data = {}
+    data["form"] = request.form.copy()
+    data["json"] = request.json if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
     
     try:
         requeststr = {
@@ -195,7 +200,9 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 (session["csrf_token"], g.csrf_token),
                 base64.urlsafe_b64encode(app.config["WTF_CSRF_SECRET_KEY"]).decode(),
                 context_ids,
-                kwargs,
+                required_kwargs,
+                extra_kwargs,
+                data,
                 app.extensions["babel"].locale_selector(),
             ],
         }
@@ -203,7 +210,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
             result = await get_result(app, requeststr)
 
         if "data" in result:
-            result = result["data"]
+            return result["data"]
         if "notifications" in result:
             for notification in result["notifications"]:
                 flash(notification["message"], category=notification["category"])
@@ -231,8 +238,11 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 error_title=result["error_title"],
                 error_message=result.get("error_message"),
             )
-        elif "redirect" in result:
-            return redirect(result["redirect"])
+        elif "redirect_url" in result:
+            # `url_has_allowed_host_and_scheme`` should check if the url is safe for redirects, meaning it matches the request host.
+            if not url_has_allowed_host_and_scheme(result["redirect_url"], request.host):
+                return abort(400)
+            return redirect(result["redirect_url"])
         return result
     except Exception as e:
         app.logger.error(
