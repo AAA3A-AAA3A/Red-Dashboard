@@ -257,6 +257,9 @@ async def get_guild(guild_id: int):
             else:
                 flash(_("Failed to leave the guild."), category="danger")
                 return redirect(request.url)
+        elif leave_guild_form.submit.data and leave_guild_form.errors:
+            for field_name, error_messages in leave_guild_form.errors.items():
+                flash(f"{field_name}: {' '.join(error_messages)}", category="warning")
     else:
         leave_guild_form = None
 
@@ -357,36 +360,36 @@ class GuildSettingsForm(FlaskForm):
         self.regional_format.default = guild["settings"]["regional_format"]
 
     bot_nickname: wtforms.StringField = wtforms.StringField(
-        _("Bot Nickname"), validators=[wtforms.validators.Length(max=32)]
+        _("Bot Nickname:"), validators=[wtforms.validators.Length(max=32)]
     )
     prefixes: wtforms.StringField = wtforms.StringField(
-        _("Prefixes"), validators=[wtforms.validators.Optional(), PrefixesCheck()]
+        _("Prefixes:"), validators=[wtforms.validators.Optional(), PrefixesCheck()]
     )
     admin_roles: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
-        _("Admin Roles"), choices=[]
+        _("Admin Roles:"), choices=[]
     )
     mod_roles: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
-        _("Mod Roles"), choices=[]
+        _("Mod Roles:"), choices=[]
     )
     ignored: wtforms.BooleanField = wtforms.BooleanField(_("Ignore commands in this guild."))
     disabled_commands: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
-        _("Disabled Commands"), choices=[]
+        _("Disabled Commands:"), choices=[]
     )
     embeds: wtforms.BooleanField = wtforms.BooleanField(_("Use embeds in responses."))
-    use_bot_color: wtforms.BooleanField = wtforms.BooleanField(_("Use bot color in embeds."))
+    use_bot_color: wtforms.BooleanField = wtforms.BooleanField(_("Use bot set color in embeds."))
     fuzzy: wtforms.BooleanField = wtforms.BooleanField(_("Use fuzzy command search."))
     delete_delay: wtforms.IntegerField = wtforms.IntegerField(
-        _("Delay before deleting invocation messages (-1 to disable)"),
+        _("Delay before deleting invocation messages (-1 to disable):"),
         validators=[
             wtforms.validators.DataRequired(),
             wtforms.validators.NumberRange(min=-1, max=60),
         ],
     )
     locale: wtforms.StringField = wtforms.StringField(
-        _("Locale"), validators=[wtforms.validators.DataRequired(), BabelCheck(check_reset=True)]
+        _("Locale:"), validators=[wtforms.validators.DataRequired(), BabelCheck(check_reset=True)]
     )
     regional_format: wtforms.StringField = wtforms.StringField(
-        _("Region"), validators=[wtforms.validators.Optional(), BabelCheck(check_reset=True)]
+        _("Regional Format:"), validators=[wtforms.validators.Optional(), BabelCheck(check_reset=True)]
     )
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
 
@@ -547,6 +550,8 @@ async def dashboard_guild(
                     flash(error, category="warning")
                 flash(_("Failed to save the modifications."), category="danger")
             return redirect(request.url)
+    else:
+        custom_commands_form = None
 
     guild_settings_form: GuildSettingsForm = GuildSettingsForm(guild=return_guild["guild"])
     if (
@@ -672,13 +677,13 @@ class DiscordProfileForm(FlaskForm):
         self.username.default = app.variables["bot"]["name"]
         self.description.default = app.variables["bot"]["profile_description"]
 
-    avatar: FileField = FileField(_("Avatar"))
-    avatar_choice: wtforms.HiddenField = wtforms.HiddenField(_("Avatar choice"), default="keep")
+    avatar: FileField = FileField()
+    avatar_choice: wtforms.HiddenField = wtforms.HiddenField(default="keep")
     username: wtforms.StringField = wtforms.StringField(
-        _("Username"), validators=[wtforms.validators.Length(max=32)]
+        _("Username:"), validators=[wtforms.validators.Length(max=32)]
     )
     description: MarkdownTextAreaField = MarkdownTextAreaField(
-        _("Description"), validators=[wtforms.validators.Length(max=1024)]
+        _("Description:"), validators=[wtforms.validators.Length(max=1024)]
     )
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
 
@@ -699,28 +704,28 @@ class DashboardSettingsForm(FlaskForm):
         ]
         self.disabled_third_parties.default = settings["disabled_third_parties"].copy()
 
-    title: wtforms.StringField = wtforms.StringField(_("Title"))
-    icon: wtforms.StringField = wtforms.StringField(_("Icon"))
-    website_description: wtforms.StringField = wtforms.StringField(_("Website Short Description"))
-    description: MarkdownTextAreaField = MarkdownTextAreaField(_("Description"))
-    support_server: wtforms.URLField = wtforms.URLField(_("Support Server"))
+    title: wtforms.StringField = wtforms.StringField(_("Title:"))
+    icon: wtforms.StringField = wtforms.StringField(_("Icon:"))
+    website_description: wtforms.StringField = wtforms.StringField(_("Website (Short) Description:"))
+    description: MarkdownTextAreaField = MarkdownTextAreaField(_("Description:"))
+    support_server: wtforms.URLField = wtforms.URLField(_("Support Server URL:"))
     default_color: wtforms.SelectField = wtforms.SelectField(
-        _("Default Color"),
+        _("Default Color:"),
         choices=[(color, color.capitalize()) for color in AVAILABLE_COLORS],
         validators=[wtforms.validators.DataRequired()],
     )
     default_background_theme: wtforms.SelectField = wtforms.SelectField(
-        _("Default Background Theme"),
+        _("Default Background Theme:"),
         choices=[("light", "Light"), ("dark", "Dark")],
         validators=[wtforms.validators.DataRequired()],
     )
     default_sidebar_theme: wtforms.SelectField = wtforms.SelectField(
-        _("Default Sidebar Theme"),
+        _("Default Sidebar Theme:"),
         choices=[("light", "Light"), ("dark", "Dark")],
         validators=[wtforms.validators.DataRequired()],
     )
     disabled_third_parties: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
-        _("Disabled Third Parties"), choices=[]
+        _("Disabled Third Parties:"), choices=[]
     )
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
 
@@ -766,38 +771,38 @@ class BotSettingsForm(FlaskForm):
         self.regional_format.default = settings["regional_format"]
 
     prefixes: wtforms.StringField = wtforms.StringField(
-        _("Prefixes"), validators=[wtforms.validators.DataRequired(), PrefixesCheck()]
+        _("Prefixes:"), validators=[wtforms.validators.DataRequired(), PrefixesCheck()]
     )
     invoke_error_msg: wtforms.StringField = wtforms.StringField(
-        _("Invoke Error Message"), validators=[wtforms.validators.Length(max=1000)]
+        _("Invoke Error Message:"), validators=[wtforms.validators.Length(max=1000)]
     )
     disabled_commands: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
-        _("Disabled Commands"), choices=[]
+        _("Disabled Commands:"), choices=[]
     )
     disabled_command_msg: wtforms.StringField = wtforms.StringField(_("Disabled Command Message"))
     description: wtforms.StringField = wtforms.StringField(
-        _("Description"), validators=[wtforms.validators.Length(max=250)]
+        _("Description:"), validators=[wtforms.validators.Length(max=250)]
     )
     custom_info: MarkdownTextAreaField = MarkdownTextAreaField(
-        _("Custom Info"), validators=[wtforms.validators.Length(max=1024)]
+        _("Custom Info:"), validators=[wtforms.validators.Length(max=1024)]
     )
-    embeds: wtforms.BooleanField = wtforms.BooleanField(_("Use Embeds"))
-    color: wtforms.ColorField = wtforms.ColorField(_("Color"))
-    fuzzy: wtforms.BooleanField = wtforms.BooleanField(_("Use Fuzzy"))
-    use_buttons: wtforms.BooleanField = wtforms.BooleanField(_("Use Buttons"))
-    invite_public: wtforms.BooleanField = wtforms.BooleanField(_("Invite Public"))
-    invite_commands_scope: wtforms.BooleanField = wtforms.BooleanField(_("Invite Commands Scope"))
+    embeds: wtforms.BooleanField = wtforms.BooleanField(_("Use Embeds in commands responses."))
+    color: wtforms.ColorField = wtforms.ColorField(_("Embeds Color:"))
+    fuzzy: wtforms.BooleanField = wtforms.BooleanField(_("Use Fuzzy Search when command invokation."))
+    use_buttons: wtforms.BooleanField = wtforms.BooleanField(_("Use Buttons instead of Reactions."))
+    invite_public: wtforms.BooleanField = wtforms.BooleanField(_("Make the invite public."))
+    invite_commands_scope: wtforms.BooleanField = wtforms.BooleanField(_("Use the Commands Scope in the invite."))
     invite_perms: wtforms.IntegerField = wtforms.IntegerField(
-        _("Invite Permissions (0 for nothing)"),
+        _("Invite Permissions (0 for nothing):"),
         validators=[
             wtforms.validators.DataRequired(),
         ],
     )
     locale: wtforms.StringField = wtforms.StringField(
-        _("Locale"), validators=[wtforms.validators.DataRequired(), BabelCheck()]
+        _("Locale:"), validators=[wtforms.validators.DataRequired(), BabelCheck()]
     )
     regional_format: wtforms.StringField = wtforms.StringField(
-        _("Regional Format"),
+        _("Regional Format:"),
         validators=[wtforms.validators.Optional(), BabelCheck(check_reset=True)],
     )
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))

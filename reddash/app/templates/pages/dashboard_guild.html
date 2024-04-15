@@ -1,5 +1,4 @@
 {% extends "layouts/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
   {{ _("Guild") }} {{ guild.name }}
@@ -165,25 +164,25 @@
                                             {{ guild_settings_form.hidden_tag() }}
                                             <div class="mb-3">
                                                 <div class="form-group">
-                                                    <label class="form-group-label">{{ _("Bot Nickname:") }}</label>
+                                                    <label class="form-group-label">{{ guild_settings_form.bot_nickname.label.text }}</label>
                                                     {{ guild_settings_form.bot_nickname(class="form-control form-control-default") }}
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <div class="form-group">
-                                                    <label class="form-group-label">{{ _("Prefixes:") }}</label>
+                                                    <label class="form-group-label">{{ guild_settings_form.prefixes.label.text }}</label>
                                                     {{ guild_settings_form.prefixes(class="form-control form-control-default select-choices") }}
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <div class="form-group">
-                                                    <label class="form-group-label">{{ _("Admin Roles:") }}</label>
+                                                    <label class="form-group-label">{{ guild_settings_form.admin_roles.label.text }}</label>
                                                     {{ guild_settings_form.admin_roles(class="form-control form-control-default") }}
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <div class="form-group">
-                                                    <label class="form-group-label">{{ _("Mod Roles:") }}</label>
+                                                    <label class="form-group-label">{{ guild_settings_form.mod_roles.label.text }}</label>
                                                     {{ guild_settings_form.mod_roles(class="form-control form-control-default") }}
                                                 </div>
                                             </div>
@@ -196,7 +195,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <div class="form-group">
-                                                    <label class="form-group-label">{{ _("Disabled Commands:") }}</label>
+                                                    <label class="form-group-label">{{ guild_settings_form.disabled_commands.label.text }}</label>
                                                     {{ guild_settings_form.disabled_commands(class="form-control form-control-default") }}
                                                 </div>
                                             </div>
@@ -224,7 +223,7 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
-                                                        <label class="form-group-label">{{ _("Delay before deleting invocation messages (-1 to disable):") }}</label>
+                                                        <label class="form-group-label">{{ guild_settings_form.delete_delay.label.text }}</label>
                                                         {{ guild_settings_form.delete_delay(class="form-control form-control-default") }}
                                                     </div>
                                                 </div>
@@ -233,13 +232,13 @@
                                             <div class="row mb-1">
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
-                                                        <label class="form-group-label">{{ _("Locale:") }}</label>
+                                                        <label class="form-group-label">{{ guild_settings_form.locale.label.text }}</label>
                                                         {{ guild_settings_form.locale(class="form-control form-control-default") }}
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
-                                                        <label class="form-group-label">{{ _("Regional Format:") }}</label>
+                                                        <label class="form-group-label">{{ guild_settings_form.regional_format.label.text }}</label>
                                                         {{ guild_settings_form.regional_format(class="form-control form-control-default") }}
                                                     </div>
                                                 </div>

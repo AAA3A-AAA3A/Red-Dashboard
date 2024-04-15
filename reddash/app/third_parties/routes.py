@@ -177,8 +177,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if key not in kwargs:
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
 
-    kwargs["data"] = request.json if request.method not in ("GET", "HEAD") else {}
     kwargs["form"] = request.form.copy()
+    kwargs["json"] = request.json if request.method not in ("GET", "HEAD") else {}
     
     try:
         requeststr = {

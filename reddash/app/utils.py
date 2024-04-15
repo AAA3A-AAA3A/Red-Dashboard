@@ -213,10 +213,10 @@ def register_extensions(_app: Flask) -> None:
         g.csrf_valid = False
 
     app.csrf_protect.protect = protect
-    initial_init = Field.__init__
+    initial_init_field = Field.__init__
 
     def init_field(field, *args, **kwargs):
-        initial_init(field, *args, **kwargs)
+        initial_init_field(field, *args, **kwargs)
         if isinstance(field, FormField):
             return
         if hasattr(field, "_value"):

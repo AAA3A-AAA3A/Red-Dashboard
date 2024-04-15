@@ -1,5 +1,4 @@
 {% extends "layouts/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
   {{ _("Admin") }}
@@ -133,51 +132,51 @@
                                     {{ dashboard_settings_form.hidden_tag() }}
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Title:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.title.label.text }}</label>
                                             {{ dashboard_settings_form.title(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Icon:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.icon.label.text }}</label>
                                             {{ dashboard_settings_form.icon(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Website Short Description:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.website_description.label.text }}</label>
                                             {{ dashboard_settings_form.website_description(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Description:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.description.label.text }}</label>
                                             {{ dashboard_settings_form.description(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Support Server URL:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.support_server.label.text }}</label>
                                             {{ dashboard_settings_form.support_server(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <hr class="horizontal dark" />
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Default Color:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.default_color.label.text }}</label>
                                             {{ dashboard_settings_form.default_color(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ _("Default Background Theme:") }}</label>
+                                                <label class="form-group-label">{{ dashboard_settings_form.default_background_theme.label.text }}</label>
                                                 {{ dashboard_settings_form.default_background_theme(class="form-control form-control-default") }}
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ _("Default SideBar Theme:") }}</label>
+                                                <label class="form-group-label">{{ dashboard_settings_form.default_sidebar_theme.label.text }}</label>
                                                 {{ dashboard_settings_form.default_sidebar_theme(class="form-control form-control-default") }}
                                             </div>
                                         </div>
@@ -185,7 +184,7 @@
                                     <hr class="horizontal dark" />
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Disabled Third Parties:") }}</label>
+                                            <label class="form-group-label">{{ dashboard_settings_form.disabled_third_parties.label.text }}</label>
                                             {{ dashboard_settings_form.disabled_third_parties(class="form-control form-control-default") }}
                                         </div>
                                     </div>
@@ -213,39 +212,39 @@
                                     {{ bot_settings_form.hidden_tag() }}
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Prefixes:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.prefixes.label.text }}</label>
                                             {{ bot_settings_form.prefixes(class="form-control form-control-default select-choices") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Invoke Error Message:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.invoke_error_msg.label.text }}</label>
                                             {{ bot_settings_form.invoke_error_msg(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <hr class="horizontal dark" />
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Disabled Commands:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.disabled_commands.label.text }}</label>
                                             {{ bot_settings_form.disabled_commands(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Disabled Command Message:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.disabled_command_msg.label.text }}</label>
                                             {{ bot_settings_form.disabled_command_msg(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <hr class="horizontal dark" />
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Description:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.description.label.text }}</label>
                                             {{ bot_settings_form.description(class="form-control form-control-default") }}
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Custom Info:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.custom_info.label.text }}</label>
                                             {{ bot_settings_form.custom_info(class="form-control form-control-default") }}
                                         </div>
                                     </div>
@@ -258,7 +257,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ _("Bot Color:") }}</label>
+                                                <label class="form-group-label">{{ bot_settings_form.color.label.text }}</label>
                                                 {{ bot_settings_form.color(class="form-control form-control-default") }}
                                             </div>
                                         </div>
@@ -273,7 +272,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-check form-switch ps-0">
                                                 {{ bot_settings_form.use_buttons(class="form-check-input ms-0", type="checkbox") }}
-                                                <label class="form-check-label">{{ _("Use Buttons instead of Reactions") }}</label>
+                                                <label class="form-check-label">{{ bot_settings_form.use_buttons.label.text }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -294,7 +293,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <div class="form-group">
-                                            <label class="form-group-label">{{ _("Invite Permissions:") }}</label>
+                                            <label class="form-group-label">{{ bot_settings_form.invite_perms.label.text }}</label>
                                             {{ bot_settings_form.invite_perms(class="form-control form-control-default") }}
                                         </div>
                                     </div>
@@ -302,13 +301,13 @@
                                     <div class="row mb-1">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ _("Locale:") }}</label>
+                                                <label class="form-group-label">{{ bot_settings_form.locale.label.text }}</label>
                                                 {{ bot_settings_form.locale(class="form-control form-control-default") }}
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ _("Regional Format:") }}</label>
+                                                <label class="form-group-label">{{ bot_settings_form.regional_format.label.text }}</label>
                                                 {{ bot_settings_form.regional_format(class="form-control form-control-default") }}
                                             </div>
                                         </div>
@@ -353,13 +352,13 @@
                         </div>
                         <div class="mb-3">
                             <div class="form-group">
-                                <label class="form-group-label">{{ _("Username:") }}</label>
+                                <label class="form-group-label">{{ bot_profile_form.username.label.text }}</label>
                                 {{ bot_profile_form.username(class="form-control form-control-default") }}
                             </div>
                         </div>
                         <div class="mb-3">
                             <div class="form-group">
-                                <label class="form-group-label">{{ _("Description:") }}</label>
+                                <label class="form-group-label">{{ bot_profile_form.description.label.text }}</label>
                                 {{ bot_profile_form.description(class="form-control form-control-default") }}
                             </div>
                         </div>
