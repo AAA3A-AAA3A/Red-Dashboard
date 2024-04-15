@@ -500,45 +500,45 @@ def add_constants(app: Flask) -> None:
 def initialize_babel(app: Flask) -> None:
     app.config["BABEL_TRANSLATION_DIRECTORIES"]: str = "translations"
     app.config["LANGUAGES"]: typing.List[str] = [
-        "en",
-        "af_ZA",
-        "ar_SA",
-        "bg_BG",
-        "ca_ES",
-        "cs_CZ",
-        "da_DK",
-        "de_DE",
-        "el_GR",
-        "es_ES",
-        "fi_FI",
-        "fr_FR",
-        "he_IL",
-        "hu_HU",
-        "id_ID",
-        "it_IT",
-        "ja_JP",
-        "ko_KR",
-        "nl_NL",
-        "nb_NO",
-        "pl_PL",
-        "pt_BR",
-        "pt_PT",
-        "ro_RO",
-        "ru_RU",
-        "sk_SK",
-        "sv_SE",
-        "tr_TR",
-        "uk_UA",
-        "vi_VN",
-        "zh_CN",
-        "zh_HK",
-        "zh_TW",
+        "en-US",
+        "af-ZA",
+        "ar-SA",
+        "bg-BG",
+        "ca-ES",
+        "cs-CZ",
+        "da-DK",
+        "de-DE",
+        "el-GR",
+        "es-ES",
+        "fi-FI",
+        "fr-FR",
+        "he-IL",
+        "hu-HU",
+        "id-ID",
+        "it-IT",
+        "ja-JP",
+        "ko-KR",
+        "nl-NL",
+        "nb-NO",
+        "pl-PL",
+        "pt-BR",
+        "pt-PT",
+        "ro-RO",
+        "ru-RU",
+        "sk-SK",
+        "sv-SE",
+        "tr-TR",
+        "uk-UA",
+        "vi-VN",
+        "zh-CN",
+        "zh-HK",
+        "zh-TW",
     ]
     locale_dict: typing.Dict[str, str] = {}
     for locale in app.config["LANGUAGES"]:
-        loc = Locale.parse(locale)
-        lang = loc.get_language_name(locale)
-        if territory := loc.get_territory_name(locale):
+        loc = Locale.parse(locale, sep="-")
+        lang = loc.get_language_name()
+        if territory := loc.get_territory_name():
             lang = f"{lang} - {territory}"
         locale_dict[locale] = lang
     app.config["LOCALE_DICT"]: typing.Dict[str, str] = locale_dict
@@ -553,27 +553,16 @@ def initialize_babel(app: Flask) -> None:
         lang = request.args.get("lang_code") or request.cookies.get(
             "lang_code"
         )  # Url is visible by user, so it's the priority.
+        lang = lang or session.get("lang_code")  # User either didn't have `lang_code` argument or wasnt able to match a locale. Let's check if theres something in the session.
         if lang:
-            # User had lang_code argument in request, lets check if its valid.
+            # User had `lang_code` argument in request, lets check if its valid.
             processed = process.extractOne(lang, app.config["LANGUAGES"])
             if processed[1] < 80:
                 # Too low of a match, abort lang_code argument and go to session value.
                 lang = None
             else:
-                # User had lang_code argument, and it closely matched a registered locale.
+                # User had `lang_code` argument, and it closely matched a registered locale.
                 locale = processed[0]
-
-        if not lang:
-            # User either didn't have lang_code argument or wasnt able to match a locale.
-            # Let's check if theres something in the session.
-            lang = session.get("lang_code")
-            if lang:
-                # User has a locale in session.
-                locale = lang
-            else:
-                # User doesn't have lang_code, and doesn't have a locale stored in session.
-                # Let's get the best one according to Flask.
-                locale = request.accept_languages.best_match(app.config["LANGUAGES"])
 
         # Let's save that so it will be used on next request as well.
         session["lang_code"] = locale
