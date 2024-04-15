@@ -3,6 +3,10 @@
 .. role:: python(code)
     :language: python
 
+=============
+Third Parties
+=============
+
 This guide details how to add third-party cogs to Red-Dashboard and create custom pages on the web dashboard.
 
 ---------------
