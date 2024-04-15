@@ -622,13 +622,14 @@ async def get_third_parties(guild_id: typing.Optional[str] = None):
     }
     cogs_data = app.variables["commands"]
     infos = {third_party: {} for third_party in _third_parties}
+    is_owner = current_user.is_authenticated and current_user.is_owner
     third_parties = {}
     for third_party, pages in sorted(_third_parties.items()):
         if third_party in app.data["disabled_third_parties"]:
             continue
         if not pages:
             continue
-        if all(page["hidden"] or "guild_id" not in page["context_ids"] for page in pages.values()):
+        if all(page["hidden"] or (page["is_owner"] and not is_owner) or (guild_id is not None and "guild_id" not in page["context_ids"]) for page in pages.values()):
             continue
         real_cog_name = third_party  # _third_parties[third_party][list(pages)[0]]["real_cog_name"]
         if real_cog_name in cogs_data:
@@ -643,6 +644,8 @@ async def get_third_parties(guild_id: typing.Optional[str] = None):
         if (
             "null" in _third_parties[third_party]
             and not _third_parties[third_party]["null"]["hidden"]
+            and not (_third_parties[third_party]["null"]["is_owner"] and not is_owner)
+            and (guild_id is None or "guild_id" in _third_parties[third_party]["null"]["context_ids"])
         ):
             third_parties[third_party]["Main Page"] = _third_parties[third_party].pop("null")
             third_parties[third_party]["Main Page"]["url"] = url_for(
@@ -652,7 +655,11 @@ async def get_third_parties(guild_id: typing.Optional[str] = None):
                 guild_id=guild_id,
             )
         for page in sorted(pages):
-            if not pages[page]["hidden"] and "guild_id" in pages[page]["context_ids"]:
+            if (
+                not pages[page]["hidden"]
+                and not (pages[page]["is_owner"] and not is_owner)
+                and (guild_id is None or "guild_id" in pages[page]["context_ids"])
+            ):
                 third_parties[third_party][page] = pages[page]
                 third_parties[third_party][page]["url"] = url_for(
                     "third_parties_blueprint.third_party",
