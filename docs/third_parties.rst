@@ -60,14 +60,14 @@ If content fields are not passed, the data will be returned directly as JSON.
 On the Dashboard Local Cog Side
 ===============================
 
-A `DashboardRPC_ThirdParties` extension has been added and is accessible at `Dashboard.rpc.third_parties_extension`. A third party is linked to a commands.Cog object, which must be loaded in order to be used. The `DashboardRPC_ThirdParties.add_third_party` method must be used to add a cog as a third party. The page parameters are stored in `DashboardRPC_ThirdParties.third_parties`.
+A `DashboardRPC_ThirdParties` handler has been added and is accessible at `Dashboard.rpc.third_parties_handler`. A third party is linked to a `commands.Cog` object, which must be loaded in order to be used. The `DashboardRPC_ThirdParties.add_third_party` method must be used to add a cog as a third party. The page parameters are stored in `DashboardRPC_ThirdParties.third_parties`.
 The `dashboard.rpc.thirdparties.dashboard_page` decorator allows providing parameters for each page. All attributes of the cog class that have a `__dashboard_params__` attribute will be automatically added to the Dashboard when the add third party method is called. Context parameters (`user_id`/`user`, `guild_id`/`guild`, `member_id`/`member`, `role_id`/`role`, `channel_id`/`channel`) and required parameters are detected in the method parameter names.
 
 Here are the parameters for the `dashboard.rpc.thirdparties.dashboard_page` decorator:
 
 - `name` (`Optional[str]`): Defaults to `None` so that the user does not have to specify the name to access this page. The name will have the same limitations as Discord slash command names for ease of use.
 
-- `methods` (`List[Literal["HEAD", "GET", "OPTIONS", "POST", "PATCH", "DELETE"]]`): The web request methods allowed to call the third-party page.
+- `methods` (`Tuple[Literal["HEAD", "GET", "OPTIONS", "POST", "PATCH", "DELETE"]]`): The web request methods allowed to call the third-party page.
 
 - `context_ids` (`List[str]`): Manually specify required context IDs.
 
@@ -152,7 +152,7 @@ In `dashboard_integration.py`:
 
         @commands.Cog.listener()
         async def on_dashboard_cog_add(self, dashboard_cog: commands.Cog) -> None:  # `on_dashboard_cog_add` is triggered by the Dashboard cog automatically.
-            dashboard_cog.rpc.third_parties_extension.add_third_party(self)  # Add the third party to Dashboard.
+            dashboard_cog.rpc.third_parties_handler.add_third_party(self)  # Add the third party to Dashboard.
 
         @dashboard_page(name=None, description="Send **Hello** to a user!", methods=("GET", "POST"), is_owner=True)  # Create a default page for the third party (`name=None`). It will be available at the URL `/third-party/MyCog`.
         async def send_hello(self, user: discord.User, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg `user` means that Red-Dashboard will request a connection from a bot user with OAuth from Discord.

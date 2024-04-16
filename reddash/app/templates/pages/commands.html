@@ -147,7 +147,7 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                      {% for cog in cogs recursive %}
+                                      {% for cog in cogs %}
                                         {% for command in cogs[cog]["commands"] recursive %}
                                           {% if (not tab_name or cogs[cog]["name"] == tab_name) and query.lower() in command["name"].lower() %}
                                             <tr data-toggle="collapse" href="#collapse_{{ command.name }}" role="button" aria-expanded="false" aria-controls="collapse_{{ command.name }}">

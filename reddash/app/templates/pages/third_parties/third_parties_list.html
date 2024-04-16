@@ -48,19 +48,17 @@
                                               </tr>
                                           </thead>
                                           <tbody>
-                                            {% for third_party in third_parties recursive %}
-                                              {% for page in third_parties[third_party] recursive %}
-                                                <tr>
-                                                  <p>
-                                                    <td style="padding-left: {{ loop.depth0 * 40 + 24 }}px">
-                                                      <a class="text-{{ variables["meta"]["color"] }}" href="{{ third_parties[third_party][page].url }}">{{ page|replace("_", " ")|replace("-", " ")|title }}</a>
-                                                    </td>
-                                                  </p>
-                                                  {% if third_parties[third_party][page].description %}
-                                                    <td style="padding-left: 24px">{{ third_parties[third_party][page].description|markdown }}</td>
-                                                  {% endif %}
-                                                </tr>
-                                              {% endfor %}
+                                            {% for page in third_parties[third_party] %}
+                                              <tr>
+                                                <p>
+                                                  <td style="padding-left: {{ loop.depth0 * 40 + 24 }}px">
+                                                    <a class="text-{{ variables["meta"]["color"] }}" href="{{ third_parties[third_party][page].url }}">{{ page|replace("_", " ")|replace("-", " ")|title }}</a>
+                                                  </td>
+                                                </p>
+                                                {% if third_parties[third_party][page].description %}
+                                                  <td style="padding-left: 24px">{{ third_parties[third_party][page].description|markdown }}</td>
+                                                {% endif %}
+                                              </tr>
                                             {% endfor %}
                                           </tbody>
                                       </table>
