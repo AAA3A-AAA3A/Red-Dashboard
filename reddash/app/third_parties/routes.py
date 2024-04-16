@@ -169,6 +169,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
 
     kwargs = request.args.copy()
     required_kwargs = {}
+    optional_kwargs = {}
     for key in third_parties[name][_page]["context_ids"]:
         if key in ("user_id", "guild_id"):
             continue
@@ -182,6 +183,9 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if key not in kwargs:
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
         required_kwargs[key] = kwargs.pop(key)
+    for key in kwargs:
+        if key in third_parties[name][_page]["optional_kwargs"]:
+            optional_kwargs[key] = kwargs[key]
     extra_kwargs = kwargs
 
     data = {}
@@ -203,6 +207,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 base64.urlsafe_b64encode(app.config["WTF_CSRF_SECRET_KEY"]).decode(),
                 context_ids,
                 required_kwargs,
+                optional_kwargs,
                 extra_kwargs,
                 data,
                 app.extensions["babel"].locale_selector(),

@@ -73,13 +73,15 @@ Here are the parameters for the `dashboard.rpc.thirdparties.dashboard_page` deco
 
 - `required_kwargs` (`List[str]`): Manually specify required parameters.
 
+- `optional_kwargs` (`List[str]`): Manually specify optional parameters.
+
 - `is_owner` (`bool`): Prevents access to the page if the user is not one of the bot owners.
 
 - `hidden` (`bool`): Determines whether the page is hidden in the third parties list. Defaults to False, or True if there are required kwargs.
 
 The `DashboardRPC_ThirdParties.data_receive` RPC method receives the data from Red-Dashboard for the mentioned API endpoint. It checks the existence of the third party and the page. If the cog is no longer loaded, the request is refused with an error message. If a `context_ids` variable is provided (`user_id`, `guild_id`, `member_id`, `role_id`, or `channel_id`), the code checks if the bot has access to it and if the Discord objects actually exist. The parameters `user`, `guild`, `member`, `role`, and `channel` are then added.
 
-The arguments received from Red-Dashboard (and passed to cogs) are `method` (`Literal["HEAD", "GET", "OPTIONS", "POST", "PATCH", "DELETE"]`), `request_url` (`str`), `csrf_token` (`typing.Tuple[str, str]`), `wtf_csrf_secret_key` (`bytes`), `**context_ids`, `**required_kwargs`, `extra_kwargs` (`typing.Dict[str, typing.Any]`), data `typing.Dict[typing.Literal["form", "json"], typing.Dict[str, typing.Any]]`, and `lang_code`. Cogs should use `**kwargs` last, as the user (or Flask) is free to add any parameters they wish to the pages in the URL.
+The arguments received from Red-Dashboard (and passed to cogs) are `method` (`Literal["HEAD", "GET", "OPTIONS", "POST", "PATCH", "DELETE"]`), `request_url` (`str`), `csrf_token` (`typing.Tuple[str, str]`), `wtf_csrf_secret_key` (`bytes`), `**context_ids`, `**required_kwargs`, `**optional_kwargs`, `extra_kwargs` (`typing.Dict[str, typing.Any]`), data `typing.Dict[typing.Literal["form", "json"], typing.Dict[str, typing.Any]]`, and `lang_code`. Cogs should use `**kwargs` last, as the user (or Flask) is free to add any parameters they wish to the pages in the URL.
 
 -----------------
 What about forms?
