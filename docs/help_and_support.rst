@@ -14,8 +14,8 @@ Common Questions
 -  Did you start the bot with the RPC flag?
 -  If you started the bot with the ``--rpc-port`` flag, did you provide the same port to ``reddash``\ command when starting the webserver? Vice versa?
 -  Have you set the redirect and secret in the cog's settings?
--  Have you tried reloading the dashboard cog/restarting the webserver?
--  Have you tried updating the dashboard cog and dashboard itself?
+-  Have you tried reloading the Dashboard cog/restarting the webserver?
+-  Have you tried updating the Dashboard cog and the webserver itself?
 -  Have you tried restarting the bot?
 
 **My browser said the website take too much time to answer or a similar error.**

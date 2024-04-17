@@ -9,7 +9,7 @@ Running the Webserver with multiple bots
 
     In order for the bot to communicate with the webserver, you must add the argument ``--rpc`` to the start line of each of your Red bots. Additionally, you must add ``--rpc-port <rpcport>`` to the start line for each of your bots, dependent on the webserver you are connecting to.
 
-At this point, the dashboard cog should be loaded and initialized on your Red bot, and restarted to have RPC enabled (as mentioned above).
+At this point, the Dashboard cog should be loaded and initialized on your Red bot, and restarted to have RPC enabled (as mentioned above).
 The webserver package should be installed into it's own, separate virtual environment, and your OAuth2 settings should be updated within Discord.
 
 Once you are squared away, activate your virtual environment using the command during installation, then for each of your webservers, run the following command, replacing ``<webport>`` and ``<rpcport>`` with the ports you came up with `here <../configuration_guides/multibots>`:

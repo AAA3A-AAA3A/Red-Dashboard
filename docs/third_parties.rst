@@ -7,15 +7,15 @@
 Third Parties
 =============
 
-This guide details how to add third-party cogs to Red-Dashboard and create custom pages on the web dashboard.
+This guide details how to add third-party cogs to Red-Dashboard and create custom pages on the web Dashboard.
 
 ---------------
 Getting Started
 ---------------
 
-Red-Dashboard allows third-party integrations, enabling cog creators to add custom pages to the dashboard. Users just need to install and load the cogs that offer this integration on their bot.
+Red-Dashboard allows third-party integrations, enabling cog creators to add custom pages to the Dashboard. Users just need to install and load the cogs that offer this integration on their bot.
 
-A "Third Parties" page is present in the dashboard's side menu, providing quick access to visible pages. Hidden pages can be accessed via links provided by the cog itself. Additionally, a "Third Parties" tab is available on each guild's page.
+A "Third Parties" page is present in the Dashboard's side menu, providing quick access to visible pages. Hidden pages can be accessed via links provided by the cog itself. Additionally, a "Third Parties" tab is available on each guild's page.
 
 ⚠️ Third parties are not officially part of Red-Dashboard. Any information provided will be utilized by the third parties, not Red-Dashboard or the cog Dashboard. For more details, refer to the `Third Parties Disclaimer <https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Third%20Parties%20Disclaimer.md>`.
 

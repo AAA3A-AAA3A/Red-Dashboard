@@ -325,7 +325,7 @@ def register_blueprints(app: Flask) -> None:
             )
             and not (request.path.startswith("/set") and request.path.count("/") == 1)
         ):
-            flash(_("The dashboard is currently locked."), category="danger")
+            flash(_("The Dashboard is currently locked."), category="danger")
             return redirect(url_for("base_blueprint.index", next=request.url))
 
 

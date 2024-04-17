@@ -1,8 +1,8 @@
 # Red-Dashboard (Fork of Neuro's Dashboard)
-An easy-to-use interactive web dashboard to control your Red-DiscordBot instance! Thank you very much to Neuro for the initial work!
+An easy-to-use interactive web Dashboard to control your Red-DiscordBot instance! Thank you very much to Neuro for the initial work!
 
 ## Overview
-This project is an easy-to-use interactive web dashboard to control your Red-DiscordBot instance, allowing for easier customization of settings and more interactive plugins to develop and get your bot ready for production. Using Discord Open Authentication, users will log into the Dashboard using their Discord account, ensuring that all users are only allowed to customize and view settings that they are explicitly given permission to control, providing a safe and secure experience for all users.
+This project is an easy-to-use interactive web Dashboard to control your Red-DiscordBot instance, allowing for easier customization of settings and more interactive plugins to develop and get your bot ready for production. Using Discord Open Authentication, users will log into the Dashboard using their Discord account, ensuring that all users are only allowed to customize and view settings that they are explicitly given permission to control, providing a safe and secure experience for all users.
 
 ## Installation
 To get started on setting up your Dashboard for your Red bot, please follow the installation instructions that can be found [here](https://red-web-dashboard.readthedocs.io/en/latest).
