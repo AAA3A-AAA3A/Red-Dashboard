@@ -60,7 +60,7 @@ When running on a domain, the redirect should be something like ``https://domain
 
 .. danger:: 
 
-   For a SSL protection, you have to use a reverse proxy when setting up the webserver. Check out `Reverse proxying with Apache <../reverse_proxy_apache>` or `Reverse proxying with Nginx <../reverse_proxy_nginx>` to get started, if you are on Linux.
+   For a SSL protection, you have to use a reverse proxy when setting up the webserver. Check out Reverse proxying with `Caddy <../reverse_proxy_guides/reverse_proxy_caddy>`, with `Apache <../reverse_proxy_guides/reverse_proxy_apache>` or with `Reverse proxying with Nginx <../reverse_proxy_guides/reverse_proxy_nginx>` to get started, if you are on Linux.
 
 Option #2: Local/Private IP address
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

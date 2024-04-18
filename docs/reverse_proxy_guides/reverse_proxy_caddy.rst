@@ -33,9 +33,6 @@ Now we need to configure apache to reverse proxy port 42356, or whichever port y
 
     sudo nano /etc/caddy/Caddyfile
 
-"""
-sudo systemctl restart caddy
-
 2. Paste the following into the file, replacing ``your.domain.com`` with the domain you will be running the Dashboard on. Note that if you are running the webserver on a port other than port 42356, you will need to replace ``42356`` below with the the specified port.
 
 .. code-block:: none
@@ -46,7 +43,7 @@ sudo systemctl restart caddy
 
 .. warning::
 
-    You should use ``localhost`` instead of ``0.0.0.0`` to make the "real" webserver port private, and use the `--host localhost` cli flag for starting the webserver.
+    You should use ``localhost`` instead of ``0.0.0.0`` to make the "real" webserver port private, and use the ``--host localhost`` cli flag for starting the webserver.
 
 3. Finally, restart caddy for the changes to take effect.
 
