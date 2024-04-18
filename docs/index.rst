@@ -33,9 +33,9 @@ Welcome to Red-Dashboard's documentation!
    :maxdepth: 1
    :caption: Reverse proxy
 
-   reverse_proxy_caddy
-   reverse_proxy_apache
-   reverse_proxy_nginx
+   reverse_proxy_guides/reverse_proxy_caddy
+   reverse_proxy_guides/reverse_proxy_apache
+   reverse_proxy_guides/reverse_proxy_nginx
 
 .. toctree::
    :maxdepth: 1
