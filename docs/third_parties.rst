@@ -17,7 +17,7 @@ Red-Dashboard allows third-party integrations, enabling cog creators to add cust
 
 A "Third Parties" page is present in the Dashboard's side menu, providing quick access to visible pages. Hidden pages can be accessed via links provided by the cog itself. Additionally, a "Third Parties" tab is available on each guild's page.
 
-⚠️ Third parties are not officially part of Red-Dashboard. Any information provided will be utilized by the third parties, not Red-Dashboard or the cog Dashboard. For more details, refer to the ``Third Parties Disclaimer <https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Third%20Parties%20Disclaimer.md>``.
+⚠️ Third parties are not officially part of Red-Dashboard. Any information provided will be utilized by the third parties, not Red-Dashboard or the cog Dashboard. For more details, refer to the `Third Parties Disclaimer <https://github.com/Cog-Creators/Red-Dashboard/blob/master/documents/Third%20Parties%20Disclaimer.md>`.
 
 How It Works
 ============
