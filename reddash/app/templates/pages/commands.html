@@ -93,10 +93,13 @@
                                                                 <div class="collapse" id="collapse_{{ command.name }}">
                                                                   <div class="d-flex card card-body text-wrap">
                                                                     {% if command.signature %}
-                                                                      <strong>{{ _("Usage:") }}</stro> <code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a>
+                                                                      <strong>{{ _("Usage:") }}</strong>
+                                                                      <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a></div>
                                                                     {% endif %}
+                                                                    <br />
                                                                     {% if command.aliases %}
-                                                                      <strong>{{ _("Aliases:") }}</strong> <code>{{ command.aliases|join(", ") }}</code>
+                                                                      <strong>{{ _("Aliases:") }}</strong>
+                                                                      <code>{{ command.aliases|join(", ") }}</code>
                                                                     {% endif %}
                                                                   </div>
                                                                 </div>
@@ -156,21 +159,20 @@
                                               </td>
                                               <td style="padding-left: 24px" class="text-wrap">{{ command.short_description|markdown }}</td>
                                             </tr>
-                                            {% if command.signature or command.aliases or command.description %}
+                                            {% if command.signature or command.aliases %}
                                               <tr>
                                                 <td colspan="2" style="border: none; padding: 0px;">
                                                   <div class="collapse" id="collapse_{{ command.name }}">
                                                     <div class="d-flex card card-body text-wrap">
-                                                      {% if command.signature or command.aliases %}
-                                                        {% if command.signature %}
-                                                          <strong>{{ _("Usage:") }}</stro> <code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a>
-                                                        {% endif %}
-                                                        {% if command.aliases %}
-                                                          <strong>{{ _("Aliases:") }}</strong> <code>{{ command.aliases|join(", ") }}</code>
-                                                        {% endif %}
-                                                        <br /><br />
+                                                      {% if command.signature %}
+                                                        <strong>{{ _("Usage:") }}</strong>
+                                                        <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a></div>
                                                       {% endif %}
-                                                      {{ command.description|markdown }}
+                                                      <br />
+                                                      {% if command.aliases %}
+                                                        <strong>{{ _("Aliases:") }}</strong>
+                                                        <code>{{ command.aliases|join(", ") }}</code>
+                                                      {% endif %}
                                                     </div>
                                                   </div>
                                                 </td>

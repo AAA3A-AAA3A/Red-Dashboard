@@ -381,12 +381,12 @@ class GuildSettingsForm(FlaskForm):
     delete_delay: wtforms.IntegerField = wtforms.IntegerField(
         _("Delay before deleting invocation messages (-1 to disable):"),
         validators=[
-            wtforms.validators.DataRequired(),
+            wtforms.validators.InputRequired(),
             wtforms.validators.NumberRange(min=-1, max=60),
         ],
     )
     locale: wtforms.StringField = wtforms.StringField(
-        _("Locale:"), validators=[wtforms.validators.DataRequired(), BabelCheck(check_reset=True)]
+        _("Locale:"), validators=[wtforms.validators.InputRequired(), BabelCheck(check_reset=True)]
     )
     regional_format: wtforms.StringField = wtforms.StringField(
         _("Regional Format:"), validators=[wtforms.validators.Optional(), BabelCheck(check_reset=True)]
@@ -416,8 +416,8 @@ class MarkdownTextAreaField(wtforms.TextAreaField):
 
 
 class AliasForm(FlaskForm):
-    alias_name: wtforms.StringField = wtforms.StringField(_("Name"), validators=[wtforms.validators.DataRequired(), wtforms.validators.Regexp(r"^[^\s]+$"), wtforms.validators.Length(max=300)])
-    command: MarkdownTextAreaField = MarkdownTextAreaField(_("Command"), validators=[wtforms.validators.DataRequired(), wtforms.validators.Length(max=1700)])
+    alias_name: wtforms.StringField = wtforms.StringField(_("Name"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Regexp(r"^[^\s]+$"), wtforms.validators.Length(max=300)])
+    command: MarkdownTextAreaField = MarkdownTextAreaField(_("Command"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Length(max=1700)])
 
 
 class AliasesForm(FlaskForm):
@@ -433,7 +433,7 @@ class AliasesForm(FlaskForm):
 
 
 class CustomCommandResponseForm(FlaskForm):
-    response: MarkdownTextAreaField = MarkdownTextAreaField(_("Response"), validators=[wtforms.validators.DataRequired(), wtforms.validators.Length(max=2000)])
+    response: MarkdownTextAreaField = MarkdownTextAreaField(_("Response"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Length(max=2000)])
 
 
 class CustomCommandForm(FlaskForm):
@@ -445,7 +445,7 @@ class CustomCommandForm(FlaskForm):
         self.responses.default = [entry for entry in self.responses.entries if entry.response.data and entry.csrf_token.data is None]
         self.responses.entries = [entry for entry in self.responses.entries if not entry.response.data or entry.csrf_token.data is not None]
 
-    command: wtforms.StringField = wtforms.StringField(_("Name"), validators=[wtforms.validators.DataRequired(), wtforms.validators.Regexp(r"^[^\sA-Z]+$"), wtforms.validators.Length(max=300)])
+    command: wtforms.StringField = wtforms.StringField(_("Name"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Regexp(r"^[^\sA-Z]+$"), wtforms.validators.Length(max=300)])
     responses: wtforms.FieldList = wtforms.FieldList(wtforms.FormField(CustomCommandResponseForm), _("Responses"), min_entries=1)
 
 
@@ -719,17 +719,17 @@ class DashboardSettingsForm(FlaskForm):
     default_color: wtforms.SelectField = wtforms.SelectField(
         _("Default Color:"),
         choices=[(color, color.capitalize()) for color in AVAILABLE_COLORS],
-        validators=[wtforms.validators.DataRequired()],
+        validators=[wtforms.validators.InputRequired()],
     )
     default_background_theme: wtforms.SelectField = wtforms.SelectField(
         _("Default Background Theme:"),
         choices=[("light", "Light"), ("dark", "Dark")],
-        validators=[wtforms.validators.DataRequired()],
+        validators=[wtforms.validators.InputRequired()],
     )
     default_sidebar_theme: wtforms.SelectField = wtforms.SelectField(
         _("Default Sidebar Theme:"),
         choices=[("light", "Light"), ("dark", "Dark")],
-        validators=[wtforms.validators.DataRequired()],
+        validators=[wtforms.validators.InputRequired()],
     )
     disabled_third_parties: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
         _("Disabled Third Parties:"), choices=[]
@@ -778,7 +778,7 @@ class BotSettingsForm(FlaskForm):
         self.regional_format.default = settings["regional_format"]
 
     prefixes: wtforms.StringField = wtforms.StringField(
-        _("Prefixes:"), validators=[wtforms.validators.DataRequired(), PrefixesCheck()]
+        _("Prefixes:"), validators=[wtforms.validators.InputRequired(), PrefixesCheck()]
     )
     invoke_error_msg: wtforms.StringField = wtforms.StringField(
         _("Invoke Error Message:"), validators=[wtforms.validators.Length(max=1000)]
@@ -802,11 +802,11 @@ class BotSettingsForm(FlaskForm):
     invite_perms: wtforms.IntegerField = wtforms.IntegerField(
         _("Invite Permissions (0 for nothing):"),
         validators=[
-            wtforms.validators.DataRequired(),
+            wtforms.validators.InputRequired(),
         ],
     )
     locale: wtforms.StringField = wtforms.StringField(
-        _("Locale:"), validators=[wtforms.validators.DataRequired(), BabelCheck()]
+        _("Locale:"), validators=[wtforms.validators.InputRequired(), BabelCheck()]
     )
     regional_format: wtforms.StringField = wtforms.StringField(
         _("Regional Format:"),
