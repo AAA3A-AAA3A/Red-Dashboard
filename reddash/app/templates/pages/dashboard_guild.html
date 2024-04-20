@@ -48,14 +48,14 @@
                                             <div id="Alias">
                                                 <div class="card">
                                                     <div class="card-header" id="headingAlias">
-                                                        <a class="btn btn-link" data-toggle="collapse" data-target="#collapseAlias" aria-expanded="true" aria-controls="collapseAlias" style="width: 100%;">
+                                                        <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseAlias" aria-expanded="true" aria-controls="collapseAlias" style="width: 100%;">
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <h4 class="mb-0">{{ _("Alias") }}</h4>
                                                                 <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
                                                             </div>
                                                         </a>
                                                     </div>
-                                                    <div id="collapseAlias" class="collapse card-body" aria-labelledby="headingAlias" data-parent="#accordion">
+                                                    <div id="collapseAlias" class="collapse card-body" aria-labelledby="headingAlias">
                                                         <form action="" method="POST" role="form" enctype="multipart/form-data">
                                                             {{ aliases_form.hidden_tag() }}
                                                             {% for alias_form in aliases_form.aliases.default %}
@@ -94,14 +94,14 @@
                                             <div id="CustomCommands">
                                                 <div class="card">
                                                     <div class="card-header" id="headingCustomCommands">
-                                                        <a class="btn btn-link" data-toggle="collapse" data-target="#collapseCustomCommands" aria-expanded="true" aria-controls="collapseCustomCommands" style="width: 100%;">
+                                                        <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseCustomCommands" aria-expanded="true" aria-controls="collapseCustomCommands" style="width: 100%;">
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <h4 class="mb-0">{{ _("CustomCommands") }}</h4>
                                                                 <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
                                                             </div>
                                                         </a>
                                                     </div>
-                                                    <div id="collapseCustomCommands" class="collapse card-body" aria-labelledby="headingCustomCommands" data-parent="#accordion">
+                                                    <div id="collapseCustomCommands" class="collapse card-body" aria-labelledby="headingCustomCommands">
                                                         <form action="" method="POST" role="form" enctype="multipart/form-data">
                                                             {{ custom_commands_form.hidden_tag() }}
                                                             {% for custom_command_form in custom_commands_form.custom_commands.default %}
