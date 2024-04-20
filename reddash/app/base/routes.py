@@ -193,11 +193,7 @@ async def dashboard():
     with app.lock:
         result = await get_result(app, requeststr)
 
-    guilds = Pagination(result["guilds"])
-    guilds.total = result["total"]
-    guilds.per_page = result["per_page"]
-    guilds.pages = result["pages"]
-    guilds.page = result["page"]
+    guilds = Pagination(result.pop("items"), **result)
 
     redirecting_to: str = (
         request.args.get("next") if not app.config["USE_SESSION_FOR_NEXT"] else session.get("next")
