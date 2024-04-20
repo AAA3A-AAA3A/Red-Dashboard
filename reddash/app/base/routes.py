@@ -222,12 +222,12 @@ class LeaveGuildForm(FlaskForm):
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Leave Guild"))
 
 
-async def get_guild(guild_id: int):
+async def get_guild(guild_id: int, for_third_parties: bool = False):
     requeststr = {
         "jsonrpc": "2.0",
         "id": 0,
         "method": "DASHBOARDRPC__GET_GUILD",
-        "params": [current_user.id, guild_id],
+        "params": [current_user.id, guild_id, for_third_parties],
     }
     with app.lock:
         guild = await get_result(app, requeststr)

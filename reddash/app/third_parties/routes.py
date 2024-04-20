@@ -161,7 +161,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
             context_ids["guild_id"] = int(guild_id)
         except (TypeError, ValueError):
             return redirect(make_login_url("base_blueprint.dashboard", next_url=url_for("third_parties_blueprint.third_party", name=name, page=page, guild_id="GUILD_ID", **request.args)))
-        return_guild = await get_guild(context_ids["guild_id"])
+        return_guild = await get_guild(context_ids["guild_id"], for_third_parties=True)
         if return_guild["guild"]["status"] == 1:
             return return_guild["guild"]
     else:
