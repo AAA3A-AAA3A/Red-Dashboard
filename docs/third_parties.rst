@@ -189,7 +189,7 @@ In ``dashboard_integration.py``:
                 "web_content": {"source": source, "form": form},
             }
 
-        @dashboard_page(name="guild", details="Get basic details about a __guild__!")  # Create a page nammed "guild" for the third party. It will be available at the URL ``/dashboard/<guild_id>/third-party/MyCog/guild``.
+        @dashboard_page(name="guild", description="Get basic details about a __guild__!")  # Create a page nammed "guild" for the third party. It will be available at the URL ``/dashboard/<guild_id>/third-party/MyCog/guild``.
         async def guild_page(self, user: discord.User, guild: discord.Guild, **kwargs) -> typing.Dict[str, typing.Any]:  # The kwarg ``guild`` means that Red-Dashboard will ask for the choice of a guild among those to which the user has access.
             return {
                 "status": 0,
