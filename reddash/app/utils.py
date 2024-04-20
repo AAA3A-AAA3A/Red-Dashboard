@@ -60,12 +60,12 @@ class User(UserMixin):
         id: int,
         name: str,
         global_name: typing.Optional[str] = None,
-        avatar_url: str = "https://cdn.discordapp.com/embed/avatars/2.png",
+        avatar_url: typing.Optional[str] = None,
     ) -> None:
         self.id: int = id
         self.name: str = name
         self.global_name: typing.Optional[str] = global_name
-        self.avatar_url: str = avatar_url
+        self.avatar_url: typing.Optional[str] = avatar_url
 
         self.devices: typing.List[str] = []
 
@@ -88,6 +88,10 @@ class User(UserMixin):
     @property
     def display_name(self) -> str:
         return self.global_name or self.name
+
+    @property
+    def display_avatar(self) -> str:
+        return self.avatar_url or f"https://cdn.discordapp.com/embed/avatars/{(self.id >> 22) % 6}.png"
 
     @property
     def is_owner(self) -> bool:

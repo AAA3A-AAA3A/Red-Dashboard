@@ -140,7 +140,7 @@ async def callback():
                     id=int(new_data["id"]),
                     name=new_data["username"],
                     global_name=new_data["global_name"],
-                    avatar_url=f"https://cdn.discordapp.com/avatars/{new_data['id']}/{new_data['avatar']}.png",
+                    avatar_url=f"https://cdn.discordapp.com/avatars/{new_data['id']}/{new_data['avatar']}.png" if new_data["avatar"] is not None else None,
                 )
                 login_user(
                     user=user,
