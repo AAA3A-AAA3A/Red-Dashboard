@@ -44,12 +44,12 @@
                                         <div class="d-flex justify-content-between mb-4">
                                             {% if guild %}
                                                 {% if not fullscreen %}
-                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a>{% if page %} / {{ page|replace("_", " ")|replace("-", " ")|title }}{% endif %}</h2>
                                                 {% else %}
-                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}"><img src="{{ guild.icon_url }}" style="height: 50px; vertical-align: -13px; border-radius: 50%; margin: none; display: inline;" /> {{ guild.name }}</a> / <a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                                    <h2 class="card-title"><a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}"><img src="{{ guild.icon_url }}" style="height: 50px; vertical-align: -13px; border-radius: 50%; margin: none; display: inline;" /> {{ guild.name }}</a> / <a href="{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id, page="third-parties", third_party=name) }}">🔙 {{ name }}</a>{% if page %} / {{ page|replace("_", " ")|replace("-", " ")|title }}{% endif %}</h2>
                                                 {% endif %}
                                             {% else %}
-                                                <h2 class="card-title"><a href="{{ url_for("third_parties_blueprint.third_parties", third_party=name) }}">🔙 {{ name }}</a></h2>
+                                                <h2 class="card-title"><a href="{{ url_for("third_parties_blueprint.third_parties", third_party=name) }}">🔙 {{ name }}</a>{% if page %} / {{ page|replace("_", " ")|replace("-", " ")|title }}{% endif %}</h2>
                                             {% endif %}
                                         </div>
                                     </div>
