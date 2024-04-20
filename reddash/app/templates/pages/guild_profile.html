@@ -2,7 +2,7 @@
     <div {% if False %}class="row"{% endif %}>
         <br />
         <div class="col-sm-auto col-4 text-center">
-            <div class="avatar avatar-xl"><img src="{{ guild.icon_url }}"{% if guild.icon_animated %} onload='this.src = this.src.slice(0, -3) + "png";' onmouseover='this.src = this.src.slice(0, -3) + "gif";' onmouseout='this.src = this.src.slice(0, -3) + "png";'{% endif %} class="shadow-sm border-radius-lg" style="height: 170%; width: 170%;" /></div>
+            <div class="avatar avatar-xl"><img src={% if guild.icon_animated %}"{{ guild.icon_url[:-3] + "png" }}" onmouseover='this.src = this.src.slice(0, -3) + "gif";' onmouseout='this.src = this.src.slice(0, -3) + "png";'{% else %}"{{ guild.icon_url }}"{% endif %} class="shadow-sm border-radius-lg" style="height: 170%; width: 170%;" /></div>
         </div>
         <div class="col-sm-auto col-8 my-auto">
             <div class="h-100">
