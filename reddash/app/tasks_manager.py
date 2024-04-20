@@ -100,7 +100,7 @@ class TasksManager:
                             continue
                         if "error" in result:
                             continue
-                        if "disconnected" in result["result"]:
+                        if "disconnected" in result["result"] or "version" not in result["result"]:
                             continue
                         if result["result"]["version"] != version != 0:
                             self.ignore_disconnect: bool = True
