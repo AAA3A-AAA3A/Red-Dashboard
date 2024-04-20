@@ -287,6 +287,9 @@
                 resize_event = new Event("resize");
                 window.dispatchEvent(resize_event);
             }
+            if (!["overview", "settings", "third-parties"].includes(target_id)) {
+                target_id = "third-parties/" + target_id;
+            }
             if (target_id == "overview") {
                 var new_url = base_url;
             } else {
