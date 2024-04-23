@@ -84,6 +84,28 @@ async def third_parties(third_party: str = None):
 
 
 @blueprint.route(
+    "/api/third-party/<name>/<page>",
+    methods=(
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+@blueprint.route(
+    "/api/third-party/<name>",
+    methods=(
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST",
+        "PATCH",
+        "DELETE",
+    ),
+)
+@blueprint.route(
     "/dashboard/<guild_id>/third-party/<name>/<page>",
     methods=(
         "GET",
