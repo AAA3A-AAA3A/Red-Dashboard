@@ -190,7 +190,7 @@ def register_extensions(_app: Flask) -> None:
     old_force_https = app.talisman._force_https
 
     def _force_https():
-        if request.remote_addr == "127.0.0.1" or request.remote_addr == "::1":
+        if request.remote_addr in ("127.0.0.1", "::1"):
             return
         private_ip_ranges = [
             ("10.0.0.0", "10.255.255.255"),
@@ -202,7 +202,7 @@ def register_extensions(_app: Flask) -> None:
         return old_force_https()
 
     app.talisman._force_https = _force_https
-    app.talisman.init_app(app, content_security_policy=None)
+    app.talisman.init_app(app, force_https=False, content_security_policy=None)
 
     app.config["WTF_CSRF_ENABLED"]: bool = True
     app.config["WTF_CSRF_SECRET_KEY"]: str = base64.urlsafe_b64decode(
