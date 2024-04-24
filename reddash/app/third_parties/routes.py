@@ -37,6 +37,7 @@ async def webhook_route():
     payload["user_agent"] = str(
         request.user_agent
     )  # User agent seems adequate enough for filtering.
+    payload["request_args"] = request.args.to_dict()
     try:
         requeststr = {
             "jsonrpc": "2.0",
