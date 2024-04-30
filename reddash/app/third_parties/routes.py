@@ -215,8 +215,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
     extra_kwargs = kwargs
 
     data = {}
-    data["form"] = {key: (value if len((value := request.form.getlist(key))) > 1 else request.form.get(key)) for key in request.form}
-    data["json"] = request.json if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
+    data["form"] = request.form.to_dict(flat=False)
+    data["json"] = request.json.to_dict(flat=False) if request.method not in ("GET", "HEAD") and request.content_type == "application/json" else {}
     
     try:
         generate_csrf()
