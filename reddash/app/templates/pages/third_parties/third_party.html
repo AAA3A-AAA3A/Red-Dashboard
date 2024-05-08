@@ -1,7 +1,11 @@
-{% extends "layouts/base.html" %}
+{% if not fullscreen %}
+    {% extends "layouts/base.html" %}
+{% else %}
+    {% extends "layouts/base-fullscreen.html" %}
+{% endif %}
 
 {% block title %}
-  {{ _("Third Party") }} {{ third_party }}{% if guild %} - {{ guild.name }}{% endif %}
+  {{ _("Third Party") }} {{ name }}{% if guild %} - {{ guild.name }}{% endif %}{% if page %} / {{ page|replace("_", " ")|replace("-", " ")|title }}{% endif %}
 {% endblock %}
 
 {% block stylesheets %}{% endblock %}

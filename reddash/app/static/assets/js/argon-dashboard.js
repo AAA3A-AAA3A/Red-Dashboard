@@ -1,27 +1,23 @@
 "use strict";
 (function() {
   let isWindows = navigator.platform.indexOf("Win") > -1 ? true : false;
-
   if (isWindows) {
     // If we are on windows OS we activate the perfectScrollbar function.
     // if (document.getElementsByClassName('main-content')[0]) {
     //   let mainpanel = document.querySelector('.main-content');
     //   let ps = new PerfectScrollbar(mainpanel);
     // };
-
-    if (document.getElementsByClassName("sidenav")[0]) {
-      let sidebar = document.querySelector(".sidenav");
+    let sidebar = document.querySelector(".sidenav");
+    if (sidebar) {
       let ps1 = new PerfectScrollbar(sidebar);
     };
-
-    if (document.getElementsByClassName("navbar-collapse")[0]) {
-      let fixedplugin = document.querySelector(".navbar:not(.navbar-expand-lg) .navbar-collapse");
+    let fixedplugin = document.querySelector(".navbar:not(.navbar-expand-lg) .navbar-collapse");
+    if (fixedplugin) {
       let ps2 = new PerfectScrollbar(fixedplugin);
     };
-
-    if (document.getElementsByClassName("fixed-plugin")[0]) {
-      let fixedplugin = document.querySelector(".fixed-plugin");
-      let ps3 = new PerfectScrollbar(fixedplugin);
+    let fixedplugin2 = document.querySelector(".fixed-plugin");
+    if (fixedplugin) {
+      let ps3 = new PerfectScrollbar(fixedplugin2);
     };
   };
 })();
@@ -133,8 +129,11 @@ function sidebarColor(a) {
     a.classList.remove("active");
   }
 
+  let oldColor = null;
   let sidebar = document.querySelector(".sidenav");
-  let oldColor = sidebar.getAttribute("data-color");
+  if (sidebar) {
+    oldColor = sidebar.getAttribute("data-color");
+  }
   if (oldColor == null) {
     oldColor = "success"
   }
@@ -188,10 +187,12 @@ function sidebarType(a) {
 
   let sidebar = document.querySelector('.sidenav');
 
-  for (let i = 0; i < colors.length; i++) {
-    sidebar.classList.remove(colors[i]);
+  if (sidebar) {
+    for (let i = 0; i < colors.length; i++) {
+      sidebar.classList.remove(colors[i]);
+    }
+    sidebar.classList.add(color);
   }
-  sidebar.classList.add(color);
 
   // Remove text-white/text-dark classes.
   if (color == 'bg-white') {
