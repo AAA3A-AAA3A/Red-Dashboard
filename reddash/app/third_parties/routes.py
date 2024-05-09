@@ -212,7 +212,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         required_kwargs[key] = kwargs.pop(key)
     for key in kwargs:
         if key in third_parties[name][_page]["optional_kwargs"]:
-            optional_kwargs[key] = kwargs[key]
+            optional_kwargs[key] = kwargs.pop(key)
     extra_kwargs = kwargs
 
     data = {}
