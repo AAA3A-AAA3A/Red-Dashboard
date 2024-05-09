@@ -3,6 +3,7 @@ import typing  # isort:skip
 from reddash.app.app import app
 
 from flask import abort, flash, jsonify, redirect, render_template, render_template_string, url_for, request, session, g
+from werkzeug.exceptions import HTTPException
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
@@ -334,6 +335,8 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 return abort(400)
             return redirect(result["redirect_url"])
         return result
+    except HTTPException:
+        raise
     except Exception as e:
         app.logger.error(
             f"Error in the page `{page or 'Main Page'}` of the third party `{name}`.", exc_info=e

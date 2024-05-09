@@ -50,7 +50,7 @@ async def discord_oauth():
     if (redirect_uri := app.data["core"]["redirect_uri"]) is None:
         redirect_uri = (
             f"http://127.0.0.1:{app.port}/callback"
-            if app.host == "0.0.0.0"
+            if app.host in ("0.0.0.0", "127.0.0.1")
             else f"http://{app.host}/callback"
         )
     state = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))

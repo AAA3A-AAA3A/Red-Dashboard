@@ -38,7 +38,7 @@ class TasksManager:
                     "jsonrpc": "2.0",
                     "id": 0,
                     "method": method,
-                    "params": [True] if only_bot_variables else [],
+                    "params": [only_bot_variables, [self.app.host, self.app.port]] if method == "DASHBOARDRPC__GET_VARIABLES" else [],
                 }
                 if self.app.cog is None:
                     with self.app.lock:
