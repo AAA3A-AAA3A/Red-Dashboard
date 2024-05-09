@@ -194,9 +194,7 @@ In ``dashboard_integration.py``:
             return {
                 "status": 0,
                 "web_content": {  # Return a web content with the text variable ``title_content``.
-                    "source": '<h4>You are in the guild "{{ guild.name }}" ({{ guild.id }})!</h4>',
-                    "guild": {"name": guild.name, "id": guild.id},
-                },
+                    "source": '<h4>You are in the guild "{{ guild.name }}" ({{ guild.id }})!</h4>',                },
             }
 
 ---------------------------------
