@@ -13,7 +13,8 @@ div.card-body:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
     color: white !important;
 }
 
-.choices__item--choice {
+.choices__item--choice,
+.choices[data-type=select-one] .choices__item {
     color: black !important;
 }
 
