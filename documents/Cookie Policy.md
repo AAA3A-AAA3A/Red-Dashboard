@@ -27,7 +27,7 @@ If you're signed into the Red-Dashboard website, then we use the authorization d
 We also use CSRF tokens to prevent user impersonation when sending forms.
 
 ### User experience
-If you are using the Red-Dashboard website, then we use data such as your preferred background color, background/sidebar theme and language locale to better your user experience.
+If you are using the Red-Dashboard website, then we use data such as your preferred background color, background/sidenav theme and language locale to better your user experience.
 
 ## 2. Why we store this data in cookies
 

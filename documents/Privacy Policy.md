@@ -20,7 +20,7 @@ This Privacy Policy applies to any unmodified distribution of the source code fo
 There are various ways we collect information about you as a user. The following detail how we access this information:
 
 ### Information you provide using the website/service:
-1. Red-Dashboard background color and background/sidebar theme, such as in what way you would like the UI to look to you.
+1. Red-Dashboard background color and background/sidenav theme, such as in what way you would like the UI to look to you.
 2. Preferred Language Locale, or what language you would like the information to be presented to you.
 3. Your IP addressed (in situations described below).
 

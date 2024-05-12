@@ -46,7 +46,7 @@ async def index():
 
 @blueprint.route("/setcolor", methods=("POST",))
 async def set_color():
-    resp = make_response(jsonify({"status": 1}))
+    resp = make_response(jsonify({"status": 0}))
     color = request.json.get("color")
     if color is not None and color != app.data["ui"]["meta"]["default_color"]:
         resp.set_cookie(
@@ -61,7 +61,7 @@ async def set_color():
 
 @blueprint.route("/setbackgroundtheme", methods=("POST",))
 async def set_background_theme():
-    resp = make_response(jsonify({"status": 1}))
+    resp = make_response(jsonify({"status": 0}))
     background_theme = request.json.get("background_theme")
     if (
         background_theme is not None
@@ -77,21 +77,21 @@ async def set_background_theme():
     return resp
 
 
-@blueprint.route("/setsidebartheme", methods=("POST",))
-async def set_sidebar_theme():
+@blueprint.route("/setsidenavtheme", methods=("POST",))
+async def set_sidenav_theme():
     resp = make_response(jsonify({"status": 1}))
-    sidebar_theme = request.json.get("sidebar_theme")
+    sidenav_theme = request.json.get("sidenav_theme")
     if (
-        sidebar_theme is not None
-        and sidebar_theme != app.data["ui"]["meta"]["default_sidebar_theme"]
+        sidenav_theme is not None
+        and sidenav_theme != app.data["ui"]["meta"]["default_sidenav_theme"]
     ):
         resp.set_cookie(
-            key="sidebar_theme",
-            value=sidebar_theme,
+            key="sidenav_theme",
+            value=sidenav_theme,
             expires=datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=365),
         )
     else:
-        resp.delete_cookie("sidebar_theme")
+        resp.delete_cookie("sidenav_theme")
     return resp
 
 
@@ -701,7 +701,7 @@ class DashboardSettingsForm(FlaskForm):
         self.support_server.default = settings["support_server"]
         self.default_color.default = settings["default_color"]
         self.default_background_theme.default = settings["default_background_theme"]
-        self.default_sidebar_theme.default = settings["default_sidebar_theme"]
+        self.default_sidenav_theme.default = settings["default_sidenav_theme"]
         self.disabled_third_parties.choices = [
             (third_party, third_party) for third_party in app.variables["third_parties"]
         ]
@@ -719,12 +719,12 @@ class DashboardSettingsForm(FlaskForm):
     )
     default_background_theme: wtforms.SelectField = wtforms.SelectField(
         _("Default Background Theme:"),
-        choices=[("light", "Light"), ("dark", "Dark")],
+        choices=[("white", "White"), ("dark", "Dark")],
         validators=[wtforms.validators.InputRequired()],
     )
-    default_sidebar_theme: wtforms.SelectField = wtforms.SelectField(
-        _("Default Sidebar Theme:"),
-        choices=[("light", "Light"), ("dark", "Dark")],
+    default_sidenav_theme: wtforms.SelectField = wtforms.SelectField(
+        _("Default Sidenav Theme:"),
+        choices=[("white", "White"), ("dark", "Dark")],
         validators=[wtforms.validators.InputRequired()],
     )
     disabled_third_parties: wtforms.SelectMultipleField = wtforms.SelectMultipleField(
@@ -894,7 +894,7 @@ async def admin(
             "support_server": dashboard_settings_form.support_server.data.strip() or None,
             "default_color": dashboard_settings_form.default_color.data,
             "default_background_theme": dashboard_settings_form.default_background_theme.data,
-            "default_sidebar_theme": dashboard_settings_form.default_sidebar_theme.data,
+            "default_sidenav_theme": dashboard_settings_form.default_sidenav_theme.data,
             "disabled_third_parties": dashboard_settings_form.disabled_third_parties.data,
         }
         requeststr = {

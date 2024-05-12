@@ -1,6 +1,6 @@
 "use strict";
 (function() {
-  let isWindows = navigator.platform.indexOf("Win") > -1 ? true : false;
+  let isWindows = !!(navigator.platform.indexOf("Win") > -1);
   if (isWindows) {
     // If we are on windows OS we activate the perfectScrollbar function.
     // if (document.getElementsByClassName('main-content')[0]) {
@@ -9,16 +9,23 @@
     // };
     let sidebar = document.querySelector(".sidenav");
     if (sidebar) {
-      let ps1 = new PerfectScrollbar(sidebar);
+      new PerfectScrollbar(sidebar);
     };
     let fixedplugin = document.querySelector(".navbar:not(.navbar-expand-lg) .navbar-collapse");
     if (fixedplugin) {
-      let ps2 = new PerfectScrollbar(fixedplugin);
+      new PerfectScrollbar(fixedplugin);
     };
     let fixedplugin2 = document.querySelector(".fixed-plugin");
     if (fixedplugin) {
-      let ps3 = new PerfectScrollbar(fixedplugin2);
+      new PerfectScrollbar(fixedplugin2);
     };
+    let scrollbar = document.querySelector("#sidenav-scrollbar");
+    if (scrollbar) {
+      let options = {
+        damping: "0.5"
+      }
+      Scrollbar.init(scrollbar, options);
+    }
   };
 })();
 
@@ -112,51 +119,27 @@ if (document.querySelector(".fixed-plugin")) {
 
 }
 
-//Set Sidebar Color.
-function sidebarColor(a) {
+// Set Sidenav Color.
+function sidenavColor(a) {
   let parent = a.parentElement.children;
   let color = a.getAttribute("data-color");
-
-  let colors = [];
+  let oldColor = null;
   for (let i = 0; i < parent.length; i++) {
+    if (parent[i].classList.contains("active")) {
+      oldColor = parent[i].getAttribute("data-color");
+    }
     parent[i].classList.remove("active");
-    colors.push(parent[i].getAttribute("data-color"));
   }
-
   if (!a.classList.contains("active")) {
     a.classList.add("active");
   } else {
     a.classList.remove("active");
   }
-
-  let oldColor = null;
-  let sidebar = document.querySelector(".sidenav");
-  if (sidebar) {
-    oldColor = sidebar.getAttribute("data-color");
-  }
-  if (oldColor == null) {
-    oldColor = "success"
-  }
-  sidebar.setAttribute("data-color", color);
-
   let background = document.querySelector(".min-height-300");
-  // for (let i = 0; i < colors.length; i++) {
-  //   background.classList.remove("bg-gradient-" + colors[i]);
-  // }
   background.classList.remove("bg-gradient-" + oldColor);
   background.classList.add("bg-gradient-" + color);
-
-  // if (document.querySelector("#sidenavCard")) {
-  //   let sidenavCard = document.querySelector("#sidenavCard+.btn+.btn");
-  //   let sidenavCardClasses = ["btn", "btn-sm", "w-100", "mb-0", "bg-gradient-" + color];
-  //   sidenavCard.removeAttribute("class");
-  //   sidenavCard.classList.add(...sidenavCardClasses);
-  // }
   let buttons = document.querySelectorAll(".btn.bg-gradient-" + oldColor);
   for (let i = 0; i < buttons.length; i++) {
-    // for (let i = 0; i < colors.length; i++) {
-    //   buttons[j].classList.remove("bg-gradient-" + colors[i]);
-    // }
     if (buttons[i].tagName == "button") {
       continue
     }
@@ -165,148 +148,88 @@ function sidebarColor(a) {
   }
 }
 
-// Set Sidebar Type.
-function sidebarType(a) {
+// Set Background Theme.
+function backgroundTheme(a) {
+  let theme = a.checked ? "dark" : "white";
+  document.querySelector("#background_theme").href = "/static/assets/css/themes/background_theme_" + theme + ".css";
+  if (theme === "dark") {
+    document.querySelector("#sidenav-theme-select").children[1].click();
+  } else {
+    document.querySelector("#sidenav-theme-select").children[0].click();
+  }
+}
+
+// Set Sidenav Theme.
+function sidenavTheme(a) {
   let parent = a.parentElement.children;
-  let color = a.getAttribute("data-class");
-  let body = document.querySelector("body");
-  let bodyWhite = document.querySelector("body:not(.dark-version)");
-  let bodyDark = body.classList.contains("dark-version");
-
-  let colors = [];
+  let theme = a.getAttribute("data-class");
+  let themes = [];
   for (let i = 0; i < parent.length; i++) {
-    parent[i].classList.remove('active');
-    colors.push(parent[i].getAttribute('data-class'));
+    parent[i].classList.remove("active");
+    themes.push(parent[i].getAttribute("data-class"));
   }
-
-  if (!a.classList.contains('active')) {
-    a.classList.add('active');
+  if (!a.classList.contains("active")) {
+    a.classList.add("active");
   } else {
-    a.classList.remove('active');
+    a.classList.remove("active");
   }
-
-  let sidebar = document.querySelector('.sidenav');
-
-  if (sidebar) {
-    for (let i = 0; i < colors.length; i++) {
-      sidebar.classList.remove(colors[i]);
-    }
-    sidebar.classList.add(color);
-  }
-
-  // Remove text-white/text-dark classes.
-  if (color == 'bg-white') {
-    let textWhites = document.querySelectorAll('.sidenav .text-white');
-    for (let i = 0; i < textWhites.length; i++) {
-      textWhites[i].classList.remove('text-white');
-      textWhites[i].classList.add('text-dark');
-    }
-  } else {
-    let textDarks = document.querySelectorAll('.sidenav .text-dark');
-    for (let i = 0; i < textDarks.length; i++) {
-      textDarks[i].classList.add('text-white');
-      textDarks[i].classList.remove('text-dark');
-    }
-  }
-
-  if (color == 'bg-default' && bodyDark) {
-    let textDarks = document.querySelectorAll('.navbar-brand .text-dark');
-    for (let i = 0; i < textDarks.length; i++) {
-      textDarks[i].classList.add('text-white');
-      textDarks[i].classList.remove('text-dark');
-    }
-  }
-
-  // Remove logo-white/logo-dark.
-
-  if ((color == 'bg-white') && bodyWhite) {
-    let navbarBrand = document.querySelector('.navbar-brand-img');
-    let navbarBrandImg = navbarBrand.src;
-
-    if (navbarBrandImg.includes('logo-ct.png')) {
-      let navbarBrandImgNew = navbarBrandImg.replace("logo-ct", "logo-ct-dark");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  } else {
-    let navbarBrand = document.querySelector('.navbar-brand-img');
-    let navbarBrandImg = navbarBrand.src;
-    if (navbarBrandImg.includes('logo-ct-dark.png')) {
-      let navbarBrandImgNew = navbarBrandImg.replace("logo-ct-dark", "logo-ct");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  }
-
-  if (color == 'bg-white' && bodyDark) {
-    let navbarBrand = document.querySelector('.navbar-brand-img');
-    let navbarBrandImg = navbarBrand.src;
-
-    if (navbarBrandImg.includes('logo-ct.png')) {
-      let navbarBrandImgNew = navbarBrandImg.replace("logo-ct", "logo-ct-dark");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  }
+  document.querySelector("#sidenav_theme").href = "/static/assets/css/themes/sidenav_theme_" + theme + ".css";
 }
 
 // Set Navbar Fixed.
 function navbarFixed(el) {
-  let classes = ['position-sticky', 'bg-white', 'left-auto', 'top-2', 'z-index-sticky'];
-  let navbar = document.getElementById('navbarBlur');
-
+  let classes = ["position-sticky", "bg-white", "left-auto", "top-2", "z-index-sticky"];
+  let navbar = document.getElementById("navbarBlur");
   if (!el.getAttribute("checked")) {
-    toggleNavLinksColor('blur');
+    toggleNavLinksColor("blur");
     navbar.classList.add(...classes);
-    navbar.setAttribute('data-scroll', 'true');
-    navbarBlurOnScroll('navbarBlur');
+    navbar.setAttribute("data-scroll", "true");
+    navbarBlurOnScroll("navbarBlur");
     el.setAttribute("checked", "true");
   } else {
-    toggleNavLinksColor('transparent');
+    toggleNavLinksColor("transparent");
     navbar.classList.remove(...classes);
-    navbar.setAttribute('data-scroll', 'false');
-    navbarBlurOnScroll('navbarBlur');
+    navbar.setAttribute("data-scroll", "false");
+    navbarBlurOnScroll("navbarBlur");
     el.removeAttribute("checked");
   }
 };
 
 // Set Navbar Minimized.
 function navbarMinimize(el) {
-  let sidenavShow = document.getElementsByClassName('g-sidenav-show')[0];
-
+  let sidenavShow = document.getElementsByClassName("g-sidenav-show")[0];
   if (!el.getAttribute("checked")) {
-    sidenavShow.classList.remove('g-sidenav-pinned');
-    sidenavShow.classList.add('g-sidenav-hidden');
+    sidenavShow.classList.remove("g-sidenav-pinned");
+    sidenavShow.classList.add("g-sidenav-hidden");
     el.setAttribute("checked", "true");
   } else {
-    sidenavShow.classList.remove('g-sidenav-hidden');
-    sidenavShow.classList.add('g-sidenav-pinned');
+    sidenavShow.classList.remove("g-sidenav-hidden");
+    sidenavShow.classList.add("g-sidenav-pinned");
     el.removeAttribute("checked");
   }
 }
 
 function toggleNavLinksColor(type) {
-  let navLinks = document.querySelectorAll('.navbar-main .nav-link, .navbar-main .breadcrumb-item, .navbar-main .breadcrumb-item a, .navbar-main h6')
-  let navLinksToggler = document.querySelectorAll('.navbar-main .sidenav-toggler-line')
-
+  let navLinks = document.querySelectorAll(".navbar-main .nav-link, .navbar-main .breadcrumb-item, .navbar-main .breadcrumb-item a, .navbar-main h6");
+  let navLinksToggler = document.querySelectorAll(".navbar-main .sidenav-toggler-line");
   if (type === "blur") {
     navLinks.forEach(element => {
-      element.classList.remove('text-white')
+      element.classList.remove("text-white");
     });
-
     navLinksToggler.forEach(element => {
-      element.classList.add('bg-dark')
-      element.classList.remove('bg-white')
+      element.classList.add("bg-dark");
+      element.classList.remove("bg-white");
     });
   } else if (type === "transparent") {
     navLinks.forEach(element => {
-      element.classList.add('text-white')
+      element.classList.add("text-white");
     });
-
     navLinksToggler.forEach(element => {
-      element.classList.remove('bg-dark')
-      element.classList.add('bg-white')
+      element.classList.remove("bg-dark");
+      element.classList.add("bg-white");
     });
   }
 }
-
 
 // Navbar blur on scroll.
 function navbarBlurOnScroll(id) {
@@ -316,7 +239,7 @@ function navbarBlurOnScroll(id) {
   let classes = ["bg-white", "left-auto", "position-sticky"];
   let toggleClasses = ["shadow-none"];
 
-  if (navbarScrollActive == 'true') {
+  if (navbarScrollActive == "true") {
     window.onscroll = debounce(function() {
       if (window.scrollY > scrollDistance) {
         blurNavbar();
@@ -330,7 +253,7 @@ function navbarBlurOnScroll(id) {
     }, 10);
   }
 
-  let isWindows = navigator.platform.indexOf("Win") > -1 ? true : false;
+  let isWindows = !!(navigator.platform.indexOf("Win") > -1);
 
   if (isWindows) {
     let content = document.querySelector(".main-content");
@@ -360,7 +283,7 @@ function navbarBlurOnScroll(id) {
     navbar.classList.remove(...classes)
     navbar.classList.add(...toggleClasses)
 
-    toggleNavLinksColor('transparent');
+    toggleNavLinksColor("transparent");
   }
 }
 

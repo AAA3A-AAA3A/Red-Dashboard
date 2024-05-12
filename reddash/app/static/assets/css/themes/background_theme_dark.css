@@ -1,0 +1,28 @@
+body:not(.sidenav):not(.sidenav > *):not(.sidenav *),
+div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *),
+div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
+    background-color: #333 !important;
+}
+
+body:not(.sidenav):not(.sidenav > *):not(.sidenav *),
+div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *),
+div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *) > *,
+div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *),
+div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *) > *,
+div.card-body:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
+    color: white !important;
+}
+
+.choices__item--choice {
+    color: black !important;
+}
+
+div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
+    border-radius: var(--bs-card-border-radius) !important;
+}
+
+body:not(.sidenav):not(.sidenav > *) a:not(.btn,.nav-link,.nav-item,h6):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)),
+div.card:not(.sidenav):not(.sidenav > *) a:not(.btn,h6,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)),
+div.card-header:not(.sidenav):not(.sidenav > *) a:not(.btn,h6,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)) {
+    color: var(--bs-indigo);
+}

@@ -359,13 +359,13 @@ def add_constants(app: Flask) -> None:
         meta["background_theme"] = request.cookies.get(
             "background_theme", meta["default_background_theme"]
         )
-        meta["sidebar_theme"] = request.cookies.get("sidebar_theme", meta["default_sidebar_theme"])
+        meta["sidenav_theme"] = request.cookies.get("sidenav_theme", meta["default_sidenav_theme"])
         return {"meta": meta}
 
-    def process_sidebar() -> typing.List[typing.Dict]:
-        sidebar = sorted(app.data["ui"]["sidebar"], key=lambda x: x["pos"])
+    def process_sidenav() -> typing.List[typing.Dict]:
+        sidenav = sorted(app.data["ui"]["sidenav"], key=lambda x: x["pos"])
         final = []
-        for item in sidebar:
+        for item in sidenav:
             item = dict(item.items())
             if item["session"] is True and not current_user.is_authenticated:
                 continue
@@ -469,7 +469,7 @@ def add_constants(app: Flask) -> None:
         variables["locales"] = app.config["LOCALE_DICT"]
         variables["safelocales"] = json.dumps(app.config["LOCALE_DICT"])
         variables["selectedlocale"] = session.get("lang_code")
-        variables["sidebar"] = process_sidebar()
+        variables["sidenav"] = process_sidenav()
         uptime = datetime.datetime.fromtimestamp(
             app.variables["stats"]["uptime"]
         )

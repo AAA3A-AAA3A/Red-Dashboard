@@ -28,11 +28,11 @@
                 <h4>{{ variables["meta"]["description"]|markdown }}</h4>
                 <br />
                 {% if variables["bot"]["invite_public"] or (current_user.is_authenticated and current_user.is_owner) %}
-                  <a class="btn btn-m bg-gradient-success" href="{{ variables["bot"]["invite_url"] }}" target="_blank" style="width: 65%;"><i class="fa fa-plus-circle me-2" style="vertical-align: -0.5px;"></i>{{ _("Invite Me!") }}</a>
+                  <a class="btn btn-m bg-gradient-{{ variables["meta"]["color"] }}" href="{{ variables["bot"]["invite_url"] }}" target="_blank" style="width: 65%;"><i class="fa fa-plus-circle me-2" style="vertical-align: -0.5px;"></i>{{ _("Invite Me!") }}</a>
                 {% endif %}
                 {% if False %}
                   <br />
-                  <a class="btn bg-gradient-success" href="{{ variables["meta"]["support_server"] }}" target="_blank">{{ _("Join support server") }}</a>
+                  <a class="btn bg-gradient-{{ variables["meta"]["color"] }}" href="{{ variables["meta"]["support_server"] }}" target="_blank">{{ _("Join support server") }}</a>
                 {% endif %}
               </div>
             </div>

@@ -20,7 +20,7 @@
                     <p>{{ _("Successfully forwarded your account informations. You may now close this tab and go back to Discord.") }}</p>
                     <img src="{{ config.ASSETS_ROOT }}/oauth.png" height="250" />
                     <br /><br />
-                    <a class="btn bg-gradient-success mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
+                    <a class="btn bg-gradient-{{ variables["meta"]["color"] }} mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
                   </div>
                 </div>
                 <div class="card-footer">

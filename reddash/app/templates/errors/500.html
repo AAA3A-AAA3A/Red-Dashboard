@@ -24,7 +24,7 @@
                     {% endif %}
                     <img src="{{ config.ASSETS_ROOT }}/error-500.gif" height="225" />
                     <br /><br />
-                    <a class="btn bg-gradient-success mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
+                    <a class="btn bg-gradient-{{ variables["meta"]["color"] }} mb-1 w-30" href="{{ url_for("base_blueprint.index") }}">{{ _("Back to Home") }}</a>
                   </div>
                 </div>
               </div>

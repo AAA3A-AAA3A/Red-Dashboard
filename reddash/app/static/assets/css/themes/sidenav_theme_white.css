@@ -1,0 +1,12 @@
+.sidenav {
+    background-color: white !important;
+    color: black !important;
+}
+
+.sidenav a:not(.btn), .sidenav span {
+    color: black !important;
+}
+
+.sidenav a.nav-link:hover:not(.active), .sidenav a.nav-link:hover:not(.active) span {
+    color: black !important;
+}

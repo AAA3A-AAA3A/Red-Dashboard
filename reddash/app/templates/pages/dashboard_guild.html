@@ -81,7 +81,7 @@
                                                             {% endfor %}
                                                             <a href="javascript:void(0);" onclick="createAlias(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Alias") }}</a>
                                                             <div class="text-center">
-                                                                {{ aliases_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                                                {{ aliases_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
                                                             </div>
                                                         </form>
                                                     </div>
@@ -136,7 +136,7 @@
                                                             {% endfor %}
                                                             <a href="javascript:void(0);" onclick="createCustomCommand(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Custom Command") }}</a>
                                                             <div class="text-center">
-                                                                {{ custom_commands_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                                                {{ custom_commands_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
                                                             </div>
                                                         </form>
                                                     </div>
@@ -244,7 +244,7 @@
                                                 </div>
                                             </div>
                                             <div class="text-center">
-                                                {{ guild_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                                {{ guild_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
                                             </div>
                                         </form>
                                     </div>

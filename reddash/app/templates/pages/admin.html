@@ -107,9 +107,9 @@
                                 </p>
                                 <form action="" method="POST" role="form" enctype="multipart/form-data">
                                     {{ dashboard_actions_form.hidden_tag() }}
-                                    {{ dashboard_actions_form.lock(class="btn mb-0 bg-gradient-success btn-md my-4 mb-2", onclick="return confirmLock(event);") }}
+                                    {{ dashboard_actions_form.lock(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4 mb-2", onclick="return confirmLock(event);") }}
                                     <p><i>{{ _("This will lock the dashboard and prevent anyone from accessing control panels. Website administrators will still have access, and users will still be able to login through Discord Open Authentication.") }}</i></p>
-                                    {{ dashboard_actions_form.refresh_sessions(class="btn mb-0 bg-gradient-success btn-md my-4 mb-2", onclick="return confirmRefreshSessions(event);") }}
+                                    {{ dashboard_actions_form.refresh_sessions(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4 mb-2", onclick="return confirmRefreshSessions(event);") }}
                                     <p><i>{{ _("This will log out all active users and require them to re-authenticate, including website administrators.") }}</i></p>
                                 </form>
                             </div>
@@ -176,8 +176,8 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="form-group-label">{{ dashboard_settings_form.default_sidebar_theme.label.text }}</label>
-                                                {{ dashboard_settings_form.default_sidebar_theme(class="form-control form-control-default") }}
+                                                <label class="form-group-label">{{ dashboard_settings_form.default_sidenav_theme.label.text }}</label>
+                                                {{ dashboard_settings_form.default_sidenav_theme(class="form-control form-control-default") }}
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        {{ dashboard_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                        {{ dashboard_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
                                     </div>
                                 </form>
                             </div>
@@ -313,7 +313,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        {{ bot_settings_form.submit(class="btn mb-0 bg-gradient-success btn-md w-100 my-4 mb-2") }}
+                                        {{ bot_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
                                     </div>
                                 </form>
                             </div>
@@ -365,7 +365,7 @@
                     </div>
                     <div class="modal-footer">
                         <a class="btn btn-secondary" data-dismiss="modal">{{ _("Fermer") }}</a>
-                        {{ bot_profile_form.submit(class="btn mb-0 bg-gradient-success btn-md w-30 mt-2 mb-4") }}
+                        {{ bot_profile_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-30 mt-2 mb-4") }}
                     </div>
                 </form>
             </div>

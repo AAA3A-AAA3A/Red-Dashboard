@@ -50,6 +50,9 @@
      <link href="{{ config.ASSETS_ROOT }}/css/nucleo-svg.css" rel="stylesheet" />
      <!-- CSS Files -->
      <link id="pagestyle" href="{{ config.ASSETS_ROOT }}/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+     <link id="background_theme" href="{{ config.ASSETS_ROOT }}/css/themes/background_theme_{{ variables["meta"]["background_theme"] }}.css" rel="stylesheet" />
+     <link id="sidenav_theme" href="{{ config.ASSETS_ROOT }}/css/themes/sidenav_theme_{{ variables["meta"]["sidenav_theme"] }}.css" rel="stylesheet" />
+  
      <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
      <style>
        body #toast-container > div {
@@ -119,18 +122,6 @@
  
      <!-- Specific JS goes HERE -->
      {% block javascripts %}{% endblock %}
- 
-     <script>
-      document.querySelector("#background-color-select").querySelector('.bg-gradient-{{ variables["meta"]["color"] }}').click();
-      {% if variables["meta"]["background_theme"] == "dark" %}
-        document.querySelector("#background-theme-select").firstElementChild.click();
-      {% endif %}
-      {% if variables["meta"]["sidebar_theme"] == "white" %}
-        document.querySelector("#sidebar-theme-select").children[0].click();
-      {% else %}
-        document.querySelector("#sidebar-theme-select").children[1].click();
-      {% endif %}
-     </script>
    </body>
  </html>
  
