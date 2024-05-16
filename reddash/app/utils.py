@@ -202,7 +202,8 @@ def register_extensions(_app: Flask) -> None:
         return old_force_https()
 
     app.talisman._force_https = _force_https
-    app.talisman.init_app(app, force_https=False, content_security_policy=None)
+    allow_unsecure_http_requests = app.data["core"]["allow_unsecure_http_requests"]
+    app.talisman.init_app(app, force_https=not allow_unsecure_http_requests, session_cookie_secure=not allow_unsecure_http_requests, content_security_policy=None)
 
     app.config["WTF_CSRF_ENABLED"]: bool = True
     app.config["WTF_CSRF_SECRET_KEY"]: str = base64.urlsafe_b64decode(
