@@ -54,8 +54,8 @@
                                               </div>
                                               <div class="row">
                                                 <div class="col-ms-8">
-                                                    <p class="mb-0">{{ (_("Author(s): {author}")).format(author=cogs[cog]["author"])}}</p>
-                                                    <p>{{ _("Repo:") }} <a {% if cogs[cog]["repo"] != "Unknown" %}href="{{ cogs[cog]["repo"] }}"{% endif %}>{{ cogs[cog]["repo"] }}</a></p>
+                                                    <p class="mb-0"><b>{{ _("Author(s):") }}</b> {{ cogs[cog]["author"] }}</p>
+                                                    <p><b>{{ _("Repo:") }}</b> <a {% if cogs[cog]["repo"] != "Unknown" %}href="{{ cogs[cog]["repo"] }}"{% endif %}>{{ cogs[cog]["repo"] }}</a></p>
                                                 </div>
                                                 <div class="col-sm-4 text-left">
                                                     <div class="dropdown show">

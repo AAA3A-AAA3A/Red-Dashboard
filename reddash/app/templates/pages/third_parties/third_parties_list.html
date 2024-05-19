@@ -36,8 +36,8 @@
                                       </div>
                                       <div class="row">
                                           <div class="col-ms-8">
-                                              <p class="mb-0">{{ (_("Author(s): {author}")).format(author=third_parties_infos[third_party]["author"])}}</p>
-                                              <p>{{ _("Repo:") }} <a {% if third_parties_infos[third_party]["repo"] != "Unknown" %}href="{{ third_parties_infos[third_party]["repo"] }}"{% endif %}>{{ third_parties_infos[third_party]["repo"] }}</a></p>
+                                              <p class="mb-0"><b>{{ _("Author(s):") }}</b> {{ third_parties_infos[third_party]["author"] }}</p>
+                                              <p><b>{{ _("Repo:") }}</b> <a {% if third_parties_infos[third_party]["repo"] != "Unknown" %}href="{{ third_parties_infos[third_party]["repo"] }}"{% endif %}>{{ third_parties_infos[third_party]["repo"] }}</a></p>
                                           </div>
                                       </div>
                                       <table class="table tablesorter">

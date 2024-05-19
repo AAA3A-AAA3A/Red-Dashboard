@@ -1,16 +1,33 @@
-body:not(.sidenav):not(.sidenav > *):not(.sidenav *),
-div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *),
-div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
+body:not(.sidenav),
+div.card:not(.sidenav),
+div.card-header:not(.sidenav),
+div.card-body:not(.sidenav),
+.nav:not(.sidenav), .nav:not(.sidenav) * {
     background-color: #333 !important;
+    color: white !important;
 }
 
-body:not(.sidenav):not(.sidenav > *):not(.sidenav *),
-div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *),
-div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *) > *,
-div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *),
-div.card-header:not(.sidenav):not(.sidenav > *):not(.sidenav *) > *,
-div.card-body:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
-    color: white !important;
+div.card:not(.sidenav), div.card:not(.sidenav) > *,
+.nav:not(.sidenav), .nav:not(.sidenav) > * {
+    border-radius: var(--bs-card-border-radius) !important;
+}
+
+.nav.nav-pills .nav-link.active {
+    background-color: transparent !important;
+}
+.moving-tab .nav-link {
+    color: black !important;
+}
+.moving-tab .nav-link.active {
+    color: black !important;
+    box-shadow: 0px 1px 5px 1px black !important;
+    background: black !important;
+}
+
+body:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)) {
+    color: var(--bs-indigo);
 }
 
 .choices__item--choice,
@@ -18,12 +35,11 @@ div.card-body:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
     color: black !important;
 }
 
-div.card:not(.sidenav):not(.sidenav > *):not(.sidenav *) {
-    border-radius: var(--bs-card-border-radius) !important;
+.editor-toolbar button:not(.active,:hover),
+h1, h2, h3, h4, h5, h6, h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
+    color: white !important;
 }
 
-body:not(.sidenav):not(.sidenav > *) a:not(.btn,.nav-link,.nav-item,h6):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)),
-div.card:not(.sidenav):not(.sidenav > *) a:not(.btn,h6,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)),
-div.card-header:not(.sidenav):not(.sidenav > *) a:not(.btn,h6,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item,h6)) {
-    color: var(--bs-indigo);
+hr {
+    border-color: white !important;
 }
