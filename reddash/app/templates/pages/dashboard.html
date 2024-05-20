@@ -62,8 +62,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <br />
-            <div id="guilds-pagination"></div>
+            {{ guilds.to_html("guilds") }}
           </div>
         </div>
       </div>
@@ -83,49 +82,5 @@
         window.location.href = "{{ url_for_query(query=None) }}";
       }
     }
-  </script>
-  <script>
-    {% if guilds.has_prev() or guilds.has_next() %}
-        document.addEventListener("DOMContentLoaded", function () {
-            {% if guilds.page|string != request.args.get("page", "1") %}
-                window.history.pushState({}, "", '{{ url_for_query(page=guilds.page if guilds.page != 1 else None) }}');
-            {% endif %}
-            var pagination = $("#guilds-pagination").pagination({
-                dataSource: {{ guilds.elements_numbers|tojson }},
-                pageSize: {{ guilds.per_page }},
-                pageNumber: {{ guilds.page }},
-                callback: function(data, pagination) {
-                    if (pagination.pageNumber == {{ guilds.page }}) {
-                        return;
-                    }
-                    if (pagination.pageNumber == 1) {
-                        redirect_url = "{{ url_for_query(page=None) }}";
-                    } else {
-                        redirect_url = '{{ url_for_query(page="1234567890") }}'.replace("1234567890", pagination.pageNumber);
-                    }
-                    document.location.href = redirect_url.replace("amp;", "");
-                },
-                beforeSizeSelectorChange: function (event) {
-                    var newPageSize = event.target.value;
-                    if (newPageSize == {{ guilds.per_page }}) {
-                        return;
-                    }
-                    if (newPageSize == {{ guilds.DEFAULT_PER_PAGE }}) {
-                        redirect_url = "{{ url_for_query(page=None, per_page=None) }}";
-                    } else {
-                        redirect_url = '{{ url_for_query(page=None, per_page="1234567890") }}'.replace("1234567890", newPageSize);
-                    }
-                    document.location.href = redirect_url.replace("amp;", "");
-                },
-                className: 'paginationjs-big paginationjs-theme-green',
-                showSizeChanger: true,
-                showGoInput: true,
-                showGoButton: true,
-                autoHidePrevious: true,
-                autoHideNext: true,
-                goButtonText: '{{ _("Go") }}',
-            })
-        });
-    {% endif %}
   </script>
 {% endblock %}

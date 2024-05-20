@@ -248,59 +248,11 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if "web_content" in result:
             for key, value in result["web_content"].items():
                 if isinstance(value, typing.Dict) and "items" in value:
-                    result["web_content"][key] = Pagination(
+                    result["web_content"][key]: Pagination = Pagination(
                         value.pop("items"),
                         **value,
                     )
-                    result["web_content"]["source"] += """
-
-                        <br />
-                        <div id="KEY-pagination"></div>
-                        <script>
-                            {% if KEY.has_prev() or KEY.has_next() %}
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    {% if KEY.page|string != request.args.get("page", "1") %}
-                                        window.history.pushState({}, "", '{{ url_for_query(page=KEY.page if KEY.page != 1 else None) }}');
-                                    {% endif %}
-                                    var pagination = $("#KEY-pagination").pagination({
-                                        dataSource: {{ KEY.elements_numbers|tojson }},
-                                        pageSize: {{ KEY.per_page }},
-                                        pageNumber: {{ KEY.page }},
-                                        callback: function(data, pagination) {
-                                            if (pagination.pageNumber == {{ KEY.page }}) {
-                                                return;
-                                            }
-                                            if (pagination.pageNumber == 1) {
-                                                redirect_url = "{{ url_for_query(page=None) }}";
-                                            } else {
-                                                redirect_url = '{{ url_for_query(page="1234567890") }}'.replace("1234567890", pagination.pageNumber);
-                                            }
-                                            document.location.href = redirect_url.replace("amp;", "");
-                                        },
-                                        beforeSizeSelectorChange: function (event) {
-                                            var newPageSize = event.target.value;
-                                            if (newPageSize == {{ KEY.per_page }}) {
-                                                return;
-                                            }
-                                            if (newPageSize == {{ KEY.DEFAULT_PER_PAGE }}) {
-                                                redirect_url = "{{ url_for_query(page=None, per_page=None) }}";
-                                            } else {
-                                                redirect_url = '{{ url_for_query(page=None, per_page="1234567890") }}'.replace("1234567890", newPageSize);
-                                            }
-                                            document.location.href = redirect_url.replace("amp;", "");
-                                        },
-                                        className: 'paginationjs-big paginationjs-theme-green',
-                                        showSizeChanger: true,
-                                        showGoInput: true,
-                                        showGoButton: true,
-                                        autoHidePrevious: true,
-                                        autoHideNext: true,
-                                        goButtonText: '{{ _("Go") }}',
-                                    })
-                                });
-                            {% endif %}
-                        </script>
-                    """.replace("KEY", key)
+                    result["web_content"]["source"] += "\n\n" + result["web_content"][key].to_html(key, render_template_string=False)
             if result["web_content"].get("standalone", False):
                 return render_template_string(
                     name=name, page=page, **return_guild, **result["web_content"]
