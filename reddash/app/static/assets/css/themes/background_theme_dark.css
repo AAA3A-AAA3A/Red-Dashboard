@@ -2,7 +2,7 @@ body:not(.sidenav),
 div.card:not(.sidenav),
 div.card-header:not(.sidenav),
 div.card-body:not(.sidenav),
-.nav:not(.sidenav), .nav:not(.sidenav) * {
+.nav:not(.sidenav,.nav-item) {
     background-color: #333 !important;
     color: white !important;
 }
@@ -12,8 +12,8 @@ div.card:not(.sidenav), div.card:not(.sidenav) > *,
     border-radius: var(--bs-card-border-radius) !important;
 }
 
-.nav.nav-pills .nav-link.active {
-    background-color: transparent !important;
+.nav.nav-pills .nav-link {
+    color: white !important;
 }
 .moving-tab .nav-link {
     color: black !important;

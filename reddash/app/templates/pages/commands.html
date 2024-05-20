@@ -94,7 +94,7 @@
                                                                   <div class="d-flex card card-body text-wrap">
                                                                     {% if command.signature %}
                                                                       <strong>{{ _("Usage:") }}</strong>
-                                                                      <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a></div>
+                                                                      <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}" style="margin-left: 10px;"><i class="far fa-copy me-2"></i></a></div>
                                                                     {% endif %}
                                                                     <br />
                                                                     {% if command.aliases %}
@@ -166,7 +166,7 @@
                                                     <div class="d-flex card card-body text-wrap">
                                                       {% if command.signature %}
                                                         <strong>{{ _("Usage:") }}</strong>
-                                                        <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}"><i class="far fa-copy me-2"></i></a></div>
+                                                        <div class="d-flex"><code>{{ prefixes[0] }}{{ command.name }} {{ command.signature }}</code> <a href="javascript:copyTextToClipboard('{{ prefixes[0] }}{{ command.name }} {{ command.signature }}');" title="{{ _("Copy to clipboard") }}" style="margin-left: 10px;"><i class="far fa-copy me-2"></i></a></div>
                                                       {% endif %}
                                                       <br />
                                                       {% if command.aliases %}
@@ -215,44 +215,46 @@
 {% block javascripts %}
   <script>
     window.onload = function() {
-        resize_event = new Event("resize");
-        window.dispatchEvent(resize_event);
+      resize_event = new Event("resize");
+      window.dispatchEvent(resize_event);
     }
   </script>
   <script>
     function changePage(tab_name) {
-        var tab_nav_link = document.querySelector("#" + tab_name + "-tab");
-        if (tab_nav_link) {
-            tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
-            tab_nav_link.click();
-        }
+      var tab_nav_link = document.querySelector("#" + tab_name + "-tab");
+      if (tab_nav_link) {
+        tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
+        tab_nav_link.click();
+      }
     }
     {% if tab_name %}
-        document.addEventListener("DOMContentLoaded", function() {
-            changePage("{{ tab_name }}");
-        });
+      document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+          changePage("{{ tab_name }}");
+        }, 500);
+      });
     {% endif %}
   </script>
   <script>
     $('#commands-tabs a[data-toggle="pill"]').on("shown.bs.tab", function(e) {
-        var target_id = e.target.id.slice(0, -4);
-        var new_url = "/commands/" + target_id;
-        if (!(window.location.pathname.startsWith(new_url))) {
-            // window.location.pathname = new_url;
-            window.history.pushState({}, "", new_url);
-        }
+      var target_id = e.target.id.slice(0, -4);
+      var new_url = "/commands/" + target_id;
+      if (!(window.location.pathname.startsWith(new_url))) {
+        // window.location.pathname = new_url;
+        window.history.pushState({}, "", new_url);
+      }
     });
   </script>
   <script>
     $(".prefix-option").click(function () {
-        let prefix = $(this).text();
-        $(".prefix").text(prefix);
-        // Change others to inactive, and the correct ones to active.
-        $(".prefix-option").removeClass("active");
-        let index = $(this).index();
-        $(".prefixdiv").each(function (someotherindexidontneed) {
-            $(this).children().eq(index).addClass("active");
-        })
+      let prefix = $(this).text();
+      $(".prefix").text(prefix);
+      // Change others to inactive, and the correct ones to active.
+      $(".prefix-option").removeClass("active");
+      let index = $(this).index();
+      $(".prefixdiv").each(function (someotherindexidontneed) {
+        $(this).children().eq(index).addClass("active");
+      })
     })
   </script>
   <script>
