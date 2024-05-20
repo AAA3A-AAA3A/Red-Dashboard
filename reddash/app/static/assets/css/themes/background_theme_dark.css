@@ -24,9 +24,9 @@ div.card:not(.sidenav), div.card:not(.sidenav) > *,
     background: black !important;
 }
 
-body:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
-div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
-div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)) {
+body:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page),
+div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page),
+div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page) {
     color: var(--bs-indigo);
 }
 
