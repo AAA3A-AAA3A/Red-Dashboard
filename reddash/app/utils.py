@@ -26,6 +26,9 @@ from flask_wtf.file import FileAllowed, FileField, MultipleFileField
 from wtforms import Field, SelectFieldBase, FormField
 from fuzzywuzzy import process
 from markdown import Markdown
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
 import bleach
 from markupsafe import Markup
 
@@ -278,6 +281,16 @@ def register_extensions(_app: Flask) -> None:
     def markdown_filter(text: str) -> Markup:
         text = bleach.clean(text, tags=[], strip=False)
         return Markup(app.markdown.convert(text.replace("\n", "<br />")))
+
+    @app.template_filter("highlight")
+    def highlight_filter(code, language="python"):
+        code = bleach.clean(code, tags=[], strip=False).replace("&lt;", "<").replace("&gt;", ">")
+        if language == "traceback":
+            lexer = Python3TracebackLexer()
+        else:
+            lexer = get_lexer_by_name(language, stripall=True)
+        formatter = HtmlFormatter()
+        return highlight(code, lexer, formatter)
 
     app.site_mapper: Sitemapper = Sitemapper(https=not app.testing)
 

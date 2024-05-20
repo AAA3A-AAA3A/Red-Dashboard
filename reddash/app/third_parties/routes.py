@@ -9,9 +9,6 @@ from flask_login import current_user, login_required
 from flask_login import login_url as make_login_url
 from django.utils.http import url_has_allowed_host_and_scheme
 from flask_wtf.csrf import generate_csrf
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import Python3TracebackLexer, get_lexer_by_name
 
 import base64
 
@@ -342,13 +339,3 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
             f"Error in the page `{page or 'Main Page'}` of the third party `{name}`.", exc_info=e
         )
         return abort(500, description=_("An error occurred while processing your request."))
-
-
-@app.template_filter("highlight")
-def highlight_filter(code, language="python"):
-    if language == "traceback":
-        lexer = Python3TracebackLexer()
-    else:
-        lexer = get_lexer_by_name(language, stripall=True)
-    formatter = HtmlFormatter()
-    return highlight(code, lexer, formatter)
