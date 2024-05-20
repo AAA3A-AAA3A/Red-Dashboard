@@ -4,7 +4,7 @@ from markupsafe import Markup
 
 
 class Pagination(typing.List):
-    """Pagination class for lists."""
+    """Pagination system for lists."""
 
     DEFAULT_PER_PAGE: int = 20
     DEFAULT_PAGE: int = 1
@@ -80,16 +80,18 @@ class Pagination(typing.List):
             per_page=per_page,
             pages=pages,
             page=page,
+            default_per_page=default_per_page,
+            default_page=default_page,
         )
 
-    def to_html(self, KEY: str = "pagination", render_template_string: bool = True) -> Markup:
+    def to_html(self, KEY: str = "pagination", custom_kwargs: bool = False, render_template_string: bool = True) -> Markup:
         html = """<br />
         <div id="KEY-pagination"></div>
         <script>
             {% if KEY.has_prev() or KEY.has_next() %}
                 document.addEventListener("DOMContentLoaded", function () {
-                    {% if KEY.page|string != request.args.get("page", KEY.default_page|string) %}
-                        window.history.pushState({}, "", '{{ url_for_query(page=KEY.page if KEY.page != KEY.default_page else None) }}');
+                    {% if KEY.page|string != request.args.get("CUSTOM_KWARGpage", KEY.default_page|string) %}
+                        window.history.pushState({}, "", '{{ url_for_query(CUSTOM_KWARGpage=KEY.page if KEY.page != KEY.default_page else None) }}');
                     {% endif %}
                     var pagination = $("#KEY-pagination").pagination({
                         dataSource: {{ KEY.elements_numbers|tojson }},
@@ -100,9 +102,9 @@ class Pagination(typing.List):
                                 return;
                             }
                             if (pagination.pageNumber == {{ KEY.default_page }}) {
-                                redirect_url = "{{ url_for_query(page=None) }}";
+                                redirect_url = "{{ url_for_query(CUSTOM_KWARGpage=None) }}";
                             } else {
-                                redirect_url = '{{ url_for_query(page="1234567890") }}'.replace("1234567890", pagination.pageNumber);
+                                redirect_url = '{{ url_for_query(CUSTOM_KWARGpage="1234567890") }}'.replace("1234567890", pagination.pageNumber);
                             }
                             document.location.href = redirect_url.replace("amp;", "");
                         },
@@ -112,9 +114,9 @@ class Pagination(typing.List):
                                 return;
                             }
                             if (newPageSize == {{ KEY.default_per_page }}) {
-                                redirect_url = "{{ url_for_query(page=None, per_page=None) }}";
+                                redirect_url = "{{ url_for_query(CUSTOM_KWARGpage=None, CUSTOM_KWARGper_page=None) }}";
                             } else {
-                                redirect_url = '{{ url_for_query(page=None, per_page="1234567890") }}'.replace("1234567890", newPageSize);
+                                redirect_url = '{{ url_for_query(CUSTOM_KWARGpage=None, CUSTOM_KWARGper_page="1234567890") }}'.replace("1234567890", newPageSize);
                             }
                             document.location.href = redirect_url.replace("amp;", "");
                         },
@@ -128,7 +130,7 @@ class Pagination(typing.List):
                     })
                 });
             {% endif %}
-        </script>""".replace("KEY", KEY)
+        </script>""".replace("KEY", KEY).replace("CUSTOM_KWARG", f"{KEY}_" if custom_kwargs else "")
         if not render_template_string:
             return html
         from flask import render_template_string
