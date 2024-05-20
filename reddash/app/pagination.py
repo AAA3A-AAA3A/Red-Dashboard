@@ -60,7 +60,7 @@ class Pagination(typing.List):
             if per_page is None
             else (
                 int(per_page)
-                if isinstance(per_page, str) and per_page.isdigit() and 1 <= int(per_page) <= default_per_page * 5
+                if isinstance(per_page, str) and per_page.isdigit() and 1 <= int(per_page) <= max(default_per_page * 5, 100)
                 else default_per_page
             )
         )
@@ -90,8 +90,8 @@ class Pagination(typing.List):
         <script>
             {% if KEY.has_prev() or KEY.has_next() %}
                 document.addEventListener("DOMContentLoaded", function () {
-                    {% if KEY.page|string != request.args.get("CUSTOM_KWARGpage", KEY.default_page|string) %}
-                        window.history.pushState({}, "", '{{ url_for_query(CUSTOM_KWARGpage=KEY.page if KEY.page != KEY.default_page else None) }}');
+                    {% if KEY.page|string != request.args.get("CUSTOM_KWARGpage", KEY.default_page|string) or KEY.per_page|string != request.args.get("CUSTOM_KWARGper_page", KEY.default_per_page|string) %}
+                        window.history.pushState({}, "", '{{ url_for_query(CUSTOM_KWARGpage=KEY.page if KEY.page != KEY.default_page else None, CUSTOM_KWARGper_page=KEY.page if KEY.per_page != KEY.default_per_page else None) }}');
                     {% endif %}
                     var pagination = $("#KEY-pagination").pagination({
                         dataSource: {{ KEY.elements_numbers|tojson }},
