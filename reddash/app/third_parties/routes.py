@@ -207,7 +207,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
         if key not in kwargs:
             return render_template("errors/custom.html", error_title=f"Missing argument: `{key}`.")
         required_kwargs[key] = kwargs.pop(key)
-    for key in kwargs:
+    for key in kwargs.copy():
         if key in third_parties[name][_page]["optional_kwargs"]:
             optional_kwargs[key] = kwargs.pop(key)
     extra_kwargs = kwargs
