@@ -26,11 +26,7 @@ class TasksManager:
         try:
             while True:
                 if not once:
-                    # Different wait times, commands should be called less due to processing.
-                    if method == "DASHBOARDRPC__GET_DATA":
-                        await asyncio.sleep(self.app.config["WEBSOCKET_INTERVAL"])
-                    else:
-                        await asyncio.sleep(self.app.config["WEBSOCKET_INTERVAL"] * 2)
+                    await asyncio.sleep(self.app.config["WEBSOCKET_INTERVAL"])
                 if not self.app.running:
                     return
 
@@ -61,6 +57,9 @@ class TasksManager:
                     if not connected:
                         continue
 
+                if "result" not in result:
+                    self.app.logger.error(f"RPC websocket returned an unexpected response: {result}")
+                    continue
                 if method == "DASHBOARDRPC__GET_DATA":
                     self.app.data.update(**result["result"])
                 elif method == "DASHBOARDRPC__GET_VARIABLES":
@@ -79,7 +78,7 @@ class TasksManager:
         version: int = 0
         try:
             while True:
-                await asyncio.sleep(1)
+                await asyncio.sleep(self.app.config["WEBSOCKET_INTERVAL"])
                 if not self.app.running:
                     return
                 if self.app.ws and self.app.ws.connected:
@@ -149,14 +148,14 @@ class TasksManager:
             self.threads.append(
                 threading.Thread(
                     target=asyncio.run,
-                    args=[self.update_data_variables("DASHBOARDRPC__GET_DATA", False)],
+                    args=[self.update_data_variables("DASHBOARDRPC__GET_DATA")],
                     daemon=True,
                 )
             )
             self.threads.append(
                 threading.Thread(
                     target=asyncio.run,
-                    args=[self.update_data_variables("DASHBOARDRPC__GET_VARIABLES", False)],
+                    args=[self.update_data_variables("DASHBOARDRPC__GET_VARIABLES")],
                     daemon=True,
                 )
             )
@@ -179,12 +178,12 @@ class TasksManager:
         else:
             self.threads.append(
                 self.app.cog.bot.loop.create_task(
-                    self.update_data_variables("DASHBOARDRPC__GET_DATA", once=False)
+                    self.update_data_variables("DASHBOARDRPC__GET_DATA")
                 )
             )
             self.threads.append(
                 self.app.cog.bot.loop.create_task(
-                    self.update_data_variables("DASHBOARDRPC__GET_VARIABLES", once=False)
+                    self.update_data_variables("DASHBOARDRPC__GET_VARIABLES")
                 )
             )
 

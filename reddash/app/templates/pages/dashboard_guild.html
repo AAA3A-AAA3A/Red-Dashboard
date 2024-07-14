@@ -45,101 +45,97 @@
                                     <div class="mt-4">
 
                                         {% if aliases_form %}
-                                            <div id="Alias">
-                                                <div class="card">
-                                                    <div class="card-header" id="headingAlias">
-                                                        <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseAlias" aria-expanded="true" aria-controls="collapseAlias" style="width: 100%;">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <h4 class="mb-0">{{ _("Alias") }}</h4>
-                                                                <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                    <div id="collapseAlias" class="collapse card-body" aria-labelledby="headingAlias">
-                                                        <form action="" method="POST" role="form" enctype="multipart/form-data">
-                                                            {{ aliases_form.hidden_tag() }}
-                                                            {% for alias_form in aliases_form.aliases.default %}
-                                                                <div class="row mb-3">
-                                                                    {% if loop.index0 > 0 %}
-                                                                        <hr class="horizontal dark" />
-                                                                    {% endif %}
-                                                                    {{ alias_form.hidden_tag() }}
-                                                                    <div class="col-md-5">
-                                                                        <div class="form-group">
-                                                                            {{ alias_form.alias_name(class="form-control form-control-default", placeholder=_("Name")) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-7">
-                                                                        <div class="form-group">
-                                                                            {{ alias_form.command(rows=4, disable_toolbar=True, class="form-control form-control-default", placeholder=_("Command")) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-12 d-flex justify-content-end align-items-center">
-                                                                        <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Alias") }}</a>
+                                            <div id="Alias" class="card">
+                                                <div class="card-header" id="headingAlias">
+                                                    <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseAlias" aria-expanded="true" aria-controls="collapseAlias" style="width: 100%;">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h4 class="mb-0">{{ _("Alias") }}</h4>
+                                                            <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div id="collapseAlias" class="collapse card-body" aria-labelledby="headingAlias">
+                                                    <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                                        {{ aliases_form.hidden_tag() }}
+                                                        {% for alias_form in aliases_form.aliases.default %}
+                                                            <div class="row mb-3">
+                                                                {% if loop.index0 > 0 %}
+                                                                    <hr class="horizontal dark" />
+                                                                {% endif %}
+                                                                {{ alias_form.hidden_tag() }}
+                                                                <div class="col-md-5">
+                                                                    <div class="form-group">
+                                                                        {{ alias_form.alias_name(class="form-control form-control-default", placeholder=_("Name")) }}
                                                                     </div>
                                                                 </div>
-                                                            {% endfor %}
-                                                            <a href="javascript:void(0);" onclick="createAlias(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Alias") }}</a>
-                                                            <div class="text-center">
-                                                                {{ aliases_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
+                                                                <div class="col-md-7">
+                                                                    <div class="form-group">
+                                                                        {{ alias_form.command(rows=4, disable_toolbar=True, class="form-control form-control-default", placeholder=_("Command")) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 d-flex justify-content-end align-items-center">
+                                                                    <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Alias") }}</a>
+                                                                </div>
                                                             </div>
-                                                        </form>
-                                                    </div>
+                                                        {% endfor %}
+                                                        <a href="javascript:void(0);" onclick="createAlias(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Alias") }}</a>
+                                                        <div class="text-center">
+                                                            {{ aliases_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         {% endif %}
 
                                         {% if custom_commands_form %}
                                             <br />
-                                            <div id="CustomCommands">
-                                                <div class="card">
-                                                    <div class="card-header" id="headingCustomCommands">
-                                                        <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseCustomCommands" aria-expanded="true" aria-controls="collapseCustomCommands" style="width: 100%;">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <h4 class="mb-0">{{ _("CustomCommands") }}</h4>
-                                                                <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                    <div id="collapseCustomCommands" class="collapse card-body" aria-labelledby="headingCustomCommands">
-                                                        <form action="" method="POST" role="form" enctype="multipart/form-data">
-                                                            {{ custom_commands_form.hidden_tag() }}
-                                                            {% for custom_command_form in custom_commands_form.custom_commands.default %}
-                                                                <div class="row mb-3">
-                                                                    {% if loop.index0 > 0 %}
-                                                                        <hr class="horizontal dark" />
-                                                                    {% endif %}
-                                                                    {{ custom_command_form.hidden_tag() }}
-                                                                    <div class="col-md-5">
-                                                                        <div class="form-group">
-                                                                            {{ custom_command_form.command(class="form-control form-control-default", placeholder=_("Command")) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-7">
-                                                                        {% for custom_command_response_form in custom_command_form.responses.default %}
-                                                                            <div class="form-group">
-                                                                                {{ custom_command_response_form.hidden_tag() }}
-                                                                                {{ custom_command_response_form.response(rows=3, class="form-control form-control-default", placeholder=_("Response")) }}
-                                                                                {% if loop.index0 != 0 %}
-                                                                                    <a href="javascript:void(0);" onclick="this.parentNode.remove();" class="text-danger mr-3">{{ _("Remove Response") }}</a>
-                                                                                {% endif %}
-                                                                            </div>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                    <div class="col-md-12 d-flex justify-content-end align-items-center">
-                                                                        <a href="javascript:void(0);" onclick="addCustomCommandResponse(this);" class="text-primary mr-3">{{ _("Add Response") }}</a>
-                                                                    </div>
-                                                                    <div class="col-md-12 d-flex justify-content-end align-items-center">
-                                                                        <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Custom Command") }}</a>
+                                            <div id="CustomCommands" class="card">
+                                                <div class="card-header" id="headingCustomCommands">
+                                                    <a class="btn btn-link mb-0" data-toggle="collapse" data-target="#collapseCustomCommands" aria-expanded="true" aria-controls="collapseCustomCommands" style="width: 100%;">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h4 class="mb-0">{{ _("CustomCommands") }}</h4>
+                                                            <h4><i class="fa fa-arrow-circle-o-down"></i></h4>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div id="collapseCustomCommands" class="collapse card-body" aria-labelledby="headingCustomCommands">
+                                                    <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                                        {{ custom_commands_form.hidden_tag() }}
+                                                        {% for custom_command_form in custom_commands_form.custom_commands.default %}
+                                                            <div class="row mb-3">
+                                                                {% if loop.index0 > 0 %}
+                                                                    <hr class="horizontal dark" />
+                                                                {% endif %}
+                                                                {{ custom_command_form.hidden_tag() }}
+                                                                <div class="col-md-5">
+                                                                    <div class="form-group">
+                                                                        {{ custom_command_form.command(class="form-control form-control-default", placeholder=_("Command")) }}
                                                                     </div>
                                                                 </div>
-                                                            {% endfor %}
-                                                            <a href="javascript:void(0);" onclick="createCustomCommand(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Custom Command") }}</a>
-                                                            <div class="text-center">
-                                                                {{ custom_commands_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
+                                                                <div class="col-md-7">
+                                                                    {% for custom_command_response_form in custom_command_form.responses.default %}
+                                                                        <div class="form-group">
+                                                                            {{ custom_command_response_form.hidden_tag() }}
+                                                                            {{ custom_command_response_form.response(rows=3, class="form-control form-control-default", placeholder=_("Response")) }}
+                                                                            {% if loop.index0 != 0 %}
+                                                                                <a href="javascript:void(0);" onclick="this.parentNode.remove();" class="text-danger mr-3">{{ _("Remove Response") }}</a>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <div class="col-md-12 d-flex justify-content-end align-items-center">
+                                                                    <a href="javascript:void(0);" onclick="addCustomCommandResponse(this);" class="text-primary mr-3">{{ _("Add Response") }}</a>
+                                                                </div>
+                                                                <div class="col-md-12 d-flex justify-content-end align-items-center">
+                                                                    <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Custom Command") }}</a>
+                                                                </div>
                                                             </div>
-                                                        </form>
-                                                    </div>
+                                                        {% endfor %}
+                                                        <a href="javascript:void(0);" onclick="createCustomCommand(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Custom Command") }}</a>
+                                                        <div class="text-center">
+                                                            {{ custom_commands_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         {% endif %}
@@ -244,7 +240,7 @@
                                                 </div>
                                             </div>
                                             <div class="text-center">
-                                                {{ guild_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
+                                                {{ guild_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
                                             </div>
                                         </form>
                                     </div>

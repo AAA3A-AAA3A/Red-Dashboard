@@ -84,6 +84,11 @@
                                 <i class="ni ni-settings-gear-65 opacity-10" style="vertical-align: -1.5px;"></i> {{ _("Bot Settings") }}
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if page and page == "custom-pages" %}show active{% endif %}" id="custom-pages-tab" data-toggle="pill" href="#custom-pages" role="tab" aria-controls="custom-pages" aria-selected="true">
+                                <i class="fa fa-file-text opacity-10" style="vertical-align: 0px;"></i> {{ _("Custom Pages") }}
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -107,9 +112,9 @@
                                 </p>
                                 <form action="" method="POST" role="form" enctype="multipart/form-data">
                                     {{ dashboard_actions_form.hidden_tag() }}
-                                    {{ dashboard_actions_form.lock(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4 mb-2", onclick="return confirmLock(event);") }}
+                                    {{ dashboard_actions_form.lock(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4", onclick="return confirmLock(event);") }}
                                     <p><i>{{ _("This will lock the dashboard and prevent anyone from accessing control panels. Website administrators will still have access, and users will still be able to login through Discord Open Authentication.") }}</i></p>
-                                    {{ dashboard_actions_form.refresh_sessions(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4 mb-2", onclick="return confirmRefreshSessions(event);") }}
+                                    {{ dashboard_actions_form.refresh_sessions(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md my-4", onclick="return confirmRefreshSessions(event);") }}
                                     <p><i>{{ _("This will log out all active users and require them to re-authenticate, including website administrators.") }}</i></p>
                                 </form>
                             </div>
@@ -189,7 +194,7 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        {{ dashboard_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
+                                        {{ dashboard_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
                                     </div>
                                 </form>
                             </div>
@@ -313,7 +318,51 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        {{ bot_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4 mb-2") }}
+                                        {{ bot_settings_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade {% if page and page == "custom-pages" %}show active{% endif %}" id="custom-pages" role="tabpanel" aria-labelledby="custom-pages-tab">
+                <div class="card card-chart">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12 text-left">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h2 class="card-title">{{ _("Custom Pages") }}</h2>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <form action="" method="POST" role="form" enctype="multipart/form-data">
+                                    {{ custom_pages_form.hidden_tag() }}
+                                    {% for custom_pages_form in custom_pages_form.custom_pages.default %}
+                                        <div class="row mb-3">
+                                            {% if loop.index0 > 0 %}
+                                                <hr class="horizontal dark" />
+                                            {% endif %}
+                                            {{ custom_pages_form.hidden_tag() }}
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    {{ custom_pages_form.title(class="form-control form-control-default", placeholder=_("Title")) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="form-group">
+                                                    {{ custom_pages_form.content(rows=5, class="form-control form-control-default", placeholder=_("Content")) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 d-flex justify-content-end align-items-center">
+                                                <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Custom Page") }}</a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <a href="javascript:void(0);" onclick="createCustomPage(this);" class="text-success mr-3"><i class="fa fa-plus-circle"></i> {{ _("Create Custom Page") }}</a>
+                                    <div class="text-center">
+                                        {{ custom_pages_form.submit(class="btn mb-0 bg-gradient-" + variables["meta"]["color"] + " btn-md w-100 my-4") }}
                                     </div>
                                 </form>
                             </div>
@@ -412,9 +461,6 @@
         })
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            changePage("{{ page }}");
-        });
         var readURL = function(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -468,6 +514,38 @@
                 }
             })
             return false;
+        }
+    </script>
+    <script>
+        var custom_page_index = {{ custom_pages_form.custom_pages.default|length }} - 1;
+        function createCustomPage(element) {
+            var newRow = document.createElement("div");
+            newRow.classList.add("row", "mb-3");
+            custom_page_index += 1;
+            if (document.querySelectorAll("#custom-pages .row").length != 0) {
+                var horizontal = '<hr class="horizontal dark" />\n';
+            } else {
+                var horizontal = "";
+            }
+            newRow.innerHTML = horizontal + `
+                <input id="custom_pages_form_custom_pages-${custom_page_index}-csrf_token" name="custom_pages_form_custom_pages-${custom_page_index}-csrf_token" type="hidden" value="{{ csrf_token() }}">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input class="form-control form-control-default" id="custom_pages_form_custom_pages-${custom_page_index}-title" maxlength="20" name="custom_pages_form_custom_pages-${custom_page_index}-title" required type="text" value="" placeholder="{{ _("Title") }}">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <textarea class="form-control form-control-default markdown-text-area-field" id="custom_pages_form_custom_pages-${custom_page_index}-content" maxlength="5000" name="custom_pages_form_custom_pages-${custom_page_index}-content" required rows="5" placeholder="{{ _("Content") }}"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-12 d-flex justify-content-end align-items-center">
+                    <a href="javascript:void(0);" onclick="this.parentElement.parentNode.remove();" class="text-danger mr-3"><i class="fa fa-minus-circle"></i> {{ _("Delete Custom Page") }}</a>
+                </div>
+            `
+            element.parentNode.insertBefore(newRow, element);
+            MarkdownField(document.getElementById(`custom_pages_form_custom_pages-${custom_page_index}-content`));
+            document.getElementById(`custom_pages_form_custom_pages-${custom_page_index}-title`).focus();
         }
     </script>
 {% endblock %}

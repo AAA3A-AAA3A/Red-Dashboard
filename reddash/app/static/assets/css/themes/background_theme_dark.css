@@ -1,4 +1,42 @@
 body:not(.sidenav),
+div.card:not(.sidenav,.sidenav *),
+div.card-header:not(.sidenav),
+div.card-body:not(.sidenav,.sidenav *),
+.nav:not(.sidenav,.nav-item) {
+    background-color: #333 !important;
+    color: white !important;
+}
+
+div.card:not(.sidenav), div.card:not(.sidenav) > *,
+.nav:not(.sidenav), .nav:not(.sidenav) > * {
+    border-radius: var(--bs-card-border-radius) !important;
+}
+
+.nav.nav-pills .nav-link {
+    color: white !important;
+}
+.moving-tab .nav-link {
+    color: black !important;
+}
+.moving-tab .nav-link.active {
+    color: black !important;
+    box-shadow: 0px 1px 5px 1px black !important;
+    background: black !important;
+}
+
+body:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)) {
+    color: var(--bs-indigo);
+}
+
+.choices__item--choice,
+.choices[data-type=select-one] .choices__item {
+    color: black !important;
+}
+
+.editor-toolbar button:not(.active,:hover),
+h1, h2, h3, h4, h5, h6, h1 *, h2 *, h3 *body:not(.sidenav),
 div.card:not(.sidenav),
 div.card-header:not(.sidenav),
 div.card-body:not(.sidenav),
@@ -24,9 +62,9 @@ div.card:not(.sidenav), div.card:not(.sidenav) > *,
     background: black !important;
 }
 
-body:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page),
-div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page),
-div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page) {
+body:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)),
+div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item):not(.sidenav a:not(.btn,.nav-link,.nav-item)) {
     color: var(--bs-indigo);
 }
 
@@ -35,8 +73,15 @@ div.card-header:not(.sidenav) a:not(.btn,.nav-link,.nav-item,.paginationjs-page)
     color: black !important;
 }
 
-.editor-toolbar button:not(.active,:hover),
-h1, h2, h3, h4, h5, h6, h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
+h1, h2, h3, h4, h5, h6, h1 *, h2 *, h3 *:not(.dropdown-item,.dropdown-item *), h4 *, h5 *, h6 *,
+.editor-toolbar button:not(.active,:hover) {
+    color: white !important;
+}
+
+hr {
+    border-color: white !important;
+}
+, h4 *, h5 *, h6 * {
     color: white !important;
 }
 

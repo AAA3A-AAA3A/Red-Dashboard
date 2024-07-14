@@ -280,17 +280,17 @@ def register_extensions(_app: Flask) -> None:
     @app.template_filter("markdown")
     def markdown_filter(text: str) -> Markup:
         text = bleach.clean(text, tags=[], strip=False)
-        return Markup(app.markdown.convert(text.replace("\n", "<br />")))
+        return Markup(app.markdown.convert(text).replace("\n", "<br />"))
 
     @app.template_filter("highlight")
-    def highlight_filter(code, language="python"):
+    def highlight_filter(code, language="python") -> Markup:
         code = bleach.clean(code, tags=[], strip=False).replace("&lt;", "<").replace("&gt;", ">")
         if language == "traceback":
             lexer = Python3TracebackLexer()
         else:
             lexer = get_lexer_by_name(language, stripall=True)
         formatter = HtmlFormatter()
-        return highlight(code, lexer, formatter)
+        return Markup(highlight(code, lexer, formatter))
 
     app.site_mapper: Sitemapper = Sitemapper(https=not app.testing)
 
@@ -415,8 +415,29 @@ def add_constants(app: Flask) -> None:
                 and request.blueprint != "login_blueprint"
             ):
                 item["url"] = make_login_url(item["route"], next_url=request.url)
-            item["active"] = item["route"] == request.endpoint
+            item["active"] = request.endpoint == item["route"]
             final.append(item)
+
+        if app.data["custom_pages"]:
+            index = next(
+                (index for index, item in enumerate(final) if item["route"] == "base_blueprint.credits"),
+                None,
+            )
+            for custom_page in app.data["custom_pages"]:
+                custom_page = {
+                    "name": custom_page["title"],
+                    "icon": "fa fa-file-text",
+                    "route": "base_blueprint.custom_page",
+                    "session": False,
+                    "owner": False,
+                    "locked": False,
+                    "hidden": False,
+                    "url": url_for("base_blueprint.custom_page", page_url=custom_page["url"]),
+                    "active": request.endpoint == "base_blueprint.custom_page" and request.view_args.get("page_url") == custom_page["url"],
+                }
+                final.insert(index, custom_page)
+                index += 1
+        
         return final
 
     def url_for_query(_anchor: typing.Optional[str] = None, **kwargs) -> str:

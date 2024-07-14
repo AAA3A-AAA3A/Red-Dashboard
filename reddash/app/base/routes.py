@@ -107,10 +107,12 @@ async def robots():
 
 # For CertBot, to allow creating a SSL certificate.
 app.add_url_rule(
-    f"/.well-known/<path:filename>",
+    "/.well-known/<path:filename>",
     endpoint=".well-known",
     host=None,
-    view_func=lambda **kw: send_from_directory(".well-known", path=kw["filename"]),
+    view_func=lambda **kw: send_from_directory(
+        ".well-known", path=kw["filename"]
+    ),
 )
 
 
@@ -170,7 +172,7 @@ async def commands(cog: typing.Optional[str] = None):
         len_cogs=len_cogs,
         len_commands=len_commands,
         tab_name=None if cog is None or cog not in cogs else cog,
-        hidden=True if request.args.get("hidden") in ("True", "true") else False,
+        hidden=request.args.get("hidden") in ("True", "true"),
         filter_param=request.args.get("query"),
     )
 
@@ -811,11 +813,28 @@ class BotSettingsForm(FlaskForm):
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
 
 
+class CustomPageForm(FlaskForm):
+    title: wtforms.StringField = wtforms.StringField(_("Title"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Length(max=20)])
+    content: MarkdownTextAreaField = MarkdownTextAreaField(_("Content"), validators=[wtforms.validators.InputRequired(), wtforms.validators.Length(max=5000)])
+
+
+class CustomPagesForm(FlaskForm):
+    def __init__(self, custom_pages: typing.Dict[str, str]) -> None:
+        super().__init__(prefix="custom_pages_form_")
+        for title, content in custom_pages.items():
+            self.custom_pages.append_entry({"title": title, "content": content})
+        self.custom_pages.default = [entry for entry in self.custom_pages.entries if entry.csrf_token.data is None]
+        self.custom_pages.entries = [entry for entry in self.custom_pages.entries if entry.csrf_token.data is not None]
+
+    custom_pages: wtforms.FieldList = wtforms.FieldList(wtforms.FormField(CustomPageForm))
+    submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
+
+
 @blueprint.route("/admin/<page>", methods=("GET", "POST"))
 @blueprint.route("/admin", methods=("GET", "POST"))
 @login_required
 async def admin(
-    page: typing.Optional[typing.Literal["overview", "dashboard-settings", "bot-settings"]] = None
+    page: typing.Optional[typing.Literal["overview", "dashboard-settings", "bot-settings", "custom_pages"]] = None
 ):
     if not current_user.is_authenticated or not current_user.is_owner:
         return abort(403, description=_("You're not a bot owner!"))
@@ -966,10 +985,41 @@ async def admin(
         for field_name, error_messages in bot_settings_form.errors.items():
             flash(f"{field_name}: {' '.join(error_messages)}", category="warning")
 
+    custom_pages = {page["title"]: page["content"] for page in app.data["custom_pages"]}
+    custom_pages_form: CustomPagesForm = CustomPagesForm(custom_pages=custom_pages)
+    if custom_pages_form.validate_on_submit():
+        custom_pages = [
+            {
+                "title": custom_page["title"],
+                "content": custom_page["content"],
+                "url": custom_page["title"].lower().replace(" ", "-"),
+            }
+            for custom_page in custom_pages_form.custom_pages.data
+        ]
+        requeststr = {
+            "jsonrpc": "2.0",
+            "id": 0,
+            "method": "DASHBOARDRPC__SET_CUSTOM_PAGES",
+            "params": [
+                current_user.id,
+                custom_pages,
+            ],
+        }
+        result = await get_result(app, requeststr)
+        if result["status"] == 0:
+            app.data["custom_pages"] = custom_pages
+            flash(_("Successfully saved the modifications."), category="success")
+        else:
+            flash(_("Failed to save the modifications."), category="danger")
+        return redirect(request.url)
+    elif custom_pages_form.submit.data and custom_pages_form.errors:
+        for field_name, error_messages in custom_pages_form.errors.items():
+            flash(f"{field_name}: {' '.join(error_messages)}", category="warning")
+
     return render_template(
         "pages/admin.html",
         page=page
-        if page is not None and page in ("overview", "dashboard-settings", "bot-settings")
+        if page is not None and page in ("overview", "dashboard-settings", "bot-settings", "custom-pages")
         else "overview",
         uptime_str=uptime_str,
         connection_str=connection_str,
@@ -977,4 +1027,12 @@ async def admin(
         dashboard_actions_form=dashboard_actions_form,
         dashboard_settings_form=dashboard_settings_form,
         bot_settings_form=bot_settings_form,
+        custom_pages_form=custom_pages_form,
     )
+
+@blueprint.route("/custom-page/<page_url>")
+async def custom_page(page_url: str):
+    page = next((p for p in app.data["custom_pages"] if p["url"] == page_url), None)
+    if page is None:
+        return abort(404, description=_("Page not found."))
+    return render_template("pages/custom_page.html", page=page)
