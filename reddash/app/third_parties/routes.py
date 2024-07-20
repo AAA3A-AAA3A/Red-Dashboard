@@ -20,6 +20,7 @@ from . import blueprint
 # <---------- Third Parties ---------->
 
 
+@app.csrf_protect.exempt
 @blueprint.route("/api/webhook", methods=("POST",))
 async def webhook_route():
     if not request.is_json:
@@ -29,9 +30,7 @@ async def webhook_route():
         )
     payload = request.get_json()
     payload["origin"] = request.origin
-    payload["headers"] = str(
-        request.headers
-    )  # Pass header data here incase there was something else the user needs for filtering.
+    payload["headers"] = dict(request.headers.items())  # Pass header data here incase there was something else the user needs for filtering.
     payload["user_agent"] = str(
         request.user_agent
     )  # User agent seems adequate enough for filtering.
