@@ -168,7 +168,7 @@ async def commands(cog: typing.Optional[str] = None):
     return render_template(
         "pages/commands.html",
         cogs=cogs,
-        prefixes=prefixes,
+        prefixes=sorted(prefixes, key=len),
         len_cogs=len_cogs,
         len_commands=len_commands,
         tab_name=None if cog is None or cog not in cogs else cog,
