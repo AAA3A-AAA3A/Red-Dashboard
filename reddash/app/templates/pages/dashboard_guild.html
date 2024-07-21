@@ -276,6 +276,28 @@
         {% endif %}
     </script>
     <script>
+        window.onload = function() {
+          resize_event = new Event("resize");
+          window.dispatchEvent(resize_event);
+        }
+    </script>
+    <script>
+        function changePage(tab_name) {
+            var tab_nav_link = document.querySelector("#" + tab_name + "-tab");
+            if (tab_nav_link) {
+            tab_nav_link.parentElement.parentElement.onmouseover(tab_nav_link);
+            tab_nav_link.click();
+            }
+        }
+        {% if tab_name %}
+            document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                changePage("{{ tab_name }}");
+            }, 500);
+            });
+        {% endif %}
+    </script>
+    <script>
         $('#guild-content a[data-toggle="pill"]').on("shown.bs.tab", function (e) {
             var base_url = '{{ url_for("base_blueprint.dashboard_guild", guild_id=guild.id) }}';
             var target_id = e.target.id.slice(0, -4);

@@ -440,7 +440,7 @@ def add_constants(app: Flask) -> None:
         
         return final
 
-    def url_for_query(_anchor: typing.Optional[str] = None, **kwargs) -> str:
+    def url_for_query(_anchor: typing.Optional[str] = None, **kwargs) -> Markup:
         full_url = request.url
         url_components = urlparse(full_url)
         query_params = parse_qs(url_components.query)
@@ -456,7 +456,7 @@ def add_constants(app: Flask) -> None:
         if _anchor is not None:
             updated_url_components = updated_url_components._replace(fragment=_anchor)
         relative_url = urlunparse(updated_url_components._replace(scheme="", netloc="", params="", fragment=""))
-        return relative_url
+        return Markup(relative_url)
 
     def number_to_text_with_suffix(number: float) -> str:
         suffixes = [

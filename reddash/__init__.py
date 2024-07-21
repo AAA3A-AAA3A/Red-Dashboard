@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 Copyright (c) 2020 - present Neuro Assassin (https://github.com/Cog-Creators/Red-Dashboard)
 """
 
-__version__ = "1.6.7"
-__authos__ = ["Neuro Assassin", "AAA3A"]
+__version__ = "1.6.8"
+__authors__ = ["AAA3A", "Neuro Assassin"]
 
 from .app import FlaskApp
