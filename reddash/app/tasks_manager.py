@@ -10,7 +10,7 @@ import threading
 
 from flask import Flask
 
-from .utils import check_for_disconnect, initialize_websocket, secure_send
+from .utils import check_for_disconnect, initialize_websocket, get_result
 
 
 class TasksManager:
@@ -43,31 +43,31 @@ class TasksManager:
                             initialized = initialize_websocket(self.app)
                             if not initialized:
                                 continue
-                        result = await secure_send(self.app, request)
+                        result = await get_result(self.app, request, retry=False)
                         if not result:
                             continue
                         connected = check_for_disconnect(self.app, method, result)
                         if not connected:
                             continue
                 else:
-                    result = await secure_send(self.app, request)
+                    result = await get_result(self.app, request, retry=False)
                     if not result:
                         continue
                     connected = check_for_disconnect(self.app, method, result)
                     if not connected:
                         continue
 
-                if "result" not in result:
-                    self.app.logger.error(f"RPC websocket returned an unexpected response: {result}")
-                    continue
+                # if "result" not in result:
+                #     self.app.logger.error(f"RPC websocket returned an unexpected response: {result}")
+                #     continue
                 if method == "DASHBOARDRPC__GET_DATA":
-                    self.app.data.update(**result["result"])
+                    self.app.data.update(**result)
                 elif method == "DASHBOARDRPC__GET_VARIABLES":
                     if not self.app.variables:
                         self.app.logger.info(
                             "Initial connection made with Red bot. Syncing data..."
                         )
-                    self.app.variables.update(**result["result"])
+                    self.app.variables.update(**result)
 
                 if once:
                     break
@@ -94,20 +94,18 @@ class TasksManager:
                             if not initialized:
                                 continue
 
-                        result = await secure_send(self.app, request)
-                        if not result:
+                        result = await get_result(self.app, request, retry=False)
+                        if not result or "error" in result:
                             continue
-                        if "error" in result:
+                        if result.get("disconnected", False) or "version" not in result:
                             continue
-                        if "disconnected" in result["result"] or "version" not in result["result"]:
-                            continue
-                        if result["result"]["version"] != version != 0:
+                        if result["version"] != version != 0:
                             self.ignore_disconnect: bool = True
                             self.app.logger.info("RPC websocket behind. Closing and restarting...")
                             self.app.ws.close()
                             initialize_websocket(self.app)
                             self.ignore_disconnect: bool = False
-                        version = result["result"]["version"]
+                        version = result["version"]
         except Exception as e:
             self.app.logger.exception(
                 "Background task `DASHBOARDRPC__CHECK_VERSION` died unexpectedly.", exc_info=e
@@ -138,10 +136,12 @@ class TasksManager:
             elif not last_state_disconnected:
                 self.app.logger.warning("Disconnected from RPC Websocket.")
                 self.app.config["RPC_CONNECTED"]: bool = False
+                last_state_disconnected = True
                 self.app.config["LAST_RPC_EVENT"]: datetime.datetime = datetime.datetime.now(
                     tz=datetime.timezone.utc
                 )
-                last_state_disconnected = True
+                self.app.ws.close()
+                initialize_websocket(self.app)
 
     def start_tasks(self) -> None:
         if self.app.cog is None:

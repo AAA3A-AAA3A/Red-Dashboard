@@ -52,6 +52,7 @@ WS_EXCEPTIONS = (
     websocket._exceptions.WebSocketConnectionClosedException,
     ConnectionResetError,
     ConnectionAbortedError,
+    AttributeError,  # If the connection is reset.
 )
 
 
@@ -626,43 +627,11 @@ def initialize_websocket(app: Flask) -> bool:
     return True
 
 
-async def secure_send(
-    app: Flask, request: typing.Dict[str, typing.Any]
-) -> typing.Dict[str, typing.Any]:
-    if app.cog is not None:
-        from aiohttp_json_rpc.protocol import JsonRpcMsg, JsonRpcMsgTyp
-
-        try:
-            method = app.cog.bot.rpc._rpc.methods[request["method"]]
-        except KeyError:
-            return {"error": {"message": "Method not found"}}
-        result = await method(
-            http_request="GET",
-            rpc=app.cog.bot.rpc._rpc,
-            msg=JsonRpcMsg(type=JsonRpcMsgTyp.REQUEST, data=request),
-        )
-        return {"result": result}
-    result = None
-    try:
-        app.ws.send(json.dumps(request))
-        result = json.loads(app.ws.recv())
-    except WS_EXCEPTIONS:
-        app.logger.warning("Connection reset.")
-        app.ws.close()
-        app.ws = None
-        return False
-    else:
-        return result
-
-
 def check_for_disconnect(app: Flask, method: str, result: typing.Dict[str, typing.Any]) -> bool:
     if (
         "error" in result
         and result["error"]["message"] == "Method not found"
-        and method == "DASHBOARDRPC__GET_VARIABLES"
-        or "result" in result
-        and isinstance(result["result"], typing.Dict)
-        and result["result"].get("disconnected", False)
+        or result.get("disconnected", False)
     ):
         app.config["RPC_CONNECTED"]: bool = False
         if app.ws is not None:
@@ -672,28 +641,35 @@ def check_for_disconnect(app: Flask, method: str, result: typing.Dict[str, typin
     return True
 
 
-async def get_result(app: Flask, request: typing.Dict[str, typing.Any]):
+async def get_result(app: Flask, request: typing.Dict[str, typing.Any], *, retry: bool = True) -> typing.Dict[str, typing.Any]:
     if app.cog is not None:
         from aiohttp_json_rpc.protocol import JsonRpcMsg, JsonRpcMsgTyp
         try:
             method = app.cog.bot.rpc._rpc.methods[request["method"]]
         except KeyError:
-            return {"status": 1, "message": _("Not connected to bot.")}
-        result = await method(
+            return {"status": 1, "error": _("Not connected to bot.")}
+        return await method(
             http_request="GET",
             rpc=app.cog.bot.rpc._rpc,
             msg=JsonRpcMsg(type=JsonRpcMsgTyp.REQUEST, data=request),
         )
-        return {"status": 0, "result": result}
-    app.ws.send(json.dumps(request))
-    result = json.loads(app.ws.recv())
+    try:
+        app.ws.send(json.dumps(request))
+        result = json.loads(app.ws.recv())
+    except WS_EXCEPTIONS:
+        if not retry:
+            return {"status": 1, "error": _("Not connected to bot.")}
+        app.logger.warning("Connection reset.")
+        app.ws.close()
+        initialize_websocket(app)
+        return await get_result(app, request, retry=False)
     if "error" in result:
         if result["error"]["message"] == "Method not found":
-            return {"status": 1, "message": _("Not connected to bot.")}
+            return {"status": 1, "error": _("Not connected to bot.")}
         app.logger.error(result["error"])
-        return {"status": 1, "message": _("Something went wrong.")}
+        return {"status": 1, "error": _("Something went wrong.")}
     if not result["result"] or isinstance(result["result"], typing.Dict) and result["result"].get("disconnected", False):
-        return {"status": 1, "message": _("Not connected to bot.")}
+        return {"status": 1, "error": _("Not connected to bot.")}
     return result["result"]
 
 
@@ -706,7 +682,7 @@ def notify_owner_of_blacklist(app: Flask, ip: str) -> None:
                 "method": "DASHBOARDRPC__NOTIFY_OWNERS_OF_BLACKLIST",
                 "params": [ip],
             }
-            result = secure_send(app, request)
+            result = (app, request)
             if not result or "error" in result:
                 time.sleep(1)
                 continue
