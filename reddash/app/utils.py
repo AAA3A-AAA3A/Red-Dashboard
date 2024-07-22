@@ -660,7 +660,8 @@ async def get_result(app: Flask, request: typing.Dict[str, typing.Any], *, retry
         if not retry:
             return {"status": 1, "error": _("Not connected to bot.")}
         app.logger.warning("Connection reset.")
-        app.ws.close()
+        if app.ws:
+            app.ws.close()
         initialize_websocket(app)
         return await get_result(app, request, retry=False)
     if "error" in result:

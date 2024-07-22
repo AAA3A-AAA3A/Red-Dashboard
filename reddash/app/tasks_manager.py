@@ -140,7 +140,8 @@ class TasksManager:
                 self.app.config["LAST_RPC_EVENT"]: datetime.datetime = datetime.datetime.now(
                     tz=datetime.timezone.utc
                 )
-                self.app.ws.close()
+                if self.app.ws:
+                    self.app.ws.close()
                 initialize_websocket(self.app)
 
     def start_tasks(self) -> None:
