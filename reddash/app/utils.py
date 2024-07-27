@@ -52,6 +52,7 @@ WS_EXCEPTIONS = (
     websocket._exceptions.WebSocketConnectionClosedException,
     ConnectionResetError,
     ConnectionAbortedError,
+    BrokenPipeError,
     AttributeError,  # If the connection is reset.
 )
 
