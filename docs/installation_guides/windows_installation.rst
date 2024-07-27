@@ -28,11 +28,11 @@ Creating a virtual environment
 
 Just like for Red-DiscordBot, Red-Dashboard requires it’s own, separate virtual environment to isolate dependencies. Red Dashboard also requires a Python version minimum of 3.8.1, and it is recommended to use the same Python version as you use for Red-Discord Bot.
 
-First, create a virtual environment using whatever Python version you use for red. For example, if Python 3.8 was installed and being used for Red:
+First, create a virtual environment using whatever Python version you use for red. For example, if Python 3.11 was installed and being used for Red:
 
 .. prompt:: batch
 
-   py -3.8 -m venv "%userprofile%\reddashenv"
+   python -3.11 -m venv "%userprofile%\reddashenv"
 
 Next, enter your virtual environment with this command:
 

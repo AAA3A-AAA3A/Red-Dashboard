@@ -75,11 +75,11 @@ Using venv
 
 Red-Dashboard, similar to Red-DiscordBot, requires a Python version of at least 3.8.1. For ease of use, we recommend to use the same exact Python version as you use for Red.
 
-First, create a virtual environment using whatever Python version you use for red. For example, if Python 3.8 was installed and being used for Red:
+First, create a virtual environment using whatever Python version you use for red. For example, if Python 3.11 was installed and being used for Red:
 
 .. prompt:: bash
 
-   python3.8 -m venv ~/reddashenv
+   python3.11 -m venv ~/reddashenv
 
 .. warning::
 
