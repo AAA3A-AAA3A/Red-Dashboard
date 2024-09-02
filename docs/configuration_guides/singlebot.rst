@@ -34,7 +34,7 @@ Copy the secret to your clipboard by clicking the "Copy" button, then take the s
 
 .. danger::
 
-   Never, ever paste your client secret anywhere other than in the command listed above. Enter the above command in DMs to ensure that no one copies your token.
+   Never, never paste your client secret anywhere other than in the command listed above. Enter the above command in DMs to ensure that no one copies your token.
 
 Set the redirect URI
 --------------------

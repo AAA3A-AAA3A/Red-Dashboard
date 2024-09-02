@@ -32,7 +32,7 @@ First, create a virtual environment using whatever Python version you use for re
 
 .. prompt:: batch
 
-   python -3.11 -m venv "%userprofile%\reddashenv"
+   python -m venv "%userprofile%\reddashenv"
 
 Next, enter your virtual environment with this command:
 

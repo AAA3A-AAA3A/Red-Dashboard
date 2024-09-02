@@ -79,7 +79,7 @@ First, create a virtual environment using whatever Python version you use for re
 
 .. prompt:: bash
 
-   python3.11 -m venv ~/reddashenv
+   python -m venv ~/reddashenv
 
 .. warning::
 
