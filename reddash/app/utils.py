@@ -37,10 +37,10 @@ from django_user_agents.utils import get_user_agent
 
 AVAILABLE_COLORS: typing.List[str] = [
     "success",
-    "danger",
-    "primary",
-    "info",
     "warning",
+    "danger",
+    "info",
+    "primary",
     "dark",
 ]
 
@@ -368,6 +368,9 @@ def apply_themes(app: Flask) -> None:
 
 
 def add_constants(app: Flask) -> None:
+    default_color = app.data["ui"]["meta"]["default_color"]
+    AVAILABLE_COLORS.remove(default_color)
+    AVAILABLE_COLORS.insert(0, default_color)
     def process_meta_tags() -> typing.Dict[str, typing.Any]:
         meta = deepcopy(app.data["ui"]["meta"])
         meta["color"] = request.cookies.get("color", meta["default_color"])
