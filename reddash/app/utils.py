@@ -282,7 +282,7 @@ def register_extensions(_app: Flask) -> None:
     @app.template_filter("markdown")
     def markdown_filter(text: str) -> Markup:
         text = bleach.clean(text, tags=[], strip=False)
-        return Markup(app.markdown.convert(text).replace("\n", "<br />"))
+        return Markup(app.markdown.convert(text).replace("\n", ""))  # <br />
 
     @app.template_filter("highlight")
     def highlight_filter(code, language="python") -> Markup:

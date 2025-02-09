@@ -14,8 +14,8 @@
           <div class="card-body">
             <div class="row">
               <div class="col-sm-12 text-left">
-                <h5 class="card-category">{{ _("{botname} • Owned by {owner}").format(botname = variables["bot"]["name"], owner = variables["bot"]["owner"]) }}</h5>
-                <h1 class="card-title">{{ _("About") }}</h1>
+                <h5 class="card-category">{{ _("Owned by") }} {{ variables["bot"]["owner"] }}</h5>
+                <h1 class="card-title">{{ variables["bot"]["name"] }}</h1>
               </div>
             </div>
           </div>
