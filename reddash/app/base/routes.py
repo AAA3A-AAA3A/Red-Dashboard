@@ -688,7 +688,7 @@ class DiscordProfileForm(FlaskForm):
         _("Username:"), validators=[wtforms.validators.Length(max=32)]
     )
     description: MarkdownTextAreaField = MarkdownTextAreaField(
-        _("Description:"), validators=[wtforms.validators.Length(max=1024)]
+        _("Description:"), validators=[wtforms.validators.Length(max=400)]
     )
     submit: wtforms.SubmitField = wtforms.SubmitField(_("Save Modifications"))
 
