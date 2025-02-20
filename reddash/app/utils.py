@@ -242,7 +242,7 @@ def register_extensions(_app: Flask) -> None:
             def _choices_generator(choices):
                 for value, label, selected, render_kw in old_choices_generator(choices):
                     yield (
-                        bleach.clean(value, tags=[], strip=False),
+                        bleach.clean(value, tags=[], strip=False) if value is not None else None,
                         bleach.clean(label, tags=[], strip=False),
                         selected
                         or (
