@@ -261,6 +261,7 @@ async def third_party(name: str, page: str = None, guild_id: str = None):
                 name=name,
                 page=page,
                 **return_guild,
+                expanded=result["web_content"].get("expanded", False),
                 fullscreen=result["web_content"].get("fullscreen", False),
                 source_content=render_template_string(
                     result["web_content"].pop("source"),

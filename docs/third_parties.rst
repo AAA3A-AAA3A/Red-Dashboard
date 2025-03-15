@@ -47,7 +47,7 @@ The API endpoint supports several keys:
 
 - ``notifications`` (``List[Dict[Literal["message", "category"], str]]``): A list of notifications to display to the user. Each notification is a dict with a ``category`` (``info``, ``warning``, ``error``, or ``success``) and a ``message`` (e.g., ``[{"message": "Hi!", "category": "success"}]``).
 
-- ``web_content`` (``Dict[str, Any]``): The Flask/Django/Jinja2 template in ``source`` will be displayed in the browser, inside a third party template (consistency with the rest of the Dashboard). It can contain HTML, CSS, and JavaScript. You can use ``"standalone": True`` to make your own complete page. You can use ``"fullscreen": True`` to use the template but without the sidenav and the guild profile. All other kwargs will be passed to the template. For example: ``{"source": "Hello, {{ user_name }}!", "user_name": "Test"}``.
+- ``web_content`` (``Dict[str, Any]``): The Flask/Django/Jinja2 template in ``source`` will be displayed in the browser, inside a third party template (consistency with the rest of the Dashboard). It can contain HTML, CSS, and JavaScript. You can use ``"standalone": True`` to make your own complete page, ``"expanded": True`` to use the template but without the guild profile, and ``"fullscreen": True`` to use the template but without the sidenav and the guild profile. All other kwargs will be passed to the template. For example: ``{"source": "Hello, {{ user_name }}!", "user_name": "Test"}``.
 
 - ``error_code`` (``int``) associated with optional ``error_message`` (``str``): Aborts and raises an HTML error, with a custom message if provided.
 
